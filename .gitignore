@@ -1,0 +1,18 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+data/
+outputs/
+.env
+.env.*
+!.env.example
+.docs
+.tmp
+/tmp/
+
+# Local project notes and proposal assets
+/IMPLEMENTATION_PLAN.md
+/AGENTS.md
+/IE4422_Group_Proposal.md
+/diagram.png
