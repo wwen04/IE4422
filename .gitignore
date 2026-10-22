@@ -16,3 +16,9 @@ outputs/
 /AGENTS.md
 /IE4422_Group_Proposal.md
 /diagram.png
+
+# Local Qwen runtime, downloaded examples and generated results
+.venv-*/
+models/
+scienceqa_samples/
+tutor_result.json

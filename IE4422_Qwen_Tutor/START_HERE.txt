@@ -1,0 +1,35 @@
+IE4422 SCIENCEQA + QWEN STARTER (WINDOWS)
+========================================
+TEAM REPOSITORY: Read ../docs/QWEN_INTEGRATION.md first.
+Use ../prepare_data.py and ../run_scienceqa_tutor.py for the shared workflow.
+The instructions below describe the original standalone exploratory workflow;
+its downloader is unpinned and does not use the team's question IDs/exports.
+
+This ZIP contains both the original Qwen code and the ScienceQA download/test scripts.
+
+1. Install Python 3.11. In VS Code terminal, in this folder:
+   py -3.11 -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+2. Install a CUDA-enabled PyTorch build for your Windows NVIDIA GPU, using:
+   https://pytorch.org/get-started/locally/
+3. Install the remaining packages:
+   pip install -r requirements.txt
+   pip install datasets pillow
+4. Verify GPU is available:
+   python -c "import torch; print(torch.cuda.is_available())"
+5. Download FIVE questions from the validation split for experimentation:
+   python download_scienceqa.py --count 5 --split validation
+6. Run the Qwen science-diagram testing script:
+   python test_scienceqa.py --limit 5
+7. Review scienceqa_samples/qwen_results.json
+
+The model downloads automatically from Hugging Face on first use. To use a
+manually downloaded copy, add:
+   --model-path "./models/Qwen2.5-VL-3B-Instruct"
+when running test_scienceqa.py.
+
+IMPORTANT:
+- Keep test split untouched until the final evaluation.
+- The answer and solution are stored in questions.json but are NOT given to Qwen.
+- Human checking is needed for generated hints and visual evidence.
+- GPU execution was not verified in this environment.

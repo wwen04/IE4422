@@ -2,6 +2,12 @@
 
 Student research project comparing progressive hints with and without structured visual evidence, using the same frozen vision-language model. No training or fine-tuning.
 
+## Qwen tutor integration
+
+The ScienceQA preparation workflow below is retained. `IE4422_Qwen_Tutor/` adds the local Qwen2.5-VL-3B prototype: diagram reading, tentative misconception diagnosis and a targeted hint. `run_scienceqa_tutor.py` connects that prototype to the public JSONL questions exported by `prepare_data.py`, preserving the team's IDs, supplied context, option order and original images. It does not load reference files. Student answers and explanations must be provided explicitly.
+
+See [Qwen setup and usage](docs/QWEN_INTEGRATION.md). This remains a prototype; it does not implement the complete comparison experiment or validate the quality of diagnoses/hints.
+
 ## Prepare ScienceQA
 
 We use only Hugging Face's [`derek-thomas/ScienceQA`](https://huggingface.co/datasets/derek-thomas/ScienceQA). Its supplied train, validation and test splits are preserved. The dataset revision is pinned in `configs/scienceqa.json`, alongside the subject and grade filter. Importing downloads the release once and caches it locally; there is no separate metadata download or manual ZIP setup.
@@ -66,7 +72,7 @@ reports/scienceqa/                        generated audit results to commit
   integrity_audit.json                    validation counts, exclusions and overlap groups
 ```
 
-Commit scripts, tests, configuration, dependency pins, ID manifests and audit reports. Each teammate runs the same command locally. `.gitignore` excludes all `data/`, the virtual environment, outputs, temporary files and local secrets. The implementation plan, agent instructions, proposal and project diagram are local-only and excluded as well. The workspace is not yet a Git repository, and nothing has been uploaded.
+Commit scripts, tests, configuration, dependency pins, ID manifests and audit reports. Each teammate runs the same command locally. `.gitignore` excludes all `data/`, virtual environments, model weights, downloaded Qwen examples, generated outputs, temporary files and local secrets. The implementation plan, agent instructions, proposal and project diagram are local-only and excluded as well.
 
 Manifests document the shared selection; the current script selects using source-row indices held in memory rather than reading the manifests back. Reports describe dataset preparation, not hint-quality experiment results.
 
