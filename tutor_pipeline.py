@@ -45,15 +45,10 @@ Only reference diagram details you can verify visually. Do not state the answer,
 Output only the hint.""", max_new_tokens=160)
 
 
-def run_pipeline(image, question, student_answer, explanation, hint_level=1, model_path=None):
-    # Load GPU dependencies only when inference is requested. Support both the
-    # original scripts and imports from the repository-level ScienceQA runner.
-    if __package__:
-        from .qwen_engine import QwenTutor
-    else:
-        from qwen_engine import QwenTutor
-
-    tutor = QwenTutor(model_path) if model_path else QwenTutor()
+def run_pipeline(tutor, image, question, student_answer, explanation, hint_level=1):
+    """Use a caller-owned model so repeated questions do not reload its weights."""
+    if hint_level not in (1, 2, 3):
+        raise ValueError("hint_level must be 1, 2, or 3")
     evidence = extract_evidence(tutor, image, question)
     diagnosis = diagnose(tutor, image, question, student_answer, explanation, evidence)
     hint = generate_hint(tutor, image, question, evidence, diagnosis, hint_level)

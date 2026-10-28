@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.ipynb_checkpoints/
 data/
 outputs/
 .env
@@ -10,6 +11,7 @@ outputs/
 .docs
 .tmp
 /tmp/
+/notebooks
 
 # Local project notes and proposal assets
 /IMPLEMENTATION_PLAN.md
@@ -17,8 +19,6 @@ outputs/
 /IE4422_Group_Proposal.md
 /diagram.png
 
-# Local Qwen runtime, downloaded examples and generated results
+# Local runtime and model downloads
 .venv-*/
 models/
-scienceqa_samples/
-tutor_result.json

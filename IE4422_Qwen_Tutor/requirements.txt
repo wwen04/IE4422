@@ -1,6 +1,0 @@
-transformers>=4.50,<5
-accelerate>=1.2
-bitsandbytes>=0.45
-qwen-vl-utils>=0.0.10
-Pillow>=10
-safetensors>=0.4

@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from IE4422_Qwen_Tutor.tutor_pipeline import run_pipeline
+from tutor_pipeline import run_pipeline
 
 
 ROOT = Path(__file__).resolve().parent
@@ -51,6 +51,13 @@ def question_prompt(item):
     return "\n\n".join(parts)
 
 
+def run_question(tutor, item, student_answer, explanation, hint_level=1):
+    """Generate a linked result using a model that can serve multiple questions."""
+    result = run_pipeline(tutor, item["image_path"], question_prompt(item),
+                          student_answer, explanation, hint_level)
+    return {"item_id": item["item_id"], "split": item["split"], **result}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--split", choices=SPLITS, default="validation")
@@ -66,9 +73,11 @@ def main(argv=None):
         item = load_question(ROOT, args.split, args.item_id)
     except (FileNotFoundError, ValueError, KeyError) as error:
         parser.error(str(error))
-    result = run_pipeline(item["image_path"], question_prompt(item), args.answer,
-                          args.explanation, args.hint_level, args.model_path)
-    result = {"item_id": item["item_id"], "split": item["split"], **result}
+    # Keep --help, data loading and unit tests independent of GPU imports.
+    from qwen_engine import QwenTutor
+
+    tutor = QwenTutor(args.model_path) if args.model_path else QwenTutor()
+    result = run_question(tutor, item, args.answer, args.explanation, args.hint_level)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",
                            encoding="utf-8")

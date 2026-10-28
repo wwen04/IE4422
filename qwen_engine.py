@@ -1,4 +1,3 @@
-
 """Load one Qwen2.5-VL model and reuse it for all tutor stages."""
 
 from pathlib import Path
@@ -14,6 +13,7 @@ from qwen_vl_utils import process_vision_info
 
 
 MODEL_ID = "Qwen/Qwen2.5-VL-3B-Instruct"
+IMAGE_SIZE = {"shortest_edge": 256 * 28 * 28, "longest_edge": 512 * 28 * 28}
 
 
 class QwenTutor:
@@ -45,11 +45,7 @@ class QwenTutor:
 
         self.model.eval()
 
-        self.processor = AutoProcessor.from_pretrained(
-            model_path,
-            min_pixels=256 * 28 * 28,
-            max_pixels=512 * 28 * 28,
-        )
+        self.processor = AutoProcessor.from_pretrained(model_path)
 
         print("Qwen model loaded successfully!")
 
@@ -62,7 +58,7 @@ class QwenTutor:
                 f"Missing science diagram: {path}"
             )
 
-        # FIX: Open image directly instead of using path.as_uri()
+        # A PIL image also works for local paths containing spaces.
         with Image.open(path) as img:
             image = img.convert("RGB")
 
@@ -90,6 +86,9 @@ class QwenTutor:
             text=[prompt],
             images=image_inputs,
             videos=video_inputs,
+            # Pass pixel budgets at processing time; checkpoint config can
+            # override constructor size settings in Transformers 5.
+            images_kwargs={"size": IMAGE_SIZE},
             padding=True,
             return_tensors="pt",
         )

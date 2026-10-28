@@ -2,12 +2,13 @@ from contextlib import redirect_stdout
 from io import StringIO
 import json
 from pathlib import Path
+from types import SimpleNamespace
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import run_scienceqa_tutor as runner
-from IE4422_Qwen_Tutor.tutor_pipeline import extract_evidence, diagnose, generate_hint
+from tutor_pipeline import extract_evidence, diagnose, generate_hint, run_pipeline
 
 
 class TutorIntegrationTests(unittest.TestCase):
@@ -73,18 +74,46 @@ class TutorIntegrationTests(unittest.TestCase):
 
     def test_cli_passes_student_response_and_saves_linked_result(self):
         output = self.root / "outputs/result.json"
+        tutor = Mock()
+        constructor = Mock(return_value=tutor)
         with patch.object(runner, "ROOT", self.root), patch.object(
                 runner, "run_pipeline", return_value={"evidence": "E", "diagnosis": "D", "hint": "H"}
-        ) as pipeline, redirect_stdout(StringIO()):
+        ) as pipeline, patch.dict("sys.modules", {
+            "qwen_engine": SimpleNamespace(QwenTutor=constructor)
+        }), redirect_stdout(StringIO()):
             runner.main(["--item-id", self.item["item_id"], "--answer", "A",
                          "--explanation", "My reasoning", "--hint-level", "2",
                          "--output", str(output)])
         arguments = pipeline.call_args.args
-        self.assertEqual(arguments[2:5], ("A", "My reasoning", 2))
+        self.assertIs(arguments[0], tutor)
+        self.assertEqual(arguments[3:6], ("A", "My reasoning", 2))
+        constructor.assert_called_once_with()
         self.assertNotIn("SECRET", str(arguments))
         result = json.loads(output.read_text(encoding="utf-8"))
         self.assertEqual(result["item_id"], self.item["item_id"])
         self.assertEqual(result["hint"], "H")
+
+    def test_multiple_questions_reuse_the_supplied_tutor_without_loading_a_model(self):
+        item = runner.load_question(self.root, "validation", self.item["item_id"])
+        tutor = Mock()
+        tutor.ask.side_effect = ["E1", "D1", "H1", "E2", "D2", "H2"]
+        constructor = Mock(side_effect=AssertionError("The pipeline must not load a model"))
+        with patch.dict("sys.modules", {
+            "qwen_engine": SimpleNamespace(QwenTutor=constructor)
+        }):
+            first = runner.run_question(tutor, item, "A", "My reasoning", 1)
+            second = runner.run_question(tutor, item, "B", "Another attempt", 2)
+        constructor.assert_not_called()
+        self.assertEqual(tutor.ask.call_count, 6)
+        self.assertEqual((first["hint"], second["hint"]), ("H1", "H2"))
+        self.assertEqual(first["item_id"], second["item_id"])
+        self.assertNotIn("SECRET", str(tutor.ask.call_args_list))
+
+    def test_invalid_hint_level_fails_before_generation(self):
+        tutor = Mock()
+        with self.assertRaisesRegex(ValueError, "hint_level"):
+            run_pipeline(tutor, "image.png", "Question", "A", "My reasoning", 4)
+        tutor.ask.assert_not_called()
 
 
 if __name__ == "__main__":
