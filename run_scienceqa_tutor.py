@@ -4,7 +4,11 @@ import argparse
 import json
 from pathlib import Path
 
-from tutor_pipeline import run_pipeline
+from tutor_pipeline import (
+    run_answered_pipeline,
+    run_initial_hint,
+    run_pipeline,
+)
 
 
 ROOT = Path(__file__).resolve().parent
@@ -42,6 +46,32 @@ def load_question(root, split, question_id):
     raise ValueError(f"Question {question_id!r} was not found in the prepared {split} split")
 
 
+def load_reference(root, split, question_id):
+    """Load answer-key material for checking only after a student submits."""
+    if split not in SPLITS:
+        raise ValueError(f"Unknown split: {split}")
+    source = root / "data/processed/scienceqa/references" / f"{split}.jsonl"
+    if not source.is_file():
+        raise FileNotFoundError(
+            f"Missing answer references: {source}. Run prepare_data.py first."
+        )
+    with source.open(encoding="utf-8") as stream:
+        for line in stream:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            if row["item_id"] == question_id:
+                return {
+                    "item_id": row["item_id"],
+                    "gold_option_id": row["gold_option_id"],
+                    "lecture": row["lecture"],
+                    "solution": row["solution"],
+                }
+    raise ValueError(
+        f"Reference for {question_id!r} was not found in the {split} split"
+    )
+
+
 def question_prompt(item):
     parts = [item["question"]]
     if item["context"].strip():
@@ -51,10 +81,44 @@ def question_prompt(item):
     return "\n\n".join(parts)
 
 
-def run_question(tutor, item, student_answer, explanation, hint_level=1):
+def run_question(tutor, item, student_answer, explanation, hint_level=1,
+                 on_stage=None):
     """Generate a linked result using a model that can serve multiple questions."""
     result = run_pipeline(tutor, item["image_path"], question_prompt(item),
-                          student_answer, explanation, hint_level)
+                          student_answer, explanation, hint_level, on_stage)
+    return {"item_id": item["item_id"], "split": item["split"], **result}
+
+
+def run_hint(tutor, item, hint_level=1, on_stage=None):
+    result = run_initial_hint(
+        tutor, item["image_path"], question_prompt(item), hint_level, on_stage
+    )
+    return {"item_id": item["item_id"], "split": item["split"], **result}
+
+
+def run_checked_question(tutor, item, reference, student_answer_id,
+                         explanation, hint_level=1, on_stage=None):
+    choice = next(
+        (choice for choice in item["choices"] if choice["id"] == student_answer_id),
+        None,
+    )
+    if choice is None:
+        raise ValueError(f"Unknown answer choice: {student_answer_id}")
+    reference_text = "\n\n".join(filter(None, (
+        reference["lecture"], reference["solution"]
+    )))
+    result = run_answered_pipeline(
+        tutor=tutor,
+        image=item["image_path"],
+        question=question_prompt(item),
+        student_answer=student_answer_id,
+        student_explanation=explanation,
+        answer_text=f'{choice["id"]}. {choice["text"]}',
+        correct_answer_id=reference["gold_option_id"],
+        reference=reference_text,
+        hint_level=hint_level,
+        on_stage=on_stage,
+    )
     return {"item_id": item["item_id"], "split": item["split"], **result}
 
 

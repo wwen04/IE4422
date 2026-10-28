@@ -79,7 +79,19 @@ Choose a prepared validation ID and provide the student's actual response and re
 
 The first run downloads `Qwen/Qwen2.5-VL-3B-Instruct`; use `--model-path` to select a complete existing checkpoint folder. The engine loads it in 4-bit and uses deterministic generation. The default result is `outputs/scienceqa_tutor.json`; choose a distinct `--output` path to retain multiple runs. The runner reads public questions only and preserves IDs, supplied context, option order and image files. It does not load reference exports.
 
-This remains the original exploratory **evidence → tentative diagnosis → one requested hint** prototype. Evidence/diagnosis are unparsed model-produced strings, not verified annotations. Diagnosis conditions hints on a student's response, which is outside the planned response-independent experiment. This reorganisation does not implement the final methodology: evidence validation/caching, three-hint history, disclosure checking, A–E comparisons and human evaluation remain pending. Development uses train/validation; preserve test items for the agreed final evaluation.
+This remains an exploratory prototype. The terminal entry point generates a response-informed hint. The browser UI additionally supports a pre-answer, answer-independent hint. Once an answer is submitted, the UI compares its choice ID with the separate reference export; if the choice matches, the model checks whether the explanation is supported by the reference lecture/solution. A correct answer with supported reasoning gets positive feedback; an incorrect answer or unclear/weak explanation gets another hint. The reference answer is loaded only for a submitted check and is not included in the question API or displayed as the answer key. Model assessments can still be wrong; they are not verified annotations or a formal grade. This does not implement the full research methodology: evidence validation/caching, three-hint history, disclosure checking, A–E comparisons and human evaluation remain pending. Development uses train/validation; preserve test items for the agreed final evaluation.
+
+## Browser interface
+
+After installing the requirements and preparing ScienceQA, start the local browser UI from the repository root:
+
+```powershell
+.\.venv\Scripts\python ui_server.py
+```
+
+The app opens at `http://127.0.0.1:8765`. It lets you choose a prepared question, view its image and choices, and select a hint level. Choose **I'm stuck — give me a hint** without entering an answer, or submit a choice and explanation with **Check my answer** to get feedback or a follow-up hint. **Load demo response** fills clearly marked example inputs. Model outputs are experimental and may be incorrect; they are not a formal assessment. Each completed run is saved under `outputs/`. Stop the local server with Ctrl+C.
+
+The server binds to localhost only and uses Python's standard library; it adds no web framework dependency. If the dataset has not been prepared, run `prepare_data.py` first. Tutor generation still requires the NVIDIA CUDA setup described above.
 
 For custom diagrams, the optional root entry points are:
 

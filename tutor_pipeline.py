@@ -45,11 +45,150 @@ Only reference diagram details you can verify visually. Do not state the answer,
 Output only the hint.""", max_new_tokens=160)
 
 
-def run_pipeline(tutor, image, question, student_answer, explanation, hint_level=1):
+def generate_initial_hint(tutor, image, question, evidence, level=1):
+    hints = {
+        1: "Invite the student to notice one relevant visual detail",
+        2: "Connect a visible detail to a useful science idea",
+        3: "Suggest a small reasoning step without solving the question",
+    }
+    if level not in hints:
+        raise ValueError("level must be 1, 2, or 3")
+    return tutor.ask(image, f"""Science question: {question}
+Visual evidence (unverified): {evidence}
+The student has not answered yet and may not know where to begin.
+Give ONE supportive, answer-independent hint at level {level}: {hints[level]}.
+Do not assume the student has made a mistake. Do not ask them to provide an answer before helping.
+Only reference diagram details you can verify visually. Do not state the answer, option letter, or reveal the solution.
+Output only the hint.""", max_new_tokens=160)
+
+
+def assess_explanation(tutor, image, question, answer_text, explanation,
+                       reference):
+    prompt = f"""Assess only whether the student's reasoning is scientifically supported.
+Question: {question}
+The student's selected answer text: {answer_text}
+The student's explanation: {explanation}
+Reference explanation for evaluation only (never repeat or reveal it): {reference}
+Compare the student's explanation to the reference, allowing scientifically equivalent wording.
+If the explanation demonstrates the key idea, output exactly SUPPORTED.
+If it conflicts with or misunderstands the key idea, output exactly NEEDS_WORK.
+If the explanation is too vague to judge, output exactly UNCERTAIN.
+Do not reveal the correct choice, reference explanation, or solution.
+Output one label only."""
+    response = tutor.ask(image, prompt, max_new_tokens=8)
+    label = response.strip().split()[0].strip(" .,:;!").upper() if response.strip() else ""
+    if label not in {"SUPPORTED", "NEEDS_WORK", "UNCERTAIN"}:
+        return "uncertain", response
+    status = {
+        "SUPPORTED": "correct",
+        "NEEDS_WORK": "needs_work",
+        "UNCERTAIN": "uncertain",
+    }[label]
+    return status, response
+
+
+def run_initial_hint(tutor, image, question, hint_level=1, on_stage=None):
+    """Offer useful diagram guidance before the learner submits an answer."""
+    if hint_level not in (1, 2, 3):
+        raise ValueError("hint_level must be 1, 2, or 3")
+    if on_stage is not None:
+        on_stage("evidence")
+    evidence = extract_evidence(tutor, image, question)
+    if on_stage is not None:
+        on_stage("hint")
+    hint = generate_initial_hint(tutor, image, question, evidence, hint_level)
+    return {
+        "mode": "hint",
+        "outcome": "hint",
+        "evidence": evidence,
+        "diagnosis": None,
+        "explanation_assessment": None,
+        "feedback": None,
+        "hint": hint,
+    }
+
+
+def run_answered_pipeline(tutor, image, question, student_answer,
+                          student_explanation, answer_text, correct_answer_id,
+                          reference, hint_level=1, on_stage=None):
+    """Check a submitted answer privately, then give feedback or another hint."""
+    if hint_level not in (1, 2, 3):
+        raise ValueError("hint_level must be 1, 2, or 3")
+    if on_stage is not None:
+        on_stage("evidence")
+    evidence = extract_evidence(tutor, image, question)
+    if on_stage is not None:
+        on_stage("assessment")
+
+    answer_correct = student_answer == correct_answer_id
+    explanation_status, explanation_assessment = assess_explanation(
+        tutor, image, question, answer_text, student_explanation, reference
+    )
+
+    if answer_correct and explanation_status == "correct":
+        feedback = (
+            "Correct—your answer and explanation show a sound understanding. "
+            "Nice work."
+        )
+        if on_stage is not None:
+            on_stage("feedback")
+        return {
+            "mode": "check",
+            "outcome": "correct",
+            "answer_correct": True,
+            "explanation_status": explanation_status,
+            "explanation_assessment": explanation_assessment,
+            "evidence": evidence,
+            "diagnosis": None,
+            "feedback": feedback,
+            "hint": None,
+        }
+
+    if on_stage is not None:
+        on_stage("diagnosis")
+    diagnosis = diagnose(
+        tutor, image, question, answer_text, student_explanation, evidence
+    )
+    if on_stage is not None:
+        on_stage("hint")
+    hint = generate_hint(tutor, image, question, evidence, diagnosis, hint_level)
+    if not answer_correct and explanation_status == "correct":
+        feedback = (
+            "Your explanation includes a useful idea, but the selected choice "
+            "doesn't match yet. Use this hint to connect your reasoning to the question."
+        )
+    elif not answer_correct:
+        feedback = "Not quite yet. Use this hint to rethink your answer."
+    else:
+        feedback = (
+            "Your selected answer matches, but the explanation may need "
+            "another look. Try strengthening your reasoning with this hint."
+        )
+    return {
+        "mode": "check",
+        "outcome": "try_again",
+        "answer_correct": answer_correct,
+        "explanation_status": explanation_status,
+        "explanation_assessment": explanation_assessment,
+        "evidence": evidence,
+        "diagnosis": diagnosis,
+        "feedback": feedback,
+        "hint": hint,
+    }
+
+
+def run_pipeline(tutor, image, question, student_answer, explanation, hint_level=1,
+             on_stage=None):
     """Use a caller-owned model so repeated questions do not reload its weights."""
     if hint_level not in (1, 2, 3):
         raise ValueError("hint_level must be 1, 2, or 3")
+    if on_stage is not None:
+        on_stage("evidence")
     evidence = extract_evidence(tutor, image, question)
+    if on_stage is not None:
+        on_stage("diagnosis")
     diagnosis = diagnose(tutor, image, question, student_answer, explanation, evidence)
+    if on_stage is not None:
+        on_stage("hint")
     hint = generate_hint(tutor, image, question, evidence, diagnosis, hint_level)
     return {"evidence": evidence, "diagnosis": diagnosis, "hint": hint}

@@ -8,7 +8,15 @@ import unittest
 from unittest.mock import Mock, patch
 
 import run_scienceqa_tutor as runner
-from tutor_pipeline import extract_evidence, diagnose, generate_hint, run_pipeline
+from tutor_pipeline import (
+    assess_explanation,
+    diagnose,
+    extract_evidence,
+    generate_hint,
+    run_answered_pipeline,
+    run_initial_hint,
+    run_pipeline,
+)
 
 
 class TutorIntegrationTests(unittest.TestCase):
@@ -20,6 +28,8 @@ class TutorIntegrationTests(unittest.TestCase):
         (self.root / "data/images/example.png").write_bytes(b"mock image")
         self.questions = self.root / "data/processed/scienceqa/questions"
         self.questions.mkdir(parents=True)
+        self.references = self.root / "data/processed/scienceqa/references"
+        self.references.mkdir(parents=True)
         self.item = {
             "item_id": "validation_000003", "split": "validation",
             "question": "Which arrow points up?", "context": "Use the arrow labels.",
@@ -28,9 +38,21 @@ class TutorIntegrationTests(unittest.TestCase):
             "answer": "SECRET GOLD", "lecture": "SECRET LECTURE", "solution": "SECRET SOLUTION",
         }
         self.write_question()
+        self.write_reference()
 
     def write_question(self):
         (self.questions / "validation.jsonl").write_text(json.dumps(self.item) + "\n", encoding="utf-8")
+
+    def write_reference(self):
+        reference = {
+            "item_id": self.item["item_id"],
+            "gold_option_id": "B",
+            "lecture": "Reference lecture",
+            "solution": "Reference solution",
+        }
+        (self.references / "validation.jsonl").write_text(
+            json.dumps(reference) + "\n", encoding="utf-8"
+        )
 
     def test_public_prompt_keeps_context_and_order_without_reference_fields(self):
         item = runner.load_question(self.root, "validation", self.item["item_id"])
@@ -60,6 +82,13 @@ class TutorIntegrationTests(unittest.TestCase):
         (self.root / self.item["image_path"]).unlink()
         with self.assertRaisesRegex(FileNotFoundError, "Missing prepared image"):
             runner.load_question(self.root, "validation", self.item["item_id"])
+
+    def test_reference_loader_is_separate_from_public_question(self):
+        item = runner.load_question(self.root, "validation", self.item["item_id"])
+        reference = runner.load_reference(self.root, "validation", self.item["item_id"])
+        self.assertNotIn("gold_option_id", item)
+        self.assertEqual(reference["gold_option_id"], "B")
+        self.assertNotIn("SECRET", str(reference))
 
     def test_split_mismatch_and_image_outside_repository_are_rejected(self):
         self.item["split"] = "test"
@@ -114,6 +143,104 @@ class TutorIntegrationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "hint_level"):
             run_pipeline(tutor, "image.png", "Question", "A", "My reasoning", 4)
         tutor.ask.assert_not_called()
+
+    def test_pipeline_reports_stages_in_order(self):
+        tutor = Mock()
+        tutor.ask.side_effect = ["Evidence", "Diagnosis", "Hint"]
+        stages = []
+
+        result = run_pipeline(
+            tutor, "image.png", "Question", "A", "My reasoning",
+            on_stage=stages.append,
+        )
+
+        self.assertEqual(stages, ["evidence", "diagnosis", "hint"])
+        self.assertEqual(result["hint"], "Hint")
+
+    def test_initial_hint_needs_no_student_answer_or_explanation(self):
+        tutor = Mock()
+        tutor.ask.side_effect = ["Evidence", "Start by noticing the labels."]
+        stages = []
+
+        result = run_initial_hint(
+            tutor, "image.png", "Question", hint_level=1, on_stage=stages.append
+        )
+
+        self.assertEqual(stages, ["evidence", "hint"])
+        self.assertEqual(result["outcome"], "hint")
+        self.assertIsNone(result["diagnosis"])
+        self.assertEqual(result["hint"], "Start by noticing the labels.")
+        self.assertNotIn("Student answer", tutor.ask.call_args_list[1].args[1])
+
+    def test_correct_answer_and_supported_explanation_get_feedback(self):
+        tutor = Mock()
+        tutor.ask.side_effect = ["Evidence", "SUPPORTED"]
+        stages = []
+
+        result = run_answered_pipeline(
+            tutor, "image.png", "Question", "B", "My reasoning",
+            "B. right", "B", "Reference explanation", on_stage=stages.append,
+        )
+
+        self.assertEqual(stages, ["evidence", "assessment", "feedback"])
+        self.assertEqual(result["outcome"], "correct")
+        self.assertTrue(result["answer_correct"])
+        self.assertEqual(result["explanation_status"], "correct")
+        self.assertIsNone(result["hint"])
+        self.assertNotIn("Reference explanation", result["feedback"])
+        self.assertEqual(tutor.ask.call_count, 2)
+
+    def test_incorrect_answer_gets_a_follow_up_hint(self):
+        tutor = Mock()
+        tutor.ask.side_effect = ["Evidence", "NEEDS_WORK", "Diagnosis", "Hint"]
+        stages = []
+
+        result = run_answered_pipeline(
+            tutor, "image.png", "Question", "A", "My reasoning",
+            "A. left", "B", "Reference explanation", on_stage=stages.append,
+        )
+
+        self.assertEqual(stages, ["evidence", "assessment", "diagnosis", "hint"])
+        self.assertEqual(result["outcome"], "try_again")
+        self.assertFalse(result["answer_correct"])
+        self.assertEqual(result["hint"], "Hint")
+        self.assertEqual(tutor.ask.call_count, 4)
+
+    def test_wrong_choice_can_still_receive_credit_for_supported_reasoning(self):
+        tutor = Mock()
+        tutor.ask.side_effect = [
+            "Evidence", "SUPPORTED", "Diagnosis", "Hint",
+        ]
+        result = run_answered_pipeline(
+            tutor, "image.png", "Question", "A", "Mostly sound idea",
+            "A. left", "B", "Reference explanation",
+        )
+        self.assertFalse(result["answer_correct"])
+        self.assertEqual(result["explanation_status"], "correct")
+        self.assertIn("useful idea", result["feedback"])
+        self.assertEqual(result["hint"], "Hint")
+
+    def test_correct_answer_with_weak_explanation_gets_another_hint(self):
+        tutor = Mock()
+        tutor.ask.side_effect = ["Evidence", "NEEDS_WORK", "Diagnosis", "Hint"]
+
+        result = run_answered_pipeline(
+            tutor, "image.png", "Question", "B", "Unclear reasoning",
+            "B. right", "B", "Reference explanation",
+        )
+
+        self.assertEqual(result["outcome"], "try_again")
+        self.assertTrue(result["answer_correct"])
+        self.assertEqual(result["explanation_status"], "needs_work")
+        self.assertEqual(result["hint"], "Hint")
+
+    def test_unclear_explanation_is_not_marked_correct(self):
+        tutor = Mock()
+        tutor.ask.return_value = "I cannot determine whether this is supported."
+        status, _ = assess_explanation(
+            tutor, "image.png", "Question", "B. right", "Maybe", "Reference"
+        )
+        self.assertEqual(status, "uncertain")
 
 
 if __name__ == "__main__":
