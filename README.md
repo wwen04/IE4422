@@ -61,7 +61,19 @@ Validation checks questions, ordered choices, answer indices, required field typ
 
 ScienceQA's `hint` field is supplied problem context and becomes `context` in our public records. Answers, lectures and solutions are written to separate reference files. Future generation code must load only public questions and build prompts from allowed fields; evaluation can join references by `item_id`.
 
-Image presence alone does not establish that a question needs visual reasoning. Complete [the visual review procedure](docs/DATA_REVIEW.md) before final evaluation selection. No final sample is frozen and no model outputs have been used for selection.
+Image presence alone does not establish that a question needs visual reasoning. The separate [assisted visual review](reviews/scienceqa/README.md) now records this judgement for each prepared candidate. Its derived selection is separate from preparation and is not independently adjudicated human ground truth. No tutor outputs or reference answers were used for this selection.
+
+## Inspect questions and apply the visual-need audit
+
+The separate [visual-need audit](reviews/scienceqa/README.md) records assisted decisions for all 2,075 prepared Grade 7-8 candidates. It leaves preparation outputs intact and exports only image-required rows under `data/final/scienceqa/`, with additional `<split>_final_ids.json` manifests.
+
+```powershell
+.\.venv\Scripts\python.exe inspect_question.py validation_000003 --open
+.\.venv\Scripts\python.exe finalize_data.py --check-only
+.\.venv\Scripts\python.exe finalize_data.py
+```
+
+The inspector generates a replaceable Markdown page and matching browser page containing the question, context, choices, image, metadata, audit classification and separate reference material. Omit the ID to be prompted, use `--list validation` to list IDs, or set `--output outputs/inspection/example.md` to keep a separate page. It needs no model or GPU. Completed audit decisions are stored outside `data/` and survive regeneration of the page or prepared data. See [the audit report](reports/scienceqa/visual_audit.md) for counts and boundaries. The tutor commands below still use the original prepared data.
 
 ## Run the tutor locally
 
