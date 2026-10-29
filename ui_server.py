@@ -1,10 +1,15 @@
 """Serve a local browser interface for the ScienceQA tutor."""
 
 import argparse
+import html
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import mimetypes
+import os
 from pathlib import Path
+import re
+import subprocess
+import sys
 import threading
 import traceback
 from urllib.parse import parse_qs, urlencode, urlparse
@@ -28,6 +33,55 @@ STAGES = {
 }
 
 
+def ensure_data_prepared(root=ROOT):
+    root = Path(root).resolve()
+    output = root / "data/processed/scienceqa"
+    required_exports = [
+        output / directory / f"{split}.jsonl"
+        for directory in ("questions", "references")
+        for split in runner.SPLITS
+    ] + [
+        root / f"manifests/scienceqa/{split}_valid_ids.json"
+        for split in runner.SPLITS
+    ] + [root / "reports/scienceqa/integrity_audit.json"]
+    if all(path.is_file() for path in required_exports):
+        print("Prepared ScienceQA data found; skipping preparation.", flush=True)
+        return
+
+    script = root / "prepare_data.py"
+    if not script.is_file():
+        raise FileNotFoundError(f"Data is missing and preparation script was not found: {script}")
+    print("ScienceQA data is missing or incomplete; running prepare_data.py.", flush=True)
+    subprocess.run([sys.executable, str(script)], cwd=root, check=True)
+
+
+def ensure_data_ready(root=ROOT):
+    root = Path(root).resolve()
+    ensure_data_prepared(root)
+
+    script = root / "finalize_data.py"
+    if not script.is_file():
+        raise FileNotFoundError(f"Data finalization script was not found: {script}")
+    print("Validating and building the finalized ScienceQA selection.", flush=True)
+    subprocess.run([sys.executable, str(script)], cwd=root, check=True)
+
+    output = root / "data/final/scienceqa"
+    required_exports = [
+        output / directory / f"{split}.jsonl"
+        for directory in ("questions", "references")
+        for split in runner.SPLITS
+    ] + [
+        root / f"manifests/scienceqa/{split}_final_ids.json"
+        for split in runner.SPLITS
+    ] + [output / "selection.json"]
+    missing = [path for path in required_exports if not path.is_file()]
+    if missing:
+        raise RuntimeError(
+            "finalize_data.py completed without creating required outputs: "
+            + ", ".join(str(path) for path in missing)
+        )
+
+
 class TutorWebApp:
     def __init__(self, root=ROOT, model_path=None):
         self.root = Path(root).resolve()
@@ -37,6 +91,38 @@ class TutorWebApp:
         self.inference_lock = threading.Lock()
         self.model_lock = threading.Lock()
         self.tutor = None
+        self.inspection_lock = threading.Lock()
+
+    def generate_inspection(self, split, item_id):
+        runner.load_question(self.root, split, item_id, data_source="final")
+        script = self.root / "inspect_question.py"
+        if not script.is_file():
+            raise FileNotFoundError(f"Question inspection script was not found: {script}")
+
+        output = self.root / "outputs/inspection" / f"{item_id}.md"
+        output.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with self.inspection_lock:
+                subprocess.run(
+                    [sys.executable, str(script), item_id, "--output", str(output)],
+                    cwd=self.root,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+        except subprocess.CalledProcessError as error:
+            detail = (error.stderr or error.stdout or "").strip()
+            message = f"Question inspection failed with exit code {error.returncode}."
+            if detail:
+                message += f" {detail}"
+            raise RuntimeError(message) from error
+
+        inspection_page = output.with_suffix(".html")
+        if not inspection_page.is_file():
+            raise FileNotFoundError(
+                f"Question inspection completed without creating {inspection_page}"
+            )
+        return inspection_page
 
     def update_job(self, job_id, **updates):
         with self.jobs_lock:
@@ -50,10 +136,10 @@ class TutorWebApp:
     def list_questions(self, split):
         if split not in runner.SPLITS:
             raise ValueError(f"Unknown split: {split}")
-        source = self.root / "data/processed/scienceqa/questions" / f"{split}.jsonl"
+        source = runner.dataset_root(self.root, "final") / "questions" / f"{split}.jsonl"
         if not source.is_file():
             raise FileNotFoundError(
-                f"Prepared {split} questions are missing. Run prepare_data.py first."
+                f"Finalized {split} questions are missing. Run ui_server.py first."
             )
         questions = []
         with source.open(encoding="utf-8") as stream:
@@ -97,7 +183,7 @@ class TutorWebApp:
         if not isinstance(item_id, str) or not item_id:
             raise ValueError("Choose a prepared question first.")
 
-        item = runner.load_question(self.root, split, item_id)
+        item = runner.load_question(self.root, split, item_id, data_source="final")
         reference = None
         if mode == "check":
             if not isinstance(answer, str) or not answer.strip():
@@ -106,7 +192,9 @@ class TutorWebApp:
                 raise ValueError("Enter the student's reasoning before checking it.")
             if answer not in {choice["id"] for choice in item["choices"]}:
                 raise ValueError("The selected answer is not one of this question's choices.")
-            reference = runner.load_reference(self.root, split, item_id)
+            reference = runner.load_reference(
+                self.root, split, item_id, data_source="final"
+            )
         else:
             answer = None
             explanation = None
@@ -207,16 +295,21 @@ class TutorWebApp:
             def log_message(self, format_string, *args):
                 print(f"[UI] {self.address_string()} - {format_string % args}")
 
-            def send_bytes(self, status, content, content_type, download_name=None):
+            def send_bytes(
+                self, status, content, content_type, download_name=None,
+                content_security_policy=None,
+            ):
                 self.send_response(status)
                 self.send_header("Content-Type", content_type)
                 self.send_header("Content-Length", str(len(content)))
                 self.send_header("X-Content-Type-Options", "nosniff")
                 self.send_header(
                     "Content-Security-Policy",
-                    "default-src 'self'; img-src 'self'; style-src 'self'; "
-                    "script-src 'self'; object-src 'none'; base-uri 'none'; "
-                    "frame-ancestors 'none'",
+                    content_security_policy or (
+                        "default-src 'self'; img-src 'self'; style-src 'self'; "
+                        "script-src 'self'; object-src 'none'; base-uri 'none'; "
+                        "frame-ancestors 'none'"
+                    ),
                 )
                 self.send_header("Referrer-Policy", "no-referrer")
                 if download_name:
@@ -251,7 +344,13 @@ class TutorWebApp:
                     elif parsed.path == "/api/question":
                         split = params.get("split", [""])[0]
                         item_id = params.get("item_id", [""])[0]
-                        item = runner.load_question(app.root, split, item_id)
+                        item = runner.load_question(
+                            app.root, split, item_id, data_source="final"
+                        )
+                        app.generate_inspection(split, item_id)
+                        item["inspection_url"] = (
+                            f"/api/inspection/{split}/{item_id}"
+                        )
                         image_query = parse_qs(parsed.query)
                         item["image_url"] = (
                             "/api/image?"
@@ -264,11 +363,58 @@ class TutorWebApp:
                     elif parsed.path == "/api/image":
                         split = params.get("split", [""])[0]
                         item_id = params.get("item_id", [""])[0]
-                        item = runner.load_question(app.root, split, item_id)
+                        item = runner.load_question(
+                            app.root, split, item_id, data_source="final"
+                        )
                         content = Path(item["image_path"]).read_bytes()
                         content_type = mimetypes.guess_type(item["image_path"])[0]
                         self.send_bytes(
                             200, content, content_type or "application/octet-stream"
+                        )
+                    elif parsed.path.startswith("/api/inspection/"):
+                        parts = parsed.path.strip("/").split("/")
+                        if len(parts) != 4:
+                            self.send_json(404, {"error": "Inspection page not found."})
+                            return
+                        _, _, split, item_id = parts
+                        if (split not in runner.SPLITS
+                                or not re.fullmatch(rf"{re.escape(split)}_\d{{6}}", item_id)):
+                            self.send_json(404, {"error": "Inspection page not found."})
+                            return
+                        runner.load_question(
+                            app.root, split, item_id, data_source="final"
+                        )
+                        inspection_page = (
+                            app.root / "outputs/inspection" / f"{item_id}.html"
+                        ).resolve()
+                        if not inspection_page.is_relative_to(
+                                (app.root / "outputs/inspection").resolve()):
+                            raise ValueError("Invalid inspection page path.")
+                        content = inspection_page.read_text(encoding="utf-8")
+                        image_path = (
+                            app.root / "data/processed/scienceqa/images"
+                            / f"{item_id}.png"
+                        )
+                        relative_image = Path(
+                            os.path.relpath(image_path, inspection_page.parent)
+                        ).as_posix().replace(" ", "%20")
+                        image_url = (
+                            "/api/image?"
+                            + urlencode({"split": split, "item_id": item_id})
+                        )
+                        content = content.replace(
+                            html.escape(relative_image, quote=True),
+                            html.escape(image_url, quote=True),
+                        )
+                        self.send_bytes(
+                            200,
+                            content.encode("utf-8"),
+                            "text/html; charset=utf-8",
+                            content_security_policy=(
+                                "default-src 'none'; img-src 'self'; "
+                                "style-src 'unsafe-inline'; object-src 'none'; "
+                                "base-uri 'none'; frame-ancestors 'self'"
+                            ),
                         )
                     elif parsed.path.startswith("/api/jobs/"):
                         job_id = parsed.path.rsplit("/", 1)[-1]
@@ -311,7 +457,8 @@ class TutorWebApp:
                 )
 
             def do_POST(self):
-                if urlparse(self.path).path != "/api/jobs":
+                request_path = urlparse(self.path).path
+                if request_path != "/api/jobs":
                     self.send_json(404, {"error": "Not found."})
                     return
                 try:
@@ -352,6 +499,7 @@ def main(argv=None):
     if args.host not in ("127.0.0.1", "localhost"):
         parser.error("The tutor UI only supports localhost for safety.")
 
+    ensure_data_ready(ROOT)
     app = TutorWebApp(model_path=args.model_path)
     server = ThreadingHTTPServer((args.host, args.port), app.handler())
     url = f"http://{args.host}:{server.server_port}"

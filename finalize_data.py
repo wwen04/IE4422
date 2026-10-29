@@ -11,6 +11,11 @@ import shutil
 ROOT = Path(__file__).resolve().parent
 SPLITS = ("train", "validation", "test")
 LABELS = ("required", "helpful_optional", "incidental", "unclear")
+DERIVED_SOURCE_FILES = {
+    "reports/scienceqa/integrity_audit.json",
+    *(f"manifests/scienceqa/{split}_{kind}_ids.json"
+      for split in SPLITS for kind in ("candidate", "valid")),
+}
 
 
 def read_jsonl(path):
@@ -18,7 +23,10 @@ def read_jsonl(path):
 
 
 def sha256(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    content = path.read_bytes()
+    if path.suffix.lower() in {".csv", ".json", ".jsonl", ".md", ".py", ".txt"}:
+        content = content.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(content).hexdigest()
 
 
 def row_digest(row):
@@ -51,9 +59,15 @@ def finalize(root=ROOT, check_only=False):
     annotation_path = review_root / "annotations.jsonl"
     provenance = json.loads((review_root / "audit_manifest.json").read_text(encoding="utf-8"))
     for relative, expected in provenance["source_files_sha256"].items():
+        if relative in DERIVED_SOURCE_FILES:
+            continue
         source = (root / relative).resolve()
         if not source.is_relative_to(root) or sha256(source) != expected:
             raise ValueError(f"Audited source changed: {relative}. Review it before rebuilding.")
+    integrity_path = root / "reports/scienceqa/integrity_audit.json"
+    integrity = json.loads(integrity_path.read_text(encoding="utf-8"))
+    if integrity.get("source") != provenance["source"]:
+        raise ValueError("Preparation report source differs from the reviewed dataset.")
     annotations = unique_index(read_jsonl(annotation_path), "annotations")
     questions, references = {}, {}
     all_ids = set()
@@ -65,11 +79,19 @@ def finalize(root=ROOT, check_only=False):
         valid = json.loads((root / f"manifests/scienceqa/{split}_valid_ids.json").read_text(encoding="utf-8"))
         if valid != list(public_index):
             raise ValueError(f"Prepared questions and valid manifest differ for {split}")
+        candidate_path = root / f"manifests/scienceqa/{split}_candidate_ids.json"
+        candidates = json.loads(candidate_path.read_text(encoding="utf-8"))
+        if (len(candidates) != len(set(candidates))
+                or not set(valid).issubset(candidates)):
+            raise ValueError(f"Candidate manifest is inconsistent for {split}")
         if set(public_index) != set(references[split]):
             raise ValueError(f"Question/reference IDs differ for {split}")
         if all_ids.intersection(public_index):
             raise ValueError("An item ID occurs in more than one split")
         all_ids.update(public_index)
+    valid_counts = {split: len(rows) for split, rows in questions.items()}
+    if integrity.get("valid_counts") != valid_counts:
+        raise ValueError("Preparation report counts differ from the prepared questions.")
     if set(annotations) != all_ids:
         missing = sorted(all_ids - set(annotations))
         extra = sorted(set(annotations) - all_ids)
@@ -109,7 +131,6 @@ def finalize(root=ROOT, check_only=False):
         "limitations": provenance["limitations"],
     }
     # Reuse the existing pixel/text audit without treating shared diagrams as identical questions.
-    integrity = json.loads((root / "reports/scienceqa/integrity_audit.json").read_text(encoding="utf-8"))
     keep = {key for ids in final_ids.values() for key in ids}
     for key in ("cross_split_identical_pixels", "cross_split_identical_problem_text", "cross_split_identical_public_input"):
         groups = [[member for member in group if member["item_id"] in keep] for group in integrity.get(key, [])]

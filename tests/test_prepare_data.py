@@ -169,18 +169,28 @@ class DataPreparationTests(unittest.TestCase):
             dataset.cache_files = [{"filename": str(ROOT / "cache/pinned-release/data.arrow")}]
             dataset.cast_column.return_value = dataset
             datasets[split] = dataset
-        with patch.dict(os.environ), patch("datasets.load_dataset", return_value=datasets):
-            self.assertEqual(set(load_scienceqa(config, offline=True)), set(SPLITS))
-            datasets["train"].cache_files = [{"filename": str(ROOT / "cache/wrong-release/data.arrow")}]
-            with self.assertRaisesRegex(ValueError, "revision differs"):
-                load_scienceqa(config, offline=True)
-            datasets["train"].cache_files = [{"filename": str(ROOT / "cache/pinned-release/data.arrow")}]
-            datasets["train"].column_names.remove("image")
-            with self.assertRaisesRegex(ValueError, "Missing columns"):
-                load_scienceqa(config, offline=True)
-            del datasets["test"]
-            with self.assertRaisesRegex(ValueError, "Expected splits"):
-                load_scienceqa(config, offline=True)
+        local_app_data = ROOT / "short-user-cache"
+        with patch.dict(os.environ, {"LOCALAPPDATA": str(local_app_data)}):
+            os.environ.pop("HF_DATASETS_CACHE", None)
+            with patch("datasets.load_dataset", return_value=datasets) as load_dataset:
+                self.assertEqual(set(load_scienceqa(config, offline=True)), set(SPLITS))
+                cache_dir = local_app_data / "IE4422" / "datasets"
+                self.assertEqual(os.environ["HF_DATASETS_CACHE"], str(cache_dir))
+                load_dataset.assert_called_once_with(
+                    config["dataset_id"],
+                    revision=config["dataset_revision"],
+                    cache_dir=str(cache_dir),
+                )
+                datasets["train"].cache_files = [{"filename": str(ROOT / "cache/wrong-release/data.arrow")}]
+                with self.assertRaisesRegex(ValueError, "revision differs"):
+                    load_scienceqa(config, offline=True)
+                datasets["train"].cache_files = [{"filename": str(ROOT / "cache/pinned-release/data.arrow")}]
+                datasets["train"].column_names.remove("image")
+                with self.assertRaisesRegex(ValueError, "Missing columns"):
+                    load_scienceqa(config, offline=True)
+                del datasets["test"]
+                with self.assertRaisesRegex(ValueError, "Expected splits"):
+                    load_scienceqa(config, offline=True)
 
 
 if __name__ == "__main__":

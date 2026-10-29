@@ -35,7 +35,7 @@ We use only Hugging Face's [`derek-thomas/ScienceQA`](https://huggingface.co/dat
 
 After cloning the repository, each teammate creates their own environment, runs that install command, then runs `prepare_data.py` once with internet access. This recreates their ignored local dataset and the shared manifests/reports. Later runs reuse the download cache; run preparation again when the source revision or filters change. The final command above runs the optional verification tests.
 
-The first run downloads approximately 626 MB of Parquet files containing text and image bytes. Allow a few GB for the downloaded files, loading cache and exported candidates. No account/token is required for this public dataset. To reuse the pinned cache without network access:
+The first run downloads approximately 626 MB of Parquet files containing text and image bytes. Allow a few GB for the downloaded files, loading cache and exported candidates. No account/token is required for this public dataset. The Hub download cache is stored under `data/cache/huggingface`; the processed Datasets cache is stored under `%LOCALAPPDATA%\IE4422\datasets` on Windows (or `~/.cache/IE4422/datasets` elsewhere) to avoid Windows path-length failures. Set `HF_DATASETS_CACHE` before running to use a different processed-cache location. To reuse the pinned cache without network access:
 
 ```powershell
 .\.venv\Scripts\python prepare_data.py --offline
@@ -101,9 +101,9 @@ After installing the requirements and preparing ScienceQA, start the local brows
 .\.venv\Scripts\python ui_server.py
 ```
 
-The app opens at `http://127.0.0.1:8765`. It lets you choose a prepared question, view its image and choices, and select a hint level. Choose **I'm stuck — give me a hint** without entering an answer, or submit a choice and explanation with **Check my answer** to get feedback or a follow-up hint. **Load demo response** fills clearly marked example inputs. Model outputs are experimental and may be incorrect; they are not a formal assessment. Each completed run is saved under `outputs/`. Stop the local server with Ctrl+C.
+The app opens at `http://127.0.0.1:8765`. Before starting the server, startup checks that prepared question/reference exports, valid-ID manifests and the integrity report exist; if any are missing, it runs `prepare_data.py`. It then runs `finalize_data.py` to validate the saved visual-need audit and rebuild the final selection. The UI displays only finalized questions marked as requiring visual evidence. When a question is selected, the UI runs `inspect_question.py` for that item. **Show inspection report** optionally displays the generated report inside the UI; it includes the audit rationale and answer/reference material, so it stays hidden unless explicitly opened. The first preparation needs internet access to download ScienceQA; later runs use the local caches. If preparation or finalization fails, startup stops and reports the error instead of opening an incomplete UI. Choose **I'm stuck — give me a hint** without entering an answer, or submit a choice and explanation with **Check my answer** to get feedback or a follow-up hint. **Load demo response** fills clearly marked example inputs. Model outputs are experimental and may be incorrect; they are not a formal assessment. Each completed run is saved under `outputs/`. Stop the local server with Ctrl+C.
 
-The server binds to localhost only and uses Python's standard library; it adds no web framework dependency. If the dataset has not been prepared, run `prepare_data.py` first. Tutor generation still requires the NVIDIA CUDA setup described above.
+The server binds to localhost only and uses Python's standard library; it adds no web framework dependency. Tutor generation still requires the NVIDIA CUDA setup described above.
 
 For custom diagrams, the optional root entry points are:
 
@@ -140,7 +140,7 @@ requirements.txt / requirements-lock.txt shared environment and constraints
 notebooks/                              Colab notebook, source ZIP and helpers
 configs/ / tests/ / docs/               configuration, checks and review guidance
 data/                                    ignored by Git
-  cache/huggingface/                      pinned download and Hugging Face loading cache
+  cache/huggingface/                      Hugging Face Hub download cache
   processed/scienceqa/
     images/train_000042.png               local-ID filenames, original image bytes
     questions/<split>.jsonl               public inputs, one JSON object per line

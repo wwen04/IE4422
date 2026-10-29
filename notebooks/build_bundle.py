@@ -12,7 +12,7 @@ SOURCE_FILES = (
     "README.md", ".gitignore", "prepare_data.py", "qwen_engine.py", "tutor_pipeline.py",
     "run_scienceqa_tutor.py", "run_tutor.py", "inspect_diagram.py",
     "requirements.txt", "requirements-lock.txt", "configs/scienceqa.json",
-    "docs/DATA_REVIEW.md", "docs/COLAB_PLAN.md", "notebooks/README.md", "notebooks/__init__.py",
+    "notebooks/README.md", "notebooks/__init__.py",
     "notebooks/IE4422_Colab.ipynb", "notebooks/colab_config.json",
     "notebooks/colab_support.py", "notebooks/run_demo.py", "notebooks/build_bundle.py",
 )

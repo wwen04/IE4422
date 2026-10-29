@@ -11,6 +11,9 @@ const hintLevel = document.querySelector("#hint-level");
 const hintButton = document.querySelector("#hint-button");
 const checkButton = document.querySelector("#check-button");
 const sampleButton = document.querySelector("#sample-button");
+const inspectionButton = document.querySelector("#inspection-button");
+const inspectionFrame = document.querySelector("#inspection-frame");
+const inspectionMessage = document.querySelector("#inspection-message");
 const setupMessage = document.querySelector("#setup-message");
 const demoNotice = document.querySelector("#demo-notice");
 const errorMessage = document.querySelector("#error-message");
@@ -24,6 +27,7 @@ const stageNames = ["evidence", "assessment", "response"];
 
 let selectedQuestion = null;
 let busy = false;
+let inspectionUrl = null;
 
 function showMessage(element, message) {
   element.textContent = message;
@@ -41,6 +45,7 @@ function updateRunButton() {
   const hasAnswer = document.querySelector('input[name="student-answer"]:checked');
   hintButton.disabled = busy || !selectedQuestion;
   checkButton.disabled = busy || !selectedQuestion || !hasAnswer || !reasoningInput.value.trim();
+  inspectionButton.disabled = !selectedQuestion;
   hintButton.querySelector("span:first-child").textContent =
     busy ? "Tutor is thinking…" : "I'm stuck — give me a hint";
   checkButton.querySelector("span:first-child").textContent =
@@ -58,6 +63,15 @@ function clearResult() {
   feedbackCard.hidden = true;
   errorMessage.hidden = true;
   resultFile.hidden = true;
+}
+
+function resetInspection() {
+  inspectionUrl = null;
+  inspectionFrame.hidden = true;
+  inspectionFrame.removeAttribute("src");
+  inspectionButton.textContent = "Show inspection report";
+  inspectionButton.setAttribute("aria-expanded", "false");
+  showMessage(inspectionMessage, "");
 }
 
 function renderQuestion(item) {
@@ -99,12 +113,15 @@ function renderQuestion(item) {
   questionImage.src = item.image_url;
   questionImage.alt = `Diagram for ${item.item_id}`;
   diagramFrame.hidden = false;
+  resetInspection();
+  inspectionUrl = item.inspection_url || null;
   clearResult();
   updateRunButton();
 }
 
 async function loadQuestionList() {
   selectedQuestion = null;
+  resetInspection();
   hintButton.disabled = true;
   checkButton.disabled = true;
   questionSelect.disabled = true;
@@ -265,6 +282,27 @@ async function runTutor(mode) {
   }
 }
 
+function toggleInspection() {
+  if (!selectedQuestion) return;
+  if (!inspectionFrame.hidden) {
+    inspectionFrame.hidden = true;
+    inspectionButton.textContent = "Show inspection report";
+    inspectionButton.setAttribute("aria-expanded", "false");
+    return;
+  }
+
+  if (!inspectionUrl) {
+    showMessage(inspectionMessage, "The inspection report is not available for this question.");
+    return;
+  }
+
+  inspectionFrame.src = inspectionUrl;
+  inspectionFrame.hidden = false;
+  inspectionButton.textContent = "Hide inspection report";
+  inspectionButton.setAttribute("aria-expanded", "true");
+  updateRunButton();
+}
+
 function loadDemoResponse() {
   const firstOption = document.querySelector('input[name="student-answer"]');
   if (!firstOption) return;
@@ -300,6 +338,7 @@ reasoningInput.addEventListener("input", () => {
   updateRunButton();
 });
 sampleButton.addEventListener("click", loadDemoResponse);
+inspectionButton.addEventListener("click", toggleInspection);
 hintButton.addEventListener("click", () => runTutor("hint"));
 checkButton.addEventListener("click", () => runTutor("check"));
 initialize();

@@ -44,7 +44,7 @@ The inspector uses Python's standard library and needs neither model weights nor
 .\.venv\Scripts\python.exe finalize_data.py
 ```
 
-The first command checks complete coverage, unique IDs, source fingerprints, splits, references and image fingerprints without writing exports. The second applies the saved decisions and writes:
+The first command checks complete coverage, unique IDs, source fingerprints, splits, references and image fingerprints without writing exports. Text-file fingerprints are normalized across LF/CRLF line endings; image fingerprints remain byte-exact. Preparation-generated candidate/valid manifests and the integrity report are checked against the prepared questions, review provenance and split counts rather than trusted by their file hashes. The second command applies the saved decisions and writes:
 
 - `data/final/scienceqa/questions/<split>.jsonl`
 - `data/final/scienceqa/references/<split>.jsonl`

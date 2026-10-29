@@ -38,15 +38,29 @@ def item_id(split, source_index):
     return f"{split}_{source_index:06d}"
 
 
+def datasets_cache_dir():
+    configured = os.environ.get("HF_DATASETS_CACHE")
+    if configured:
+        return Path(configured).expanduser().resolve()
+    cache_root = Path(os.environ.get("LOCALAPPDATA", Path.home() / ".cache"))
+    return cache_root / "IE4422" / "datasets"
+
+
 def load_scienceqa(config, offline):
     os.environ["HF_HOME"] = str(ROOT / "data/cache/huggingface")
+    cache_dir = datasets_cache_dir()
+    os.environ["HF_DATASETS_CACHE"] = str(cache_dir)
     if offline:
         os.environ["HF_HUB_OFFLINE"] = "1"
         os.environ["HF_DATASETS_OFFLINE"] = "1"
     # Import after setting cache/offline options: libraries read environment settings.
     from datasets import Image as DatasetImage, load_dataset
 
-    datasets = load_dataset(config["dataset_id"], revision=config["dataset_revision"])
+    datasets = load_dataset(
+        config["dataset_id"],
+        revision=config["dataset_revision"],
+        cache_dir=str(cache_dir),
+    )
     if set(datasets) != set(SPLITS):
         raise ValueError(f"Expected splits {SPLITS}; received {tuple(datasets)}")
     required_fields = set(TEXT_FIELDS) | {"image", "choices", "answer"}

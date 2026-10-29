@@ -86,6 +86,27 @@
           </figure>
         </div>
 
+        <section class="inspection-section" aria-label="Optional question inspection">
+          <div class="section-title-row">
+            <div>
+              <div class="eyebrow">OPTIONAL / QUESTION INSPECTION</div>
+              <p class="inspection-note">The report includes the saved visual-audit decision and reference answer, lecture, and solution.</p>
+            </div>
+            <button id="inspection-button" class="text-button inspection-button" type="button" disabled>
+              Show inspection report
+            </button>
+          </div>
+          <div id="inspection-message" class="notice" role="status" hidden></div>
+          <iframe
+            id="inspection-frame"
+            class="inspection-frame"
+            title="Question inspection report"
+            sandbox="allow-same-origin"
+            referrerpolicy="no-referrer"
+            hidden
+          ></iframe>
+        </section>
+
         <div class="response-section">
           <div class="section-title-row">
             <div>

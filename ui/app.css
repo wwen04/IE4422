@@ -124,6 +124,11 @@ select:focus, textarea:focus { border-color: #80a58c; box-shadow: 0 0 0 3px rgba
 select:disabled { color: #9ba49d; background: #f8f9f7; }
 
 .question-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(155px, .43fr); gap: 18px; margin-top: 17px; padding: 20px; border: 1px solid #edf0ea; border-radius: 11px; background: #fbfcfa; }
+.inspection-section { margin-top: 12px; padding: 13px 15px; border: 1px solid #edf0ea; border-radius: 10px; background: #fff; }
+.inspection-section .section-title-row { align-items: center; }
+.inspection-note { max-width: 500px; margin: 5px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.inspection-frame { display: block; width: 100%; height: 620px; margin-top: 12px; border: 1px solid var(--line); border-radius: 8px; background: #f7f8fb; }
+.inspection-button:disabled { color: #a7b5aa; cursor: not-allowed; }
 .question-kicker { color: var(--soft); font-size: 9px; }
 .question-copy h3 { margin: 8px 0 10px; font-size: 16px; line-height: 1.48; letter-spacing: -.25px; }
 .context-text { margin: 0 0 13px; color: var(--muted); font-size: 11px; line-height: 1.55; }

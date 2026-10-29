@@ -65,7 +65,7 @@
     "grade7": 404,
     "grade8": 601
   },
-  "annotations_sha256": "dc938a491b0a6f96a1d7211b100d513945ed1533fb8bc2e227822e4c968e33fc",
+  "annotations_sha256": "ef7dfdc8ff59352cf9d719f1f453b0a17587b97416b43786ae81ee738b231b9e",
   "source_files_sha256": {
     "configs/scienceqa.json": "5db980e48cb048077ab2fb1fa13ef45e6e746a68ad477a072aded36794eadb21",
     "reports/scienceqa/integrity_audit.json": "9519873238d391647246bfc4ecb53d3a4d09a6dcadc1d334e1da9b0aa2f97754",

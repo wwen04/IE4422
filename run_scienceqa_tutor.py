@@ -15,13 +15,23 @@ ROOT = Path(__file__).resolve().parent
 SPLITS = ("train", "validation", "test")
 
 
-def load_question(root, split, question_id):
+def dataset_root(root, data_source):
+    if data_source not in ("processed", "final"):
+        raise ValueError(f"Unknown data source: {data_source}")
+    return Path(root) / "data" / data_source / "scienceqa"
+
+
+def load_question(root, split, question_id, data_source="processed"):
     """Read only public questions; never open the reference-answer exports."""
     if split not in SPLITS:
         raise ValueError(f"Unknown split: {split}")
-    source = root / "data/processed/scienceqa/questions" / f"{split}.jsonl"
+    root = Path(root).resolve()
+    source = dataset_root(root, data_source) / "questions" / f"{split}.jsonl"
     if not source.is_file():
-        raise FileNotFoundError(f"Missing prepared questions: {source}. Run prepare_data.py first.")
+        command = "prepare_data.py" if data_source == "processed" else "ui_server.py"
+        raise FileNotFoundError(
+            f"Missing {data_source} questions: {source}. Run {command} first."
+        )
     with source.open(encoding="utf-8") as stream:
         for line in stream:
             if not line.strip():
@@ -46,14 +56,16 @@ def load_question(root, split, question_id):
     raise ValueError(f"Question {question_id!r} was not found in the prepared {split} split")
 
 
-def load_reference(root, split, question_id):
+def load_reference(root, split, question_id, data_source="processed"):
     """Load answer-key material for checking only after a student submits."""
     if split not in SPLITS:
         raise ValueError(f"Unknown split: {split}")
-    source = root / "data/processed/scienceqa/references" / f"{split}.jsonl"
+    root = Path(root).resolve()
+    source = dataset_root(root, data_source) / "references" / f"{split}.jsonl"
     if not source.is_file():
         raise FileNotFoundError(
-            f"Missing answer references: {source}. Run prepare_data.py first."
+            f"Missing {data_source} answer references: {source}. "
+            f"Run {'prepare_data.py' if data_source == 'processed' else 'ui_server.py'} first."
         )
     with source.open(encoding="utf-8") as stream:
         for line in stream:

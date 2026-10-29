@@ -1,5 +1,7 @@
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import threading
 import unittest
@@ -10,7 +12,7 @@ from urllib.request import Request, urlopen
 from http.server import ThreadingHTTPServer
 
 import run_scienceqa_tutor as runner
-from ui_server import TutorWebApp
+from ui_server import TutorWebApp, ensure_data_prepared, ensure_data_ready, main
 
 
 class TutorWebAppTests(unittest.TestCase):
@@ -18,9 +20,9 @@ class TutorWebAppTests(unittest.TestCase):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
-        self.questions_dir = self.root / "data/processed/scienceqa/questions"
+        self.questions_dir = self.root / "data/final/scienceqa/questions"
         self.questions_dir.mkdir(parents=True)
-        reference_dir = self.root / "data/processed/scienceqa/references"
+        reference_dir = self.root / "data/final/scienceqa/references"
         reference_dir.mkdir(parents=True)
         (reference_dir / "validation.jsonl").write_text(
             json.dumps({
@@ -31,7 +33,7 @@ class TutorWebAppTests(unittest.TestCase):
             }) + "\n",
             encoding="utf-8",
         )
-        image_dir = self.root / "data/images"
+        image_dir = self.root / "data/final/scienceqa/images"
         image_dir.mkdir(parents=True)
         (image_dir / "example.png").write_bytes(b"test-image")
         self.item = {
@@ -40,12 +42,25 @@ class TutorWebAppTests(unittest.TestCase):
             "question": "What does this diagram show?",
             "context": "Use the labels.",
             "choices": [{"id": "A", "text": "A sample choice"}],
-            "image_path": "data/images/example.png",
+            "image_path": "data/final/scienceqa/images/example.png",
             "gold_option_id": "SECRET ANSWER",
             "solution": "SECRET SOLUTION",
         }
         (self.questions_dir / "validation.jsonl").write_text(
             json.dumps(self.item) + "\n", encoding="utf-8"
+        )
+        (self.root / "inspect_question.py").write_text(
+            "import sys\n"
+            "from pathlib import Path\n"
+            "output = Path(sys.argv[sys.argv.index('--output') + 1])\n"
+            "output.parent.mkdir(parents=True, exist_ok=True)\n"
+            "output.write_text('# inspection\\n', encoding='utf-8')\n"
+            "output.with_suffix('.html').write_text("
+            "\"<!doctype html><html><body>"
+            "<img src='../../data/processed/scienceqa/images/"
+            "validation_000001.png'>"
+            "<p>Reference answer: A</p></body></html>\", encoding='utf-8')\n",
+            encoding="utf-8",
         )
         self.app = TutorWebApp(self.root)
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), self.app.handler())
@@ -70,10 +85,103 @@ class TutorWebAppTests(unittest.TestCase):
         with urlopen(request, timeout=5) as response:
             return response.status, response.headers, response.read()
 
+    def test_prepare_data_runs_only_when_exports_are_missing(self):
+        script = self.root / "prepare_data.py"
+        script.write_text("# test script\n", encoding="utf-8")
+        with patch("ui_server.subprocess.run") as run:
+            ensure_data_prepared(self.root)
+        run.assert_called_once_with(
+            [sys.executable, str(script)],
+            cwd=self.root,
+            check=True,
+        )
+
+        for directory in ("questions", "references"):
+            target = self.root / "data/processed/scienceqa" / directory
+            target.mkdir(parents=True, exist_ok=True)
+            for split in runner.SPLITS:
+                (target / f"{split}.jsonl").write_text("{}\n", encoding="utf-8")
+        for split in runner.SPLITS:
+            target = self.root / f"manifests/scienceqa/{split}_valid_ids.json"
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("[]\n", encoding="utf-8")
+        report = self.root / "reports/scienceqa/integrity_audit.json"
+        report.parent.mkdir(parents=True, exist_ok=True)
+        report.write_text("{}\n", encoding="utf-8")
+        with patch("ui_server.subprocess.run") as run:
+            ensure_data_prepared(self.root)
+        run.assert_not_called()
+
+    def test_startup_runs_preparation_then_finalization(self):
+        (self.root / "prepare_data.py").write_text("# preparation\n", encoding="utf-8")
+        (self.root / "finalize_data.py").write_text("# finalization\n", encoding="utf-8")
+        calls = []
+
+        def run_script(command, cwd, check):
+            script_name = Path(command[1]).name
+            calls.append(script_name)
+            if script_name == "prepare_data.py":
+                for directory in ("questions", "references"):
+                    target = self.root / "data/processed/scienceqa" / directory
+                    target.mkdir(parents=True, exist_ok=True)
+                    for split in runner.SPLITS:
+                        (target / f"{split}.jsonl").write_text("", encoding="utf-8")
+                for split in runner.SPLITS:
+                    target = self.root / f"manifests/scienceqa/{split}_valid_ids.json"
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_text("[]\n", encoding="utf-8")
+                report = self.root / "reports/scienceqa/integrity_audit.json"
+                report.parent.mkdir(parents=True, exist_ok=True)
+                report.write_text("{}\n", encoding="utf-8")
+            elif script_name == "finalize_data.py":
+                output = self.root / "data/final/scienceqa"
+                for directory in ("questions", "references"):
+                    target = output / directory
+                    target.mkdir(parents=True, exist_ok=True)
+                    for split in runner.SPLITS:
+                        (target / f"{split}.jsonl").write_text("", encoding="utf-8")
+                for split in runner.SPLITS:
+                    target = self.root / f"manifests/scienceqa/{split}_final_ids.json"
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_text("[]\n", encoding="utf-8")
+                (output / "selection.json").write_text("{}\n", encoding="utf-8")
+            else:
+                self.fail(f"Unexpected startup script: {script_name}")
+
+        with patch("ui_server.subprocess.run", side_effect=run_script) as run:
+            ensure_data_ready(self.root)
+        self.assertEqual(calls, ["prepare_data.py", "finalize_data.py"])
+        self.assertEqual(run.call_count, 2)
+        self.assertTrue(all(call.kwargs["check"] for call in run.call_args_list))
+
+    def test_main_prepares_data_before_starting_ui_server(self):
+        events = []
+
+        class FakeServer:
+            server_port = 8765
+
+            def __init__(self, address, handler):
+                events.append("server")
+
+            def serve_forever(self):
+                events.append("serve")
+                raise KeyboardInterrupt
+
+            def server_close(self):
+                events.append("close")
+
+        with patch("ui_server.ensure_data_ready",
+                   side_effect=lambda root: events.append("prepare")), \
+                patch("ui_server.ThreadingHTTPServer", FakeServer), \
+                patch("ui_server.webbrowser.open"):
+            main(["--no-browser"])
+        self.assertEqual(events, ["prepare", "server", "serve", "close"])
+
     def test_ui_and_question_routes_only_expose_public_question_fields(self):
         status, _, page = self.request("/")
         self.assertEqual(status, 200)
         self.assertIn(b"science hint studio", page.lower())
+        self.assertIn(b"Show inspection report", page)
 
         _, _, response = self.request("/api/questions?split=validation")
         self.assertNotIn(b"SECRET", response)
@@ -93,6 +201,32 @@ class TutorWebAppTests(unittest.TestCase):
         _, headers, image = self.request(question["image_url"])
         self.assertEqual(headers.get_content_type(), "image/png")
         self.assertEqual(image, b"test-image")
+
+    def test_inspection_runs_when_question_is_selected_and_display_is_optional(self):
+        with patch("ui_server.subprocess.run", wraps=subprocess.run) as run:
+            status, _, response = self.request(
+                "/api/question?split=validation&item_id=validation_000001"
+            )
+            self.assertEqual(status, 200)
+            question = json.loads(response)
+            self.assertNotIn("SECRET", response.decode("utf-8"))
+            page_url = question["inspection_url"]
+            self.assertEqual(
+                run.call_args.args[0][1],
+                str(self.root / "inspect_question.py"),
+            )
+            status, headers, page = self.request(page_url)
+
+        self.assertEqual(status, 200)
+        self.assertEqual(headers.get_content_type(), "text/html")
+        self.assertEqual(
+            headers.get("Content-Security-Policy"),
+            "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; "
+            "object-src 'none'; base-uri 'none'; frame-ancestors 'self'",
+        )
+        self.assertIn(b"/api/image?split=validation&amp;item_id=validation_000001", page)
+        self.assertIn(b"Reference answer: A", page)
+        self.assertEqual(run.call_count, 1)
 
     def test_run_validation_rejects_missing_student_response(self):
         request = Request(
@@ -231,7 +365,7 @@ class TutorWebAppTests(unittest.TestCase):
 
         self.assertEqual(job["status"], "complete")
         load_reference.assert_called_once_with(
-            self.root, "validation", self.item["item_id"]
+            self.root, "validation", self.item["item_id"], data_source="final"
         )
         self.assertEqual(checked.call_args.args[2]["gold_option_id"], "A")
 
