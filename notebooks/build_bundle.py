@@ -10,11 +10,14 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_FILES = (
     "README.md", ".gitignore", "prepare_data.py", "qwen_engine.py", "tutor_pipeline.py",
-    "run_scienceqa_tutor.py", "run_tutor.py", "inspect_diagram.py",
+    "run_scienceqa_tutor.py", "run_tutor.py", "inspect_diagram.py", "finalize_data.py", "inspect_question.py",
     "requirements.txt", "requirements-lock.txt", "configs/scienceqa.json",
     "notebooks/README.md", "notebooks/__init__.py",
     "notebooks/IE4422_Colab.ipynb", "notebooks/colab_config.json",
     "notebooks/colab_support.py", "notebooks/run_demo.py", "notebooks/build_bundle.py",
+    "reviews/scienceqa/README.md", "reviews/scienceqa/annotations.jsonl",
+    "reviews/scienceqa/audit_manifest.json", "reports/scienceqa/visual_audit.md",
+    "ui_server.py", "ui/index.html", "ui/app.js", "ui/app.css",
 )
 
 

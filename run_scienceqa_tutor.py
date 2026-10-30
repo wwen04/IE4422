@@ -1,4 +1,4 @@
-"""Run the local Qwen tutor on a public question exported by prepare_data.py."""
+"""Run the local Qwen tutor on an audited final ScienceQA question."""
 
 import argparse
 import json
@@ -21,51 +21,74 @@ def dataset_root(root, data_source):
     return Path(root) / "data" / data_source / "scienceqa"
 
 
-def load_question(root, split, question_id, data_source="processed"):
-    """Read only public questions; never open the reference-answer exports."""
+def load_final_ids(root, split):
+    if split not in SPLITS:
+        raise ValueError(f"Unknown split: {split}")
+    path = Path(root) / f"manifests/scienceqa/{split}_final_ids.json"
+    if not path.is_file():
+        raise FileNotFoundError(f"Missing audited selection: {path}. Run finalize_data.py first.")
+    ids = json.loads(path.read_text(encoding="utf-8"))
+    if (not isinstance(ids, list) or any(not isinstance(key, str) or not key.startswith(f"{split}_") for key in ids)
+            or len(ids) != len(set(ids))):
+        raise ValueError(f"Invalid final-ID manifest for {split}")
+    return ids
+
+
+def load_public_questions(root, split, data_source="final"):
+    """Load public records, requiring final exports to match the audited IDs."""
     if split not in SPLITS:
         raise ValueError(f"Unknown split: {split}")
     root = Path(root).resolve()
     source = dataset_root(root, data_source) / "questions" / f"{split}.jsonl"
     if not source.is_file():
-        command = "prepare_data.py" if data_source == "processed" else "ui_server.py"
+        command = "prepare_data.py" if data_source == "processed" else "prepare_data.py then finalize_data.py"
         raise FileNotFoundError(
             f"Missing {data_source} questions: {source}. Run {command} first."
         )
-    with source.open(encoding="utf-8") as stream:
-        for line in stream:
-            if not line.strip():
-                continue
-            row = json.loads(line)
-            if row["item_id"] == question_id:
-                if row["split"] != split:
-                    raise ValueError("Question split does not match the requested split")
-                image = (root / row["image_path"]).resolve()
-                if not image.is_relative_to(root.resolve()):
-                    raise ValueError("Prepared image path must stay inside the repository")
-                if not image.is_file():
-                    raise FileNotFoundError(f"Missing prepared image: {image}")
-                # Explicitly select public fields even if extra fields are present.
-                return {
-                    "item_id": row["item_id"], "split": row["split"],
-                    "question": row["question"], "context": row["context"],
-                    "choices": [{"id": choice["id"], "text": choice["text"]}
-                                for choice in row["choices"]],
-                    "image_path": str(image),
-                }
-    raise ValueError(f"Question {question_id!r} was not found in the prepared {split} split")
+    rows = [json.loads(line) for line in source.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if any(row["split"] != split for row in rows):
+        raise ValueError("Question split does not match the requested split")
+    if data_source == "final" and [row["item_id"] for row in rows] != load_final_ids(root, split):
+        raise ValueError(f"Final question exports differ from the audited {split} manifest. Run finalize_data.py.")
+    return rows
 
 
-def load_reference(root, split, question_id, data_source="processed"):
+def load_question(root, split, question_id, data_source="final"):
+    """Read only public questions; never open the reference-answer exports."""
+    root = Path(root).resolve()
+    rows = load_public_questions(root, split, data_source)
+    for row in rows:
+        if row["item_id"] == question_id:
+            image = (root / row["image_path"]).resolve()
+            if not image.is_relative_to(root):
+                raise ValueError("Prepared image path must stay inside the repository")
+            if data_source == "final" and not image.is_relative_to((dataset_root(root, "final") / "images").resolve()):
+                raise ValueError("Final questions must use audited images under data/final/scienceqa/images")
+            if not image.is_file():
+                raise FileNotFoundError(f"Missing {data_source} image: {image}")
+            # Explicitly select public fields even if extra fields are present.
+            return {
+                "item_id": row["item_id"], "split": row["split"],
+                "question": row["question"], "context": row["context"],
+                "choices": [{"id": choice["id"], "text": choice["text"]}
+                            for choice in row["choices"]],
+                "image_path": str(image),
+            }
+    raise ValueError(f"Question {question_id!r} was not found in the {data_source} {split} split")
+
+
+def load_reference(root, split, question_id, data_source="final"):
     """Load answer-key material for checking only after a student submits."""
     if split not in SPLITS:
         raise ValueError(f"Unknown split: {split}")
     root = Path(root).resolve()
+    if data_source == "final" and question_id not in load_final_ids(root, split):
+        raise ValueError(f"Question {question_id!r} is not in the audited {split} selection")
     source = dataset_root(root, data_source) / "references" / f"{split}.jsonl"
     if not source.is_file():
         raise FileNotFoundError(
             f"Missing {data_source} answer references: {source}. "
-            f"Run {'prepare_data.py' if data_source == 'processed' else 'ui_server.py'} first."
+            f"Run {'prepare_data.py' if data_source == 'processed' else 'finalize_data.py'} first."
         )
     with source.open(encoding="utf-8") as stream:
         for line in stream:
@@ -137,7 +160,7 @@ def run_checked_question(tutor, item, reference, student_answer_id,
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--split", choices=SPLITS, default="validation")
-    parser.add_argument("--item-id", required=True, help="Prepared ID, e.g. validation_000003")
+    parser.add_argument("--item-id", required=True, help="Audited final ID, e.g. validation_000008")
     parser.add_argument("--answer", required=True, help="Student response, not a reference answer")
     parser.add_argument("--explanation", required=True, help="Student's own reasoning")
     parser.add_argument("--hint-level", type=int, choices=(1, 2, 3), default=1)

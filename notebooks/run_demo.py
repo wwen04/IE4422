@@ -47,7 +47,7 @@ def main():
     attempt = read_json(args.attempt)
     if not attempt["answer"].strip() or not attempt["explanation"].strip():
         parser.error("Provide the student's actual answer and explanation before generation.")
-    item = load_question(ROOT, args.split, args.item_id)
+    item = load_question(ROOT, args.split, args.item_id, data_source="final")
     config = read_json(ROOT / "notebooks/colab_config.json")
     model_folder = ROOT / "models" / config["model_revision"]
     if not complete_checkpoint(model_folder, config):
@@ -63,6 +63,7 @@ def main():
                 ("torch", "torchvision", "transformers", "datasets", "huggingface-hub", "bitsandbytes")}
     record = {"run_id": run_id, "model": config, "packages": versions,
               "dataset": read_json(ROOT / "configs/scienceqa.json"),
+              "audited_selection": read_json(ROOT / "data/final/scienceqa/selection.json"),
               "bundle": read_json(ROOT / "bundle_info.json"),
               "gpu": torch.cuda.get_device_name(0), "cuda": torch.version.cuda,
               "torch_build": torch.__version__,

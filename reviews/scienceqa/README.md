@@ -13,12 +13,12 @@ Categories:
 
 Only `required` is retained. Categories are not numerical confidence scores. Repeated templates can share a rationale; every original ID retains its own decision and source fingerprints. The audit is about eligibility, not whether a language model can guess an answer without seeing an image.
 
-## Inspect any prepared ID
+## Inspect an audited ID
 
 From the repository root:
 
 ```powershell
-.\.venv\Scripts\python.exe inspect_question.py validation_000003 --open
+.\.venv\Scripts\python.exe inspect_question.py validation_000008 --open
 ```
 
 This generates/replaces `outputs/inspection/current_question.md` and a matching `.html` page. `--open` opens the HTML page in your browser. The page shows question, supplied context, ordered choices, full-size image, metadata, saved audit decision and source check. Reference answer, lecture and solution are in a separate expandable section in HTML. These reference fields are for your inspection and are not sent to the tutor.
@@ -35,7 +35,13 @@ Keep multiple inspection pages by choosing a distinct Markdown filename:
 .\.venv\Scripts\python.exe inspect_question.py validation_000008 --output outputs/inspection/planet.md --open
 ```
 
-The inspector uses Python's standard library and needs neither model weights nor a GPU. It always reads the prepared candidates, so excluded IDs remain inspectable. Generated pages are disposable; replacing them never changes the saved audit decisions.
+The inspector uses Python's standard library and needs neither model weights nor a GPU. It defaults to final questions and final images, and checks the final manifest. Excluded IDs remain inspectable through an explicit audit-only option:
+
+```powershell
+.\.venv\Scripts\python.exe inspect_question.py validation_000003 --source processed --open
+```
+
+Use `--source processed --list validation` to list candidates instead of final IDs. Generated pages are disposable; replacing them never changes saved decisions or tutor inputs.
 
 ## Reproduce the final selection
 
@@ -53,7 +59,7 @@ The first command checks complete coverage, unique IDs, source fingerprints, spl
 - `manifests/scienceqa/<split>_final_ids.json`
 - `reports/scienceqa/visual_audit.json` and `.md`
 
-Answers and audit rationale are not added to the final public question records. Original IDs, choices and official splits are preserved. Final image paths point to the final copies. The report includes retained cross-split overlap groups from the existing integrity audit; no duplicate-removal policy is silently applied. The current tutor and browser UI still read `data/processed`; this change does not switch their inputs.
+Answers and audit rationale are not added to the final public question records. Original IDs, choices and official splits are preserved. Final image paths point to the final copies. The report includes retained cross-split overlap groups from the existing integrity audit; no duplicate-removal policy is silently applied. The command-line runner, Python helper, browser tutor, inspector defaults and Colab demo use the final set. They reject missing final data and excluded IDs instead of falling back to candidates. The browser startup and Colab preparation cell run finalization automatically; for the standalone CLI, run it after preparation.
 
 Rerunning `prepare_data.py` on the same source and filters should reproduce the audited inputs. If source bytes, records, filters or manifests change, finalization refuses to silently reuse stale decisions. Review the differences and update the audit before rebuilding. Final manifests and exported questions define membership; leftover images from previous exports do not.
 

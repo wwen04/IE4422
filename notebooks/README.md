@@ -10,7 +10,7 @@ No local GPU, Python installation, GitHub access or Hugging Face account is need
 1. Open [Google Colab](https://colab.research.google.com/) and choose **File → Upload notebook**. Upload `IE4422_Colab.ipynb`.
 2. Choose **Runtime → Change runtime type → GPU** (a T4 is a suitable starting point if offered). Use a current Python 3.12+ runtime. A TPU does not work with this CUDA engine.
 3. Run the notebook cells in order. When prompted, upload the current `IE4422_Source.zip` and approve mounting your own Google Drive. Leave `UPLOAD_NEW_SOURCE=True` when replacing an older bundle.
-4. Leave the default settings for a first run. The notebook creates one project environment, prepares ScienceQA, displays a validation question, and asks for the student's actual response and reasoning.
+4. Leave the default settings for a first run. The notebook creates one project environment, prepares ScienceQA, applies the bundled visual-need audit, displays an audited final validation question, and asks for the student's actual response and reasoning. Only retained IDs and images under `data/final/scienceqa/` are used for generation.
 5. It downloads the pinned Qwen checkpoint, then runs the existing prototype's evidence, diagnosis and three hint levels with one model instance. Completed stages/results are saved under **My Drive/IE4422/runs/**.
 
 The notebook is a launcher; all project jobs use one project environment with access to Colab's existing CUDA PyTorch. Creation uses `--without-pip --system-site-packages`, bypassing the failing `ensurepip` bootstrap in Colab's system Python. Colab's existing pip explicitly targets the project Python through `--python`, so installs go into the project environment without bootstrapping another pip. Project packages install without modifying the notebook kernel, so no kernel restart is needed. Setup checks this pip route before installing dependencies, and displays command output/errors live.
@@ -22,7 +22,7 @@ The profile preserves the actual torch/torchvision wheels and respects all their
 - Dataset: approximately 626 MB on the first fresh preparation. Public questions and evaluation references remain in separate files. Test items are never selected for this demo.
 - Model: approximately 7.5 GB of original weights plus small supporting files. Four-bit quantization happens during model loading; it does not reduce the original download. The model ID and exact revision are in `colab_config.json`.
 - Working files live in Colab's temporary `/content/IE4422` folder. Drive retains a prepared-data ZIP, an optional complete checkpoint folder, and generated results. Allow at least 8 GB free Drive space for model caching, plus space for data/results.
-- On later sessions, the notebook restores matching artifacts from Drive. It checks preparation source/configuration before reusing data and checks the model revision and required files before loading a checkpoint.
+- On later sessions, the notebook restores matching artifacts from Drive. It checks preparation source/configuration, finalization code and saved audit decisions before reusing data. The archive includes processed and final exports; finalization validates the reviewed sources and rebuilds the final set before question selection. It checks the model revision and required files before loading a checkpoint.
 - Set `REBUILD_DATA=True` to repeat full dataset preparation. Set `SAVE_MODEL_TO_DRIVE=False` to download weights to temporary Colab storage each new session. With `USE_DRIVE=False`, results can be downloaded at the end, but temporary files disappear when Colab deletes the runtime.
 - Notebook runtime settings and actual package/GPU versions are recorded with every run. Model loading happens once per generation-cell invocation, with evidence/diagnosis reused for that item's requested hint levels. The worker exits afterwards and releases its model memory. Rerunning generation starts a new model instance and keeps the previous run in a separate directory.
 
@@ -38,6 +38,8 @@ This demonstrates the current exploratory prototype. Its diagnosis uses a studen
 - **Insufficient Drive space:** turn off model caching or free space in your Drive, then rerun the model cell. A partially copied checkpoint is not reused as complete.
 - **Interrupted model download:** rerun the model cell; Hugging Face can reuse completed files. Dataset caches are written only after full preparation.
 - **Source files edited:** rebuild the ZIP so teammates run the updated code, not an older snapshot. Start a fresh Colab runtime when replacing an already uploaded source bundle.
+- **Old prepared-data archive or changed audit:** set `REBUILD_DATA=True` and rerun cell 6 with the latest source ZIP. Candidate-only archives are not accepted as an audited dataset. Downloads can still reuse the local Hugging Face cache in the same runtime.
+- **Question ID excluded by the audit:** choose an ID from `manifests/scienceqa/<split>_final_ids.json`, or leave `ITEM_ID` blank to select the first retained development item. The demo does not fall back to the candidate pool.
 
 From the repository root:
 

@@ -136,22 +136,8 @@ class TutorWebApp:
     def list_questions(self, split):
         if split not in runner.SPLITS:
             raise ValueError(f"Unknown split: {split}")
-        source = runner.dataset_root(self.root, "final") / "questions" / f"{split}.jsonl"
-        if not source.is_file():
-            raise FileNotFoundError(
-                f"Finalized {split} questions are missing. Run ui_server.py first."
-            )
-        questions = []
-        with source.open(encoding="utf-8") as stream:
-            for line in stream:
-                if not line.strip():
-                    continue
-                row = json.loads(line)
-                questions.append({
-                    "item_id": row["item_id"],
-                    "question": row["question"],
-                })
-        return questions
+        return [{"item_id": row["item_id"], "question": row["question"]}
+                for row in runner.load_public_questions(self.root, split)]
 
     def get_tutor(self):
         if self.tutor is None:
@@ -381,7 +367,7 @@ class TutorWebApp:
                                 or not re.fullmatch(rf"{re.escape(split)}_\d{{6}}", item_id)):
                             self.send_json(404, {"error": "Inspection page not found."})
                             return
-                        runner.load_question(
+                        item = runner.load_question(
                             app.root, split, item_id, data_source="final"
                         )
                         inspection_page = (
@@ -391,10 +377,7 @@ class TutorWebApp:
                                 (app.root / "outputs/inspection").resolve()):
                             raise ValueError("Invalid inspection page path.")
                         content = inspection_page.read_text(encoding="utf-8")
-                        image_path = (
-                            app.root / "data/processed/scienceqa/images"
-                            / f"{item_id}.png"
-                        )
+                        image_path = Path(item["image_path"])
                         relative_image = Path(
                             os.path.relpath(image_path, inspection_page.parent)
                         ).as_posix().replace(" ", "%20")

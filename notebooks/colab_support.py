@@ -1,6 +1,7 @@
 """Small setup and storage helpers for the Colab notebook; no tutoring prompts."""
 
 import argparse
+import hashlib
 from importlib import metadata
 import json
 import os
@@ -162,29 +163,37 @@ def setup_environment(root, environment):
                  "print('CUDA:', torch.version.cuda, 'GPU:', torch.cuda.get_device_name(0))"])
 
 
-CACHE_PREFIXES = ("data/processed/scienceqa/", "manifests/scienceqa/", "reports/scienceqa/")
+CACHE_PREFIXES = ("data/processed/scienceqa/", "data/final/scienceqa/",
+                  "manifests/scienceqa/", "reports/scienceqa/")
+AUDIT_SOURCES = ("finalize_data.py", "reviews/scienceqa/annotations.jsonl",
+                 "reviews/scienceqa/audit_manifest.json")
 
 
 def prepared_signature(root):
     root = Path(root)
-    return {"format": 1, "dataset": read_json(root / "configs/scienceqa.json"),
+    return {"format": 2, "dataset": read_json(root / "configs/scienceqa.json"),
             "preparation_source": (root / "prepare_data.py").read_text(encoding="utf-8"),
+            "visual_audit_sha256": {
+                name: hashlib.sha256((root / name).read_text(encoding="utf-8").encode("utf-8")).hexdigest()
+                for name in AUDIT_SOURCES},
             "dependencies": (root / "requirements-lock.txt").read_text(encoding="utf-8")}
 
 
 def prepared_files():
-    files = [f"data/processed/scienceqa/{folder}/{split}.jsonl"
-             for split in ("train", "validation", "test") for folder in ("questions", "references")]
+    files = [f"data/{stage}/scienceqa/{folder}/{split}.jsonl"
+             for stage in ("processed", "final") for split in ("train", "validation", "test")
+             for folder in ("questions", "references")]
     files.extend(f"manifests/scienceqa/{split}_{kind}_ids.json"
-                 for split in ("train", "validation", "test") for kind in ("candidate", "valid"))
-    return files + ["reports/scienceqa/metadata_audit.json", "reports/scienceqa/integrity_audit.json"]
+                 for split in ("train", "validation", "test") for kind in ("candidate", "valid", "final"))
+    return files + ["reports/scienceqa/metadata_audit.json", "reports/scienceqa/integrity_audit.json",
+                    "reports/scienceqa/visual_audit.json", "data/final/scienceqa/selection.json"]
 
 
 def archive_prepared(root, archive):
     root, archive = Path(root), Path(archive)
     for name in prepared_files():
         if not (root / name).is_file():
-            raise FileNotFoundError(f"Run full prepare_data.py before caching; missing {name}")
+            raise FileNotFoundError(f"Run prepare_data.py then finalize_data.py before caching; missing {name}")
     files = sorted(path for prefix in CACHE_PREFIXES for path in (root / prefix).rglob("*")
                    if path.is_file())
     record = {"signature": prepared_signature(root),

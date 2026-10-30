@@ -6,6 +6,7 @@ from pathlib import Path
 import tempfile
 import subprocess
 import sys
+from types import ModuleType
 import unittest
 from unittest.mock import Mock, patch
 import zipfile
@@ -25,14 +26,19 @@ class ColabWorkflowTests(unittest.TestCase):
         (root / "configs").mkdir(parents=True, exist_ok=True)
         support.write_json(root / "configs/scienceqa.json", {"dataset_revision": "fixed"})
         (root / "prepare_data.py").write_text("# preparation\n", encoding="utf-8")
+        for name in support.AUDIT_SOURCES:
+            target = root / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("{}\n", encoding="utf-8")
         (root / "requirements-lock.txt").write_text("datasets==5.1.0\n", encoding="utf-8")
         for name in support.prepared_files():
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("[]\n", encoding="utf-8")
-        image = root / "data/processed/scienceqa/images/example.png"
-        image.parent.mkdir(parents=True)
-        image.write_bytes(b"original image bytes")
+        for stage in ("processed", "final"):
+            image = root / f"data/{stage}/scienceqa/images/example.png"
+            image.parent.mkdir(parents=True)
+            image.write_bytes(b"original image bytes")
 
     def test_prepared_cache_roundtrip_and_stale_source_rejection(self):
         self.fixture(self.root)
@@ -40,15 +46,75 @@ class ColabWorkflowTests(unittest.TestCase):
         support.archive_prepared(self.root, archive)
         target = self.root / "restored"
         (target / "configs").mkdir(parents=True)
-        for name in ("configs/scienceqa.json", "prepare_data.py", "requirements-lock.txt"):
+        for name in ("configs/scienceqa.json", "prepare_data.py", "requirements-lock.txt", *support.AUDIT_SOURCES):
+            (target / name).parent.mkdir(parents=True, exist_ok=True)
             (target / name).write_bytes((self.root / name).read_bytes())
         self.assertTrue(support.restore_prepared(target, archive))
         self.assertEqual((target / "data/processed/scienceqa/images/example.png").read_bytes(),
                          b"original image bytes")
         self.assertTrue((target / "data/processed/scienceqa/references/validation.jsonl").is_file())
+        self.assertEqual((target / "data/final/scienceqa/images/example.png").read_bytes(), b"original image bytes")
+        self.assertTrue((target / "manifests/scienceqa/validation_final_ids.json").is_file())
         (target / "prepare_data.py").write_text("# changed", encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "REBUILD_DATA"):
             support.restore_prepared(target, archive)
+
+    def test_prepared_cache_rejects_changed_audit_decisions(self):
+        self.fixture(self.root)
+        archive = self.root / "prepared.zip"
+        support.archive_prepared(self.root, archive)
+        (self.root / "reviews/scienceqa/annotations.jsonl").write_text('{"changed": true}\n', encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "REBUILD_DATA"):
+            support.restore_prepared(self.root, archive)
+
+    def test_notebook_finalizes_before_caching_and_revalidates_reused_data(self):
+        self.fixture(self.root)
+        support.write_json(self.root / "reports/scienceqa/visual_audit.json", {"final_counts": {}})
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        code = next(cell["source"] for cell in notebook["cells"] if cell["id"] == "prepare-data")
+        events = []
+        namespace = {
+            "WORK": self.root, "PYTHON": Path(sys.executable), "PERSISTENT": None,
+            "REBUILD_DATA": False, "prepared_signature": support.prepared_signature,
+            "prepared_files": support.prepared_files, "read_json": support.read_json,
+            "write_json": support.write_json,
+            "run_visible": lambda command, **kwargs: events.append(command[1]),
+            "archive_prepared": lambda *args: events.append("archive"),
+        }
+        with redirect_stdout(StringIO()):
+            exec(compile(code, "prepare-data", "exec"), namespace)
+            self.assertEqual(events, ["prepare_data.py", "finalize_data.py", "archive"])
+            events.clear()
+            exec(compile(code, "prepare-data", "exec"), namespace)
+        self.assertEqual(events, ["finalize_data.py"])
+
+    def test_notebook_selects_final_ids_and_rejects_excluded_candidates(self):
+        self.fixture(self.root)
+        retained = "validation_000008"
+        excluded = "validation_000003"
+        row = {"item_id": retained, "split": "validation", "question": "Read labels.",
+               "context": "Student passage", "choices": [{"id": "A", "text": "Choice"}],
+               "image_path": "data/final/scienceqa/images/example.png"}
+        (self.root / "data/final/scienceqa/questions/validation.jsonl").write_text(
+            json.dumps(row) + "\n", encoding="utf-8")
+        support.write_json(self.root / "manifests/scienceqa/validation_final_ids.json", [retained])
+        support.write_json(self.root / "manifests/scienceqa/validation_valid_ids.json", [excluded, retained])
+        (self.root / "data/processed/scienceqa/questions/validation.jsonl").write_text(
+            json.dumps({**row, "item_id": excluded}) + "\n", encoding="utf-8")
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        code = next(cell["source"] for cell in notebook["cells"] if cell["id"] == "select-question")
+        display_module = ModuleType("IPython.display")
+        display_module.Image = Mock()
+        display_module.display = Mock()
+        namespace = {"WORK": self.root, "read_json": support.read_json}
+        with patch.dict(sys.modules, {"IPython.display": display_module}), redirect_stdout(StringIO()):
+            exec(compile(code, "select-question", "exec"), namespace)
+            self.assertEqual(namespace["item"]["item_id"], retained)
+            self.assertIn("data/final/", namespace["item"]["image_path"].replace("\\", "/"))
+            # Simulate entering an excluded ID through the notebook's parameter form.
+            excluded_code = code.replace("ITEM_ID = ''", f"ITEM_ID = '{excluded}'")
+            with self.assertRaisesRegex(ValueError, "not found.*final"):
+                exec(compile(excluded_code, "select-question", "exec"), namespace)
 
     def test_missing_preparation_and_unsafe_archives_fail(self):
         with self.assertRaises(FileNotFoundError):
@@ -200,6 +266,8 @@ class ColabWorkflowTests(unittest.TestCase):
         with zipfile.ZipFile(archive) as source:
             names = source.namelist()
             self.assertIn("IE4422/prepare_data.py", names)
+            for required in (*support.AUDIT_SOURCES, "inspect_question.py", "ui_server.py", "ui/app.js"):
+                self.assertIn("IE4422/" + required, names)
             self.assertIn("IE4422/notebooks/run_demo.py", names)
             self.assertEqual(source.read("IE4422/notebooks/IE4422_Colab.ipynb"),
                              (ROOT / "notebooks/IE4422_Colab.ipynb").read_bytes())

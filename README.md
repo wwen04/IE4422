@@ -30,10 +30,11 @@ We use only Hugging Face's [`derek-thomas/ScienceQA`](https://huggingface.co/dat
 
 ```powershell
 .\.venv\Scripts\python prepare_data.py
+.\.venv\Scripts\python finalize_data.py
 .\.venv\Scripts\python -m unittest discover -s tests -v
 ```
 
-After cloning the repository, each teammate creates their own environment, runs that install command, then runs `prepare_data.py` once with internet access. This recreates their ignored local dataset and the shared manifests/reports. Later runs reuse the download cache; run preparation again when the source revision or filters change. The final command above runs the optional verification tests.
+After cloning the repository, each teammate creates their own environment, runs that install command, then runs `prepare_data.py` and `finalize_data.py` in order. Preparation needs internet access the first time; finalization applies the committed audit decisions to produce the dataset used by the tutor. Later runs reuse the download cache. Changes to the source revision or filters require reviewing audit compatibility before finalization. The last command above runs the optional verification tests.
 
 The first run downloads approximately 626 MB of Parquet files containing text and image bytes. Allow a few GB for the downloaded files, loading cache and exported candidates. No account/token is required for this public dataset. The Hub download cache is stored under `data/cache/huggingface`; the processed Datasets cache is stored under `%LOCALAPPDATA%\IE4422\datasets` on Windows (or `~/.cache/IE4422/datasets` elsewhere) to avoid Windows path-length failures. Set `HF_DATASETS_CACHE` before running to use a different processed-cache location. To reuse the pinned cache without network access:
 
@@ -68,12 +69,12 @@ Image presence alone does not establish that a question needs visual reasoning. 
 The separate [visual-need audit](reviews/scienceqa/README.md) records assisted decisions for all 2,075 prepared Grade 7-8 candidates. It leaves preparation outputs intact and exports only image-required rows under `data/final/scienceqa/`, with additional `<split>_final_ids.json` manifests.
 
 ```powershell
-.\.venv\Scripts\python.exe inspect_question.py validation_000003 --open
+.\.venv\Scripts\python.exe inspect_question.py validation_000008 --open
 .\.venv\Scripts\python.exe finalize_data.py --check-only
 .\.venv\Scripts\python.exe finalize_data.py
 ```
 
-The inspector generates a replaceable Markdown page and matching browser page containing the question, context, choices, image, metadata, audit classification and separate reference material. Omit the ID to be prompted, use `--list validation` to list IDs, or set `--output outputs/inspection/example.md` to keep a separate page. It needs no model or GPU. Completed audit decisions are stored outside `data/` and survive regeneration of the page or prepared data. See [the audit report](reports/scienceqa/visual_audit.md) for counts and boundaries. The tutor commands below still use the original prepared data.
+The inspector defaults to audited final questions and images. It generates a replaceable Markdown page and matching browser page containing the question, context, choices, image, metadata, audit classification and separate reference material. Omit the ID to be prompted, use `--list validation` to list final IDs, or set `--output outputs/inspection/example.md` to keep a separate page. To inspect an excluded candidate, explicitly use `--source processed`, for example `inspect_question.py validation_000003 --source processed --open`. This inspection mode does not change tutor inputs. It needs no model or GPU. Completed audit decisions are stored outside `data/` and survive regeneration of the page or prepared data. See [the audit report](reports/scienceqa/visual_audit.md) for counts and boundaries. The CLI, Python helper, browser tutor and Colab demo use the audited final set; missing final data causes an error instead of a fallback to candidates.
 
 ## Run the tutor locally
 
@@ -83,10 +84,10 @@ Check that the selected Python can use CUDA:
 .\.venv\Scripts\python -c "import torch; print(torch.cuda.is_available())"
 ```
 
-Choose a prepared validation ID and provide the student's actual response and reasoning. Replace the example explanation before running:
+Choose an audited final validation ID and provide the student's actual response and reasoning. Replace the example explanation before running:
 
 ```powershell
-.\.venv\Scripts\python run_scienceqa_tutor.py --split validation --item-id validation_000003 --answer "A" --explanation "Replace with the student's own reasoning" --hint-level 1
+.\.venv\Scripts\python run_scienceqa_tutor.py --split validation --item-id validation_000008 --answer "A" --explanation "Replace with the student's own reasoning" --hint-level 1
 ```
 
 The first run downloads `Qwen/Qwen2.5-VL-3B-Instruct`; use `--model-path` to select a complete existing checkpoint folder. The engine loads it in 4-bit and uses deterministic generation. The default result is `outputs/scienceqa_tutor.json`; choose a distinct `--output` path to retain multiple runs. The runner reads public questions only and preserves IDs, supplied context, option order and image files. It does not load reference exports.
@@ -121,7 +122,7 @@ from qwen_engine import QwenTutor
 from run_scienceqa_tutor import ROOT, load_question, run_question
 
 tutor = QwenTutor()  # Load once for this Python session.
-item = load_question(ROOT, "validation", "validation_000003")
+item = load_question(ROOT, "validation", "validation_000008")
 result = run_question(tutor, item, "A", "The student's actual reasoning", hint_level=1)
 # Call run_question(tutor, ...) again for other items or hint levels.
 ```
@@ -132,9 +133,11 @@ The lower-level `tutor_pipeline.run_pipeline(tutor, image, question, student_ans
 
 ```text
 prepare_data.py                         pinned dataset preparation
+finalize_data.py                        apply saved audit decisions
+inspect_question.py                     inspect final questions; explicit candidate inspection option
 qwen_engine.py                          shared image/text model adapter
 tutor_pipeline.py                       prompt stages using a supplied tutor
-run_scienceqa_tutor.py                   prepared-question CLI and Python helper
+run_scienceqa_tutor.py                   audited-question CLI and Python helper
 run_tutor.py / inspect_diagram.py        optional custom-diagram entry points
 requirements.txt / requirements-lock.txt shared environment and constraints
 notebooks/                              Colab notebook, source ZIP and helpers
@@ -147,9 +150,16 @@ data/                                    ignored by Git
     references/<split>.jsonl              gold option, lecture and solution
     visual_review_template.csv            blank worksheet for human review
     environment.json                     Python and main package versions
+  final/scienceqa/
+    images/<item_id>.png                  audited image copies used by the tutor
+    questions/<split>.jsonl               retained public questions
+    references/<split>.jsonl              matching separate reference answers
+    selection.json                       audit provenance and final counts
+reviews/scienceqa/                        committed audit decisions and provenance
 manifests/scienceqa/                      small ID lists to commit
   <split>_candidate_ids.json              passed the subject/grade/image-presence filter
   <split>_valid_ids.json                  also passed question and image validation
+  <split>_final_ids.json                  retained by the visual-need audit
 reports/scienceqa/                        generated audit results to commit
   metadata_audit.json                     source, ID convention and filter counts
   integrity_audit.json                    validation counts, exclusions and overlap groups
@@ -157,9 +167,9 @@ reports/scienceqa/                        generated audit results to commit
 
 Commit scripts, tests, configuration, dependency pins, ID manifests and audit reports. Each teammate runs the same command locally. `.gitignore` excludes all `data/`, virtual environments, model weights, downloaded Qwen examples, generated outputs, temporary files and local secrets. The implementation plan, agent instructions, proposal and project diagram are local-only and excluded as well.
 
-Manifests document the shared selection; the current script selects using source-row indices held in memory rather than reading the manifests back. Reports describe dataset preparation, not hint-quality experiment results.
+Candidate/valid manifests document preparation; `prepare_data.py` selects using source-row indices. `finalize_data.py` applies the saved review decisions. Runtime question loaders require final exports to match the final-ID manifests and require images under `data/final/scienceqa/images/`. Reports describe preparation and curation, not hint-quality experiment results.
 
-A full preparation run overwrites generated manifests, reports, question/reference exports and the blank review template. Save completed reviews separately before rerunning. If changing filters, do not treat old files left in `images/` as the selection: current valid manifests and question exports define the usable set.
+A full preparation run overwrites preparation manifests, reports, question/reference exports and the blank review template. Saved decisions live separately under `reviews/`. Run finalization afterwards before using the tutor. Old image files do not define membership: final manifests and final question exports define the runtime selection.
 
 Exact cross-split overlaps are checked by directly comparing question/context/ordered-choice values and decoded RGB pixels with matching dimensions. Pixel comparisons process one size group at a time. Reports contain matching IDs, with no automatic removal or split reassignment. These checks do not cover paraphrases, near-duplicate images or pretrained-model contamination. Shared images can support different questions; agree on an overlap policy before final sampling.
 

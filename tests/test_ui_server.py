@@ -49,6 +49,9 @@ class TutorWebAppTests(unittest.TestCase):
         (self.questions_dir / "validation.jsonl").write_text(
             json.dumps(self.item) + "\n", encoding="utf-8"
         )
+        manifest = self.root / "manifests/scienceqa/validation_final_ids.json"
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text(json.dumps([self.item["item_id"]]), encoding="utf-8")
         (self.root / "inspect_question.py").write_text(
             "import sys\n"
             "from pathlib import Path\n"
@@ -57,8 +60,8 @@ class TutorWebAppTests(unittest.TestCase):
             "output.write_text('# inspection\\n', encoding='utf-8')\n"
             "output.with_suffix('.html').write_text("
             "\"<!doctype html><html><body>"
-            "<img src='../../data/processed/scienceqa/images/"
-            "validation_000001.png'>"
+            "<img src='../../data/final/scienceqa/images/"
+            "example.png'>"
             "<p>Reference answer: A</p></body></html>\", encoding='utf-8')\n",
             encoding="utf-8",
         )

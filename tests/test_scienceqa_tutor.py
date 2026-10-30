@@ -24,21 +24,24 @@ class TutorIntegrationTests(unittest.TestCase):
         self.directory = tempfile.TemporaryDirectory(dir=runner.ROOT)
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
-        (self.root / "data/images").mkdir(parents=True)
-        (self.root / "data/images/example.png").write_bytes(b"mock image")
-        self.questions = self.root / "data/processed/scienceqa/questions"
+        (self.root / "data/final/scienceqa/images").mkdir(parents=True)
+        (self.root / "data/final/scienceqa/images/example.png").write_bytes(b"mock image")
+        self.questions = self.root / "data/final/scienceqa/questions"
         self.questions.mkdir(parents=True)
-        self.references = self.root / "data/processed/scienceqa/references"
+        self.references = self.root / "data/final/scienceqa/references"
         self.references.mkdir(parents=True)
         self.item = {
             "item_id": "validation_000003", "split": "validation",
             "question": "Which arrow points up?", "context": "Use the arrow labels.",
             "choices": [{"id": "A", "text": "left"}, {"id": "B", "text": "up"}],
-            "image_path": "data/images/example.png",
+            "image_path": "data/final/scienceqa/images/example.png",
             "answer": "SECRET GOLD", "lecture": "SECRET LECTURE", "solution": "SECRET SOLUTION",
         }
         self.write_question()
         self.write_reference()
+        manifest = self.root / "manifests/scienceqa/validation_final_ids.json"
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text(json.dumps([self.item["item_id"]]), encoding="utf-8")
 
     def write_question(self):
         (self.questions / "validation.jsonl").write_text(json.dumps(self.item) + "\n", encoding="utf-8")
@@ -80,7 +83,7 @@ class TutorIntegrationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "not found"):
             runner.load_question(self.root, "validation", "validation_999999")
         (self.root / self.item["image_path"]).unlink()
-        with self.assertRaisesRegex(FileNotFoundError, "Missing prepared image"):
+        with self.assertRaisesRegex(FileNotFoundError, "Missing final image"):
             runner.load_question(self.root, "validation", self.item["item_id"])
 
     def test_reference_loader_is_separate_from_public_question(self):
@@ -89,6 +92,33 @@ class TutorIntegrationTests(unittest.TestCase):
         self.assertNotIn("gold_option_id", item)
         self.assertEqual(reference["gold_option_id"], "B")
         self.assertNotIn("SECRET", str(reference))
+
+    def test_default_rejects_excluded_processed_rows_and_missing_final_exports(self):
+        processed = self.root / "data/processed/scienceqa/questions"
+        processed.mkdir(parents=True)
+        excluded = {**self.item, "item_id": "validation_000999"}
+        (processed / "validation.jsonl").write_text(json.dumps(excluded) + "\n", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "not found"):
+            runner.load_question(self.root, "validation", excluded["item_id"])
+        with self.assertRaisesRegex(ValueError, "audited"):
+            runner.load_reference(self.root, "validation", excluded["item_id"])
+        (self.questions / "validation.jsonl").unlink()
+        with self.assertRaisesRegex(FileNotFoundError, "finalize_data.py"):
+            runner.load_question(self.root, "validation", excluded["item_id"])
+
+    def test_final_manifest_and_final_image_directory_are_enforced(self):
+        manifest = self.root / "manifests/scienceqa/validation_final_ids.json"
+        manifest.write_text("[]", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "audited.*manifest"):
+            runner.load_question(self.root, "validation", self.item["item_id"])
+        manifest.write_text(json.dumps([self.item["item_id"]]), encoding="utf-8")
+        image = self.root / "data/processed/scienceqa/images/example.png"
+        image.parent.mkdir(parents=True)
+        image.write_bytes(b"old candidate")
+        self.item["image_path"] = image.relative_to(self.root).as_posix()
+        self.write_question()
+        with self.assertRaisesRegex(ValueError, "audited images"):
+            runner.load_question(self.root, "validation", self.item["item_id"])
 
     def test_split_mismatch_and_image_outside_repository_are_rejected(self):
         self.item["split"] = "test"
