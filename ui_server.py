@@ -8,6 +8,7 @@ import mimetypes
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 import threading
@@ -31,6 +32,20 @@ STAGES = {
     "feedback": ("Preparing positive feedback", 88),
     "complete": ("Finished", 100),
 }
+
+
+def validate_origin(value):
+    """Accept an explicit HTTP(S) origin, never a wildcard or a URL path."""
+    parsed = urlparse(value)
+    if (parsed.scheme not in ("http", "https") or not parsed.hostname
+            or parsed.username or parsed.password or parsed.path
+            or parsed.params or parsed.query or parsed.fragment
+            or any(character.isspace() for character in value)
+            or "*" in value or ";" in value):
+        raise ValueError(f"Expected an exact HTTP(S) origin: {value!r}")
+    # Accessing port also rejects malformed port values.
+    parsed.port
+    return value
 
 
 def ensure_data_prepared(root=ROOT):
@@ -83,9 +98,17 @@ def ensure_data_ready(root=ROOT):
 
 
 class TutorWebApp:
-    def __init__(self, root=ROOT, model_path=None):
+    def __init__(self, root=ROOT, model_path=None, persistent_output=None,
+                 allowed_origins=(), frame_ancestors=(), splits=runner.SPLITS, instance_id=None):
         self.root = Path(root).resolve()
         self.model_path = model_path
+        self.instance_id = instance_id or uuid.uuid4().hex
+        self.persistent_output = Path(persistent_output) if persistent_output else None
+        self.allowed_origins = {validate_origin(value) for value in allowed_origins}
+        self.frame_ancestors = tuple(validate_origin(value) for value in frame_ancestors)
+        self.splits = tuple(splits)
+        if not self.splits or any(split not in runner.SPLITS for split in self.splits):
+            raise ValueError("Choose supported dataset splits.")
         self.jobs = {}
         self.jobs_lock = threading.Lock()
         self.inference_lock = threading.Lock()
@@ -94,6 +117,7 @@ class TutorWebApp:
         self.inspection_lock = threading.Lock()
 
     def generate_inspection(self, split, item_id):
+        self.check_split(split)
         runner.load_question(self.root, split, item_id, data_source="final")
         script = self.root / "inspect_question.py"
         if not script.is_file():
@@ -134,10 +158,13 @@ class TutorWebApp:
             return dict(job) if job else None
 
     def list_questions(self, split):
-        if split not in runner.SPLITS:
-            raise ValueError(f"Unknown split: {split}")
+        self.check_split(split)
         return [{"item_id": row["item_id"], "question": row["question"]}
                 for row in runner.load_public_questions(self.root, split)]
+
+    def check_split(self, split):
+        if split not in self.splits:
+            raise ValueError(f"Dataset split is unavailable in this session: {split}")
 
     def get_tutor(self):
         if self.tutor is None:
@@ -157,6 +184,7 @@ class TutorWebApp:
         if mode not in ("hint", "check"):
             raise ValueError("Choose whether to get a hint or check an answer.")
         split = payload.get("split", "validation")
+        self.check_split(split)
         item_id = payload.get("item_id")
         answer = payload.get("student_answer")
         explanation = payload.get("explanation")
@@ -245,6 +273,12 @@ class TutorWebApp:
                 json.dumps(result, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
+            if self.persistent_output:
+                self.persistent_output.mkdir(parents=True, exist_ok=True)
+                destination = self.persistent_output / output_path.name
+                temporary = destination.with_suffix(".json.partial")
+                shutil.copy2(output_path, temporary)
+                temporary.replace(destination)
             label, progress = STAGES["complete"]
             self.update_job(
                 job_id,
@@ -265,15 +299,18 @@ class TutorWebApp:
 
     def status(self):
         counts = {}
-        for split in runner.SPLITS:
+        for split in self.splits:
             try:
                 counts[split] = len(self.list_questions(split))
             except FileNotFoundError:
                 counts[split] = 0
-        return {"prepared": any(counts.values()), "counts": counts}
+        return {"prepared": any(counts.values()), "counts": counts,
+                "pid": os.getpid(), "instance_id": self.instance_id,
+                "model_loaded": self.tutor is not None}
 
     def handler(self):
         app = self
+        ancestors = " ".join(("'self'", *app.frame_ancestors)) if app.frame_ancestors else "'none'"
 
         class RequestHandler(BaseHTTPRequestHandler):
             server_version = "ScienceTutorUI/1.0"
@@ -294,7 +331,7 @@ class TutorWebApp:
                     content_security_policy or (
                         "default-src 'self'; img-src 'self'; style-src 'self'; "
                         "script-src 'self'; object-src 'none'; base-uri 'none'; "
-                        "frame-ancestors 'none'"
+                        f"frame-ancestors {ancestors}"
                     ),
                 )
                 self.send_header("Referrer-Policy", "no-referrer")
@@ -329,6 +366,7 @@ class TutorWebApp:
                         })
                     elif parsed.path == "/api/question":
                         split = params.get("split", [""])[0]
+                        app.check_split(split)
                         item_id = params.get("item_id", [""])[0]
                         item = runner.load_question(
                             app.root, split, item_id, data_source="final"
@@ -348,6 +386,7 @@ class TutorWebApp:
                         self.send_json(200, item)
                     elif parsed.path == "/api/image":
                         split = params.get("split", [""])[0]
+                        app.check_split(split)
                         item_id = params.get("item_id", [""])[0]
                         item = runner.load_question(
                             app.root, split, item_id, data_source="final"
@@ -363,7 +402,7 @@ class TutorWebApp:
                             self.send_json(404, {"error": "Inspection page not found."})
                             return
                         _, _, split, item_id = parts
-                        if (split not in runner.SPLITS
+                        if (split not in app.splits
                                 or not re.fullmatch(rf"{re.escape(split)}_\d{{6}}", item_id)):
                             self.send_json(404, {"error": "Inspection page not found."})
                             return
@@ -396,7 +435,8 @@ class TutorWebApp:
                             content_security_policy=(
                                 "default-src 'none'; img-src 'self'; "
                                 "style-src 'unsafe-inline'; object-src 'none'; "
-                                "base-uri 'none'; frame-ancestors 'self'"
+                                "base-uri 'none'; frame-ancestors "
+                                + " ".join(("'self'", *app.frame_ancestors))
                             ),
                         )
                     elif parsed.path.startswith("/api/jobs/"):
@@ -446,7 +486,8 @@ class TutorWebApp:
                     return
                 try:
                     origin = self.headers.get("Origin")
-                    if origin and urlparse(origin).netloc != self.headers.get("Host"):
+                    if (origin and urlparse(origin).netloc != self.headers.get("Host")
+                            and origin not in app.allowed_origins):
                         self.send_json(403, {"error": "Cross-origin requests are not allowed."})
                         return
                     if not self.headers.get("Content-Type", "").startswith(
@@ -478,12 +519,22 @@ def main(argv=None):
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--model-path", default=None)
     parser.add_argument("--no-browser", action="store_true")
+    parser.add_argument("--persistent-output", type=Path,
+                        help="Also save each completed UI result to this folder (e.g. mounted Drive).")
+    parser.add_argument("--allowed-origin", action="append", default=[], type=validate_origin,
+                        help="Exact trusted proxy origin for POST requests; repeat if needed.")
+    parser.add_argument("--frame-ancestor", action="append", default=[], type=validate_origin,
+                        help="Exact trusted notebook origin allowed to embed the UI; repeat if needed.")
+    parser.add_argument("--splits", nargs="+", choices=runner.SPLITS, default=runner.SPLITS)
+    parser.add_argument("--instance-id", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
     if args.host not in ("127.0.0.1", "localhost"):
         parser.error("The tutor UI only supports localhost for safety.")
 
     ensure_data_ready(ROOT)
-    app = TutorWebApp(model_path=args.model_path)
+    app = TutorWebApp(model_path=args.model_path, persistent_output=args.persistent_output,
+                      allowed_origins=args.allowed_origin, frame_ancestors=args.frame_ancestor,
+                      splits=args.splits, instance_id=args.instance_id)
     server = ThreadingHTTPServer((args.host, args.port), app.handler())
     url = f"http://{args.host}:{server.server_port}"
     print(f"Science tutor UI is running at {url}")

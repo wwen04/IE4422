@@ -22,7 +22,7 @@ For inference on an NVIDIA GPU, first install the appropriate CUDA-enabled **PyT
 
 The unified stack retains datasets 5.1.0, Pillow 13.0.0 and huggingface-hub 2.2.0, and uses Transformers 5.21.0. Both datasets and this Transformers release accept Hub versions `>=1.31,<3`. The earlier Transformers 4.57.6 pin required Hub `<1` and was incompatible with the data stack. This was a library-version constraint, not a limitation of the Qwen checkpoint; no dataset-source or preparation-logic change is needed.
 
-Dependency consistency, imports and preparation/tests are checked locally. GPU inference and the research quality of outputs still need a feasibility trial. Teammates without a local GPU can use the [Colab notebook and source ZIP](notebooks/README.md). They run the same model/prompt functions in a single Colab project environment that retains Colab's CUDA wheels; actual assigned-hardware feasibility still needs a real Colab run.
+Dependency consistency, imports and preparation/tests are checked locally. GPU inference and the research quality of outputs still need a feasibility trial. Teammates without a local GPU can use the [Colab notebook and source ZIP](notebooks/README.md). The notebook now launches the browser UI inside Colab, keeps one model loaded across requests, and can save results/checkpoints to Drive. The original three-hint notebook demo remains optional. It uses a single project environment that retains Colab's CUDA wheels; see the notebook guide for Google's free-runtime web-UI restrictions. Actual proxy/browser behavior and GPU feasibility still need a real Colab run.
 
 ## Prepare ScienceQA
 

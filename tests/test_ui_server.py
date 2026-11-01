@@ -4,15 +4,16 @@ import subprocess
 import sys
 import tempfile
 import threading
+from types import ModuleType
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from http.server import ThreadingHTTPServer
 
 import run_scienceqa_tutor as runner
-from ui_server import TutorWebApp, ensure_data_prepared, ensure_data_ready, main
+from ui_server import TutorWebApp, ensure_data_prepared, ensure_data_ready, main, validate_origin
 
 
 class TutorWebAppTests(unittest.TestCase):
@@ -269,6 +270,7 @@ class TutorWebAppTests(unittest.TestCase):
                 self.assertEqual(raised.exception.code, expected_status)
 
     def test_run_creates_visible_job_and_downloadable_local_result(self):
+        self.app.persistent_output = self.root / "drive/runs/ui"
         generated = {
             "mode": "check", "evidence": "Evidence", "diagnosis": "Diagnosis",
             "hint": "Hint", "outcome": "try_again", "answer_correct": False,
@@ -299,6 +301,11 @@ class TutorWebAppTests(unittest.TestCase):
         self.assertEqual(job["status"], "complete")
         self.assertEqual(job["result"]["hint"], "Hint")
         self.assertTrue((self.root / "outputs" / job["output_file"]).is_file())
+        self.assertEqual(
+            (self.app.persistent_output / job["output_file"]).read_bytes(),
+            (self.root / "outputs" / job["output_file"]).read_bytes(),
+        )
+        self.assertEqual(list(self.app.persistent_output.glob("*.partial")), [])
         _, headers, result_file = self.request(f"/api/results/{job_id}")
         self.assertEqual(headers.get_content_type(), "application/json")
         self.assertEqual(json.loads(result_file)["student_explanation"], "Example reasoning")
@@ -371,6 +378,77 @@ class TutorWebAppTests(unittest.TestCase):
             self.root, "validation", self.item["item_id"], data_source="final"
         )
         self.assertEqual(checked.call_args.args[2]["gold_option_id"], "A")
+
+    def test_model_is_loaded_once_from_supplied_checkpoint(self):
+        engine = ModuleType("qwen_engine")
+        engine.QwenTutor = Mock()
+        self.app.model_path = "cached/checkpoint"
+        with patch.dict(sys.modules, {"qwen_engine": engine}):
+            first = self.app.get_tutor()
+            self.assertIs(self.app.get_tutor(), first)
+        engine.QwenTutor.assert_called_once_with("cached/checkpoint")
+
+    def test_proxy_origin_is_explicit_and_other_origins_remain_blocked(self):
+        origin = "https://session.example.com"
+        self.app.allowed_origins = {origin}
+        for candidate, expected in ((origin, 202), (origin + ".evil.com", 403), ("null", 403)):
+            with self.subTest(origin=candidate), patch.object(self.app, "start_job", return_value="job") as start:
+                request = Request(self.base_url + "/api/jobs", data=b'{}',
+                                  headers={"Content-Type": "application/json", "Origin": candidate})
+                if expected == 202:
+                    with urlopen(request, timeout=5) as response:
+                        self.assertEqual(response.status, 202)
+                    start.assert_called_once()
+                else:
+                    with self.assertRaises(HTTPError) as error:
+                        urlopen(request, timeout=5)
+                    self.assertEqual(error.exception.code, expected)
+                    start.assert_not_called()
+
+    def test_embedding_is_opt_in_and_applies_to_nested_inspection(self):
+        _, headers, _ = self.request("/")
+        self.assertIn("frame-ancestors 'none'", headers["Content-Security-Policy"])
+        origins = ("https://colab.research.google.com", "https://output.example.com")
+        self.app.frame_ancestors = origins
+        # handler() captures CSP when the server is created.
+        self.server.RequestHandlerClass = self.app.handler()
+        _, headers, _ = self.request("/")
+        expected = "frame-ancestors 'self' " + " ".join(origins)
+        self.assertIn(expected, headers["Content-Security-Policy"])
+        _, _, response = self.request("/api/question?split=validation&item_id=validation_000001")
+        _, headers, _ = self.request(json.loads(response)["inspection_url"])
+        self.assertIn(expected, headers["Content-Security-Policy"])
+        for invalid in ("https://*.example.com", "https://example.com/path", "null",
+                        "https://example.com;", "https://user@example.com", "https://example.com\n"):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                validate_origin(invalid)
+
+    def test_development_session_rejects_held_out_data_in_all_routes(self):
+        self.app.splits = ("train", "validation")
+        self.assertNotIn("test", self.app.status()["counts"])
+        for path, code in (("/api/questions?split=test", 400),
+                           ("/api/question?split=test&item_id=test_000001", 400),
+                           ("/api/image?split=test&item_id=test_000001", 400),
+                           ("/api/inspection/test/test_000001", 404)):
+            with self.subTest(path=path), self.assertRaises(HTTPError) as error:
+                self.request(path)
+            self.assertEqual(error.exception.code, code)
+        with self.assertRaisesRegex(ValueError, "unavailable"):
+            self.app.start_job({"mode": "hint", "split": "test", "item_id": "test_000001"})
+
+    def test_failed_drive_copy_is_visible_and_keeps_local_result(self):
+        self.app.persistent_output = self.root / "drive"
+        self.app.jobs["copy-failure"] = {"status": "running"}
+        with patch.object(self.app, "get_tutor", return_value=object()), patch(
+                "ui_server.runner.run_hint", return_value={"hint": "Saved locally"}), patch(
+                "ui_server.shutil.copy2", side_effect=OSError("Drive quota exceeded")), patch(
+                "ui_server.traceback.print_exc"):
+            self.app.run_job("copy-failure", "hint", self.item, None, None, None, 1)
+        job = self.app.get_job("copy-failure")
+        self.assertEqual(job["status"], "failed")
+        self.assertIn("Drive quota exceeded", job["error"])
+        local = self.root / "outputs/ui_copy-failure.json"
+        self.assertEqual(json.loads(local.read_text())["hint"], "Saved locally")
 
 
 if __name__ == "__main__":

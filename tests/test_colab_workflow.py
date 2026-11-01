@@ -266,7 +266,8 @@ class ColabWorkflowTests(unittest.TestCase):
         with zipfile.ZipFile(archive) as source:
             names = source.namelist()
             self.assertIn("IE4422/prepare_data.py", names)
-            for required in (*support.AUDIT_SOURCES, "inspect_question.py", "ui_server.py", "ui/app.js"):
+            for required in (*support.AUDIT_SOURCES, "inspect_question.py", "ui_server.py", "ui/app.js",
+                             "notebooks/colab_ui.py"):
                 self.assertIn("IE4422/" + required, names)
             self.assertIn("IE4422/notebooks/run_demo.py", names)
             self.assertEqual(source.read("IE4422/notebooks/IE4422_Colab.ipynb"),
@@ -280,6 +281,44 @@ class ColabWorkflowTests(unittest.TestCase):
             info = json.loads(source.read("IE4422/bundle_info.json"))
             self.assertEqual(set(info["files"]), {name.removeprefix("IE4422/") for name in names
                                                  if name != "IE4422/bundle_info.json"})
+
+    def test_notebook_ui_launch_uses_proxy_embed_and_drive_without_model_import(self):
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        cells = {cell["id"]: cell for cell in notebook["cells"]}
+        ids = list(cells)
+        self.assertLess(ids.index("prepare-data"), ids.index("prepare-model"))
+        self.assertLess(ids.index("prepare-model"), ids.index("start-ui"))
+        output = Mock()
+        output.eval_js.side_effect = ["https://session.example.com/", "https://output.example.com"]
+        google = ModuleType("google")
+        colab = ModuleType("google.colab")
+        colab.output = output
+        google.colab = colab
+        server = Mock()
+        server.start.return_value = {"model_loaded": False}
+        namespace = {"INTERFACE": "browser UI", "WORK": self.root, "PYTHON": Path(sys.executable),
+                     "PERSISTENT": self.root / "drive", "UI_SERVER": server}
+        with patch.dict(sys.modules, {"google": google, "google.colab": colab}), redirect_stdout(StringIO()):
+            exec(compile(cells["start-ui"]["source"], "start-ui", "exec"), namespace)
+        self.assertEqual(server.start.call_args.kwargs["proxy_origin"], "https://session.example.com")
+        self.assertEqual(server.start.call_args.kwargs["persistent_output"], self.root / "drive/runs/ui")
+        self.assertEqual(server.start.call_args.kwargs["frame_ancestors"],
+                         ("https://colab.research.google.com", "https://output.example.com"))
+        output.serve_kernel_port_as_iframe.assert_called_once_with(8765, height=1100, cache_in_notebook=False)
+        server.stop.assert_not_called()
+
+    def test_browser_mode_skips_demo_inputs_generation_and_default_stop(self):
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        cells = {cell["id"]: cell for cell in notebook["cells"]}
+        server = Mock()
+        namespace = {"INTERFACE": "browser UI", "UI_SERVER": server}
+        with patch("builtins.input", side_effect=AssertionError("UI mode must not prompt")), \
+                redirect_stdout(StringIO()):
+            for id in ("select-question", "student-attempt", "generate-hints", "stop-ui", "download-results"):
+                exec(compile(cells[id]["source"], id, "exec"), namespace)
+            server.stop.assert_not_called()
+            exec(cells["stop-ui"]["source"].replace("STOP_UI = False", "STOP_UI = True"), namespace)
+        server.stop.assert_called_once()
 
 
 if __name__ == "__main__":

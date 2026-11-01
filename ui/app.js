@@ -316,6 +316,9 @@ function loadDemoResponse() {
 async function initialize() {
   try {
     const status = await getJson("/api/status");
+    for (const option of [...splitSelect.options]) {
+      if (!(option.value in status.counts)) option.remove();
+    }
     const badge = document.querySelector("#dataset-badge");
     const total = Object.values(status.counts).reduce((sum, count) => sum + count, 0);
     if (status.prepared) {

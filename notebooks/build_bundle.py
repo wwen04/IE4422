@@ -14,7 +14,7 @@ SOURCE_FILES = (
     "requirements.txt", "requirements-lock.txt", "configs/scienceqa.json",
     "notebooks/README.md", "notebooks/__init__.py",
     "notebooks/IE4422_Colab.ipynb", "notebooks/colab_config.json",
-    "notebooks/colab_support.py", "notebooks/run_demo.py", "notebooks/build_bundle.py",
+    "notebooks/colab_support.py", "notebooks/colab_ui.py", "notebooks/run_demo.py", "notebooks/build_bundle.py",
     "reviews/scienceqa/README.md", "reviews/scienceqa/annotations.jsonl",
     "reviews/scienceqa/audit_manifest.json", "reports/scienceqa/visual_audit.md",
     "ui_server.py", "ui/index.html", "ui/app.js", "ui/app.css",
