@@ -266,12 +266,14 @@ class ColabWorkflowTests(unittest.TestCase):
         with zipfile.ZipFile(archive) as source:
             names = source.namelist()
             self.assertIn("IE4422/prepare_data.py", names)
-            for required in (*support.AUDIT_SOURCES, "inspect_question.py", "ui_server.py", "ui/app.js",
+            for required in (*support.AUDIT_SOURCES, "inspect_question.py", "check_scienceqa_answers.py", "ui_server.py", "ui/app.js",
                              "notebooks/colab_ui.py"):
                 self.assertIn("IE4422/" + required, names)
             self.assertIn("IE4422/notebooks/run_demo.py", names)
             self.assertEqual(source.read("IE4422/notebooks/IE4422_Colab.ipynb"),
                              (ROOT / "notebooks/IE4422_Colab.ipynb").read_bytes())
+            self.assertEqual(source.read("IE4422/check_scienceqa_answers.py"),
+                             (ROOT / "check_scienceqa_answers.py").read_bytes())
             self.assertTrue(all(name.startswith("IE4422/") for name in names))
             for prefix in ("IE4422/data/", "IE4422/models/", "IE4422/.venv/", "IE4422/.git/"):
                 self.assertFalse(any(name.startswith(prefix) for name in names))
@@ -319,6 +321,48 @@ class ColabWorkflowTests(unittest.TestCase):
             server.stop.assert_not_called()
             exec(cells["stop-ui"]["source"].replace("STOP_UI = False", "STOP_UI = True"), namespace)
         server.stop.assert_called_once()
+
+    def test_notebook_answer_checker_uses_fixed_checkpoint_and_preserves_outputs(self):
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        cells = {cell["id"]: cell for cell in notebook["cells"]}
+        self.assertIn("INTERFACE = 'answer checker'", cells["storage-settings"]["source"])
+        self.assertLess(list(cells).index("prepare-model"), list(cells).index("check-training-answers"))
+        support.write_json(self.root / "notebooks/colab_config.json", {"model_revision": "fixed"})
+        code = cells["check-training-answers"]["source"]
+        for fail in (False, True):
+            with self.subTest(fail=fail):
+                server = Mock()
+                namespace = {"INTERFACE": "answer checker", "UI_SERVER": server,
+                             "WORK": self.root, "PYTHON": Path(sys.executable),
+                             "PERSISTENT": self.root / "drive", "read_json": support.read_json,
+                             "shutil": __import__("shutil")}
+
+                def simulate_worker(command, **kwargs):
+                    self.assertEqual(Path(command[1]).name, "check_scienceqa_answers.py")
+                    self.assertEqual(command[command.index("--limit") + 1], "10")
+                    self.assertEqual(command[command.index("--model-path") + 1],
+                                     str(self.root / "models/fixed"))
+                    self.assertNotIn("--split", command)
+                    output = Path(command[command.index("--output-dir") + 1])
+                    support.write_json(output / "run.json", {"status": "failed" if fail else "complete"})
+                    if fail:
+                        raise subprocess.CalledProcessError(1, command)
+                    support.write_json(output / "result.json", {"summary": {"accuracy": 0.5}})
+
+                namespace["run_visible"] = simulate_worker
+                with patch.object(support, "complete_checkpoint", return_value=True), redirect_stdout(StringIO()):
+                    if fail:
+                        with self.assertRaises(subprocess.CalledProcessError):
+                            exec(compile(code, "check-training-answers", "exec"), namespace)
+                    else:
+                        exec(compile(code, "check-training-answers", "exec"), namespace)
+                server.stop.assert_called_once()
+                run = namespace["ANSWER_CHECK_RUN"]
+                saved = self.root / "drive/runs/answer_checks" / run.name
+                self.assertEqual((saved / "run.json").read_bytes(), (run / "run.json").read_bytes())
+        namespace = {"INTERFACE": "browser UI"}
+        with redirect_stdout(StringIO()):
+            exec(compile(code, "check-training-answers", "exec"), namespace)
 
 
 if __name__ == "__main__":

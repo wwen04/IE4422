@@ -10,10 +10,14 @@ No local GPU, Python installation, GitHub access or Hugging Face account is need
 1. Open [Google Colab](https://colab.research.google.com/) and choose **File → Upload notebook**. Upload `IE4422_Colab.ipynb`.
 2. Choose **Runtime → Change runtime type → GPU** (a T4 is a suitable starting point if offered). Use a current Python 3.12+ runtime. A TPU does not work with this CUDA engine.
 3. Run the notebook cells in order. When prompted, upload the current `IE4422_Source.zip` and approve mounting your own Google Drive. Leave `UPLOAD_NEW_SOURCE=True` when replacing an older bundle.
-4. Leave `INTERFACE='browser UI'` for the interactive tutor. The notebook creates one project environment, prepares ScienceQA, applies the bundled visual-need audit, and restores/downloads the pinned Qwen checkpoint.
-5. Step 8 starts `ui_server.py` as a background process and embeds its UI inside the notebook through Colab's own port proxy. Choose an audited train/validation question, ask for a hint or submit an answer and reasoning. The model loads on the first hint/check, then remains in GPU memory for later requests. Held-out test items are unavailable through both the UI and API in this session.
-6. Completed UI results are saved locally as `outputs/ui_*.json` and, with Drive enabled, immediately copied to **My Drive/IE4422/runs/ui/**. The UI's result-download link downloads an individual completed result. Step 11 can export all saved local UI results, including recovery files if Drive saving failed.
-7. Step 9 shows status/logs. Rerun step 8 with `RESTART_UI=False` to redisplay and reuse the same server, or True to deliberately replace it. Set `STOP_UI=True` in step 10 when finished to release GPU memory. A normal Run all leaves the server running and skips the optional demo/input/download cells.
+4. Leave `INTERFACE='answer checker'` for the new answer-only training check. The notebook creates one project environment, prepares ScienceQA, applies the bundled visual-need audit, and restores/downloads the pinned Qwen checkpoint.
+5. Step 8 runs `check_scienceqa_answers.py` with one model instance and one direct call per question. `CHECK_LIMIT=10` checks the first ten audited training questions in saved order; set it to 0 for the full audited training set. The model returns one option letter without an explanation. The checker loads training reference letters only after generation. It does not train the model, select validation/test questions, or run hint stages.
+6. Each batch retains raw responses, predictions, failures, timing and settings in a new `outputs/answer_checks/<run-id>/` folder. Scoring adds per-question correctness, accuracy and invalid/error counts; failed and invalid predictions remain in the denominator. Drive users receive a copy under **My Drive/IE4422/runs/answer_checks/<run-id>/**, including available partial files if the worker fails. Step 12 optionally downloads the latest run as a ZIP.
+7. Run all performs the selected answer check and skips the browser/demo workflows. Rerun step 8 for a new batch. The worker releases its model when it exits. This is development feedback on the current audited Grade 7–8 training selection, not held-out accuracy or evidence of hint quality.
+
+The checker normalizes whitespace and letter case, then accepts only a single supplied option letter. Extra text, empty responses and out-of-range letters are invalid. It records `predictions.jsonl` incrementally, a `run.json` status/settings file, and a scored `result.json`. Missing or invalid references stop scoring. The first-N sample is deterministic and should not be presented as a representative benchmark.
+
+To use the existing interactive tutor, choose `INTERFACE='browser UI'` in step 3. Step 9 starts `ui_server.py` and embeds it through Colab's port proxy. Choose an audited train/validation question, ask for a hint or submit an answer and reasoning. The model loads on the first request and stays loaded for later requests. Test items are unavailable through this UI/API. UI results are saved locally as `outputs/ui_*.json` and, with Drive enabled, immediately copied to **My Drive/IE4422/runs/ui/**. Step 10 shows status/logs; rerun step 9 with `RESTART_UI=False` to reuse the server or True to replace it. Set `STOP_UI=True` in step 11 to release GPU memory. In browser mode, Run all leaves the server running and skips the checker/demo workflows. Step 12 exports saved UI results, including recovery files after a failed Drive copy.
 
 Google's [Colab FAQ](https://research.google.com/colaboratory/faq.html) restricts interacting primarily through a web UI on free managed runtimes without a positive compute-unit balance. Use an eligible runtime for the browser UI. Embedding the app does not remove that restriction. Keep the notebook open; the proxy is session access, not public hosting. No tunnel service or tunnel account is needed. Google's separate-tab helper is deprecated because of browser security changes, so this notebook uses its supported iframe helper.
 
@@ -25,7 +29,7 @@ The profile preserves the actual torch/torchvision wheels and respects all their
 
 ## Downloads and saved files
 
-- Dataset: approximately 626 MB on the first fresh preparation. Public questions and evaluation references remain in separate files. Test items are never selected for this demo.
+- Dataset: approximately 626 MB on the first fresh preparation. Public questions and evaluation references remain in separate files. Preparation retains all official splits; the answer checker reads only training exports. The existing tutor demos offer train/validation, and never select test items.
 - Model: approximately 7.5 GB of original weights plus small supporting files. Four-bit quantization happens during model loading; it does not reduce the original download. The model ID and exact revision are in `colab_config.json`.
 - Working files live in Colab's temporary `/content/IE4422` folder. Drive retains a prepared-data ZIP, an optional complete checkpoint folder, and generated results. Allow at least 8 GB free Drive space for model caching, plus space for data/results.
 - On later sessions, the notebook restores matching artifacts from Drive. It checks preparation source/configuration, finalization code and saved audit decisions before reusing data. The archive includes processed and final exports; finalization validates the reviewed sources and rebuilds the final set before question selection. It checks the model revision and required files before loading a checkpoint.
@@ -36,11 +40,11 @@ This demonstrates the current exploratory prototype. Pre-answer UI hints do not 
 
 ## Troubleshooting
 
-- **UI blank or refused to connect:** run step 9, check the server is running, and rerun step 8 to recreate its iframe. Keep the notebook open and allow Colab kernel access if prompted. A fresh runtime needs setup again. Localhost on your laptop is not the Colab server.
-- **Server settings changed:** set `RESTART_UI=True`, rerun step 8, then reset it to False. Restart interrupts current jobs. Replacing source, dependencies or prepared data also stops the old worker before changing its files.
-- **UI first request is slow:** the server is loading the cached checkpoint into GPU memory. Check step 9 for failures; later requests reuse that model. Do not also run a second model-loading worker.
+- **UI blank or refused to connect:** select browser UI in step 3, run step 10, check the server is running, and rerun step 9 to recreate its iframe. Keep the notebook open and allow Colab kernel access if prompted. A fresh runtime needs setup again. Localhost on your laptop is not the Colab server.
+- **Server settings changed:** set `RESTART_UI=True`, rerun step 9, then reset it to False. Restart interrupts current jobs. Replacing source, dependencies or prepared data also stops the old worker before changing its files.
+- **UI first request is slow:** the server is loading the cached checkpoint into GPU memory. Check step 10 for failures; later requests reuse that model. Do not also run a second model-loading worker.
 - **Port already in use:** choose another `UI_PORT`, or stop the server that owns it. The launcher does not kill unrelated processes.
-- **Drive result copy failed:** the job shows the error and retains its local `outputs/ui_*.json`. Fix Drive space/access, use step 11 to download the local recovery result, and retry as needed. Results are marked complete only after the enabled Drive copy succeeds.
+- **Drive result copy failed:** local results remain in `outputs/`. Fix Drive space/access or use step 12 to download recovery results. UI jobs are marked complete only after the enabled Drive copy succeeds; answer-check `run.json` describes the worker's local run, and the notebook reports any subsequent Drive-copy failure.
 
 - **`ensurepip` failed in an older bundle:** download both updated files and open the updated notebook. Run cells 1–4, upload the updated ZIP in cell 2, and leave `UPLOAD_NEW_SOURCE=True`. The revised setup skips `ensurepip` and can reuse the partially created environment. Keep the existing Drive folder and saved files.
 - **torch 2.11 requires `setuptools<82`, but a constraint requests 84.2.1:** download the latest source ZIP, rerun cell 2 with `UPLOAD_NEW_SOURCE=True`, then rerun cell 4. The corrected profile handles bounded requirements as well as exact pins. Keep the runtime and Drive files.
@@ -59,7 +63,7 @@ From the repository root:
 .\.venv\Scripts\python notebooks/build_bundle.py
 ```
 
-`colab_support.py` contains setup/storage helpers, `colab_ui.py` manages the UI process/readiness/logs, `run_demo.py` calls the existing model/prompt stages, and `build_bundle.py` packages an explicit list of source files. Model weights, datasets, environments, secrets and local proposal/agent notes are excluded from the source ZIP.
+`check_scienceqa_answers.py` at the bundle root provides the standalone training answer check. `colab_support.py` contains setup/storage helpers, `colab_ui.py` manages the UI process/readiness/logs, `run_demo.py` calls the existing model/prompt stages, and `build_bundle.py` packages an explicit list of source files. Model weights, datasets, environments, secrets and local proposal/agent notes are excluded from the source ZIP.
 
 Local tests and notebook structure can be checked without a GPU. An actual Colab CUDA run is still required to verify assigned-hardware feasibility and model output quality.
 

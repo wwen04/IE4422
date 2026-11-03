@@ -22,7 +22,7 @@ For inference on an NVIDIA GPU, first install the appropriate CUDA-enabled **PyT
 
 The unified stack retains datasets 5.1.0, Pillow 13.0.0 and huggingface-hub 2.2.0, and uses Transformers 5.21.0. Both datasets and this Transformers release accept Hub versions `>=1.31,<3`. The earlier Transformers 4.57.6 pin required Hub `<1` and was incompatible with the data stack. This was a library-version constraint, not a limitation of the Qwen checkpoint; no dataset-source or preparation-logic change is needed.
 
-Dependency consistency, imports and preparation/tests are checked locally. GPU inference and the research quality of outputs still need a feasibility trial. Teammates without a local GPU can use the [Colab notebook and source ZIP](notebooks/README.md). The notebook now launches the browser UI inside Colab, keeps one model loaded across requests, and can save results/checkpoints to Drive. The original three-hint notebook demo remains optional. It uses a single project environment that retains Colab's CUDA wheels; see the notebook guide for Google's free-runtime web-UI restrictions. Actual proxy/browser behavior and GPU feasibility still need a real Colab run.
+Dependency consistency, imports and preparation/tests are checked locally. GPU inference and the research quality of outputs still need a feasibility trial. Teammates without a local GPU can use the [Colab notebook and source ZIP](notebooks/README.md). The notebook defaults to the answer-only training checker and can save results/checkpoints to Drive. The browser UI and original three-hint demo remain optional. It uses a single project environment that retains Colab's CUDA wheels; see the notebook guide for Google's free-runtime web-UI restrictions. Actual proxy/browser behavior and GPU feasibility still need a real Colab run.
 
 ## Prepare ScienceQA
 
@@ -75,6 +75,24 @@ The separate [visual-need audit](reviews/scienceqa/README.md) records assisted d
 ```
 
 The inspector defaults to audited final questions and images. It generates a replaceable Markdown page and matching browser page containing the question, context, choices, image, metadata, audit classification and separate reference material. Omit the ID to be prompted, use `--list validation` to list final IDs, or set `--output outputs/inspection/example.md` to keep a separate page. To inspect an excluded candidate, explicitly use `--source processed`, for example `inspect_question.py validation_000003 --source processed --open`. This inspection mode does not change tutor inputs. It needs no model or GPU. Completed audit decisions are stored outside `data/` and survive regeneration of the page or prepared data. See [the audit report](reports/scienceqa/visual_audit.md) for counts and boundaries. The CLI, Python helper, browser tutor and Colab demo use the audited final set; missing final data causes an error instead of a fallback to candidates.
+
+## Answer-only training check
+
+`check_scienceqa_answers.py` is a standalone command for the answer-only development check. It uses only the current audited final **training** selection (natural science, Grades 7–8, image required by the saved audit). It does not train or update the model. Validation/test questions cannot be selected. Dataset preparation still exports the official splits for the rest of the project.
+
+After preparing/finalizing data and setting up a CUDA GPU, check the first ten retained training questions:
+
+```powershell
+.\.venv\Scripts\python check_scienceqa_answers.py --limit 10
+```
+
+Omit `--limit` to check the whole audited training set. To select particular retained training questions, use `--item-id train_000006` and repeat `--item-id` for more IDs. `--model-path` accepts an existing checkpoint folder; the default is the same `Qwen/Qwen2.5-VL-3B-Instruct` model used by the tutor. `--help` needs no GPU or model download.
+
+One loaded model serves all selected questions, with one deterministic call per question. Its inputs are the image, question, supplied context and ordered options. The prompt requests exactly one option letter without a justification. There is no evidence extraction, hint generation or learner-attempt assessment. The checker loads only training reference letters after all generation calls, then compares option IDs directly. Reference lectures/solutions never enter prompts.
+
+Each run creates a new folder under `outputs/answer_checks/`; `--output-dir` can instead name a new folder. `predictions.jsonl` is flushed after each question and retains raw responses, predictions, timing and errors. `run.json` records selected IDs, model/generation settings and run status. `result.json` adds reference letters, correctness and summary counts. Whitespace and letter case are normalized; extra text, empty responses and letters outside the supplied options are invalid. Invalid outputs and generation failures count as unsuccessful in overall accuracy. A random-guess baseline accounts for varying option counts. Missing or invalid references stop scoring rather than shrink the denominator.
+
+These training results are development feedback, not held-out accuracy or evidence of hint quality. This answer-only check is narrower than the proposal's answer-and-explanation condition A. The implementation has been checked with fake model responses; real model results have not been run.
 
 ## Run the tutor locally
 
@@ -138,6 +156,7 @@ inspect_question.py                     inspect final questions; explicit candid
 qwen_engine.py                          shared image/text model adapter
 tutor_pipeline.py                       prompt stages using a supplied tutor
 run_scienceqa_tutor.py                   audited-question CLI and Python helper
+check_scienceqa_answers.py               answer-only development check; audited train only
 run_tutor.py / inspect_diagram.py        optional custom-diagram entry points
 requirements.txt / requirements-lock.txt shared environment and constraints
 notebooks/                              Colab notebook, source ZIP and helpers
