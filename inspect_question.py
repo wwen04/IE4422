@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 import webbrowser
 
-from run_scienceqa_tutor import dataset_root, load_public_questions
+from scienceqa_tutor import dataset_root, load_public_questions
 
 
 ROOT = Path(__file__).resolve().parent

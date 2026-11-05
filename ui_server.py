@@ -17,7 +17,7 @@ from urllib.parse import parse_qs, urlencode, urlparse
 import uuid
 import webbrowser
 
-import run_scienceqa_tutor as runner
+import scienceqa_tutor as runner
 
 
 ROOT = Path(__file__).resolve().parent

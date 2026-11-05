@@ -1,5 +1,7 @@
-"""Evidence extraction -> tentative misconception diagnosis -> targeted hint."""
+"""Browser tutor stages for pre-answer hints and submitted-answer checks."""
 import json
+
+from hint_prompts import INITIAL_HINT_MAX_NEW_TOKENS, render_initial_hint
 
 # Illustrative categories only. Replace or refine from research-based inventories.
 MISCONCEPTIONS = {
@@ -12,11 +14,15 @@ MISCONCEPTIONS = {
 }
 
 
-def extract_evidence(tutor, image, question):
-    return tutor.ask(image, f"""Science question: {question}
+def evidence_prompt(question):
+    return f"""Science question: {question}
 Describe only visible diagram evidence relevant to this question.
 Return a JSON object with keys: entities, labels, arrows, relationships, uncertainties.
-Do not guess missing or unreadable details. Return JSON only.""", max_new_tokens=320)
+Do not guess missing or unreadable details. Return JSON only."""
+
+
+def extract_evidence(tutor, image, question):
+    return tutor.ask(image, evidence_prompt(question), max_new_tokens=320)
 
 
 def diagnose(tutor, image, question, student_answer, explanation, evidence):
@@ -46,20 +52,8 @@ Output only the hint.""", max_new_tokens=160)
 
 
 def generate_initial_hint(tutor, image, question, evidence, level=1):
-    hints = {
-        1: "Invite the student to notice one relevant visual detail",
-        2: "Connect a visible detail to a useful science idea",
-        3: "Suggest a small reasoning step without solving the question",
-    }
-    if level not in hints:
-        raise ValueError("level must be 1, 2, or 3")
-    return tutor.ask(image, f"""Science question: {question}
-Visual evidence (unverified): {evidence}
-The student has not answered yet and may not know where to begin.
-Give ONE supportive, answer-independent hint at level {level}: {hints[level]}.
-Do not assume the student has made a mistake. Do not ask them to provide an answer before helping.
-Only reference diagram details you can verify visually. Do not state the answer, option letter, or reveal the solution.
-Output only the hint.""", max_new_tokens=160)
+    return tutor.ask(image, render_initial_hint(question, level, str(evidence)),
+                     max_new_tokens=INITIAL_HINT_MAX_NEW_TOKENS)
 
 
 def assess_explanation(tutor, image, question, answer_text, explanation,
@@ -175,20 +169,3 @@ def run_answered_pipeline(tutor, image, question, student_answer,
         "feedback": feedback,
         "hint": hint,
     }
-
-
-def run_pipeline(tutor, image, question, student_answer, explanation, hint_level=1,
-             on_stage=None):
-    """Use a caller-owned model so repeated questions do not reload its weights."""
-    if hint_level not in (1, 2, 3):
-        raise ValueError("hint_level must be 1, 2, or 3")
-    if on_stage is not None:
-        on_stage("evidence")
-    evidence = extract_evidence(tutor, image, question)
-    if on_stage is not None:
-        on_stage("diagnosis")
-    diagnosis = diagnose(tutor, image, question, student_answer, explanation, evidence)
-    if on_stage is not None:
-        on_stage("hint")
-    hint = generate_hint(tutor, image, question, evidence, diagnosis, hint_level)
-    return {"evidence": evidence, "diagnosis": diagnosis, "hint": hint}

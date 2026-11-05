@@ -22,7 +22,7 @@ For inference on an NVIDIA GPU, first install the appropriate CUDA-enabled **PyT
 
 The unified stack retains datasets 5.1.0, Pillow 13.0.0 and huggingface-hub 2.2.0, and uses Transformers 5.21.0. Both datasets and this Transformers release accept Hub versions `>=1.31,<3`. The earlier Transformers 4.57.6 pin required Hub `<1` and was incompatible with the data stack. This was a library-version constraint, not a limitation of the Qwen checkpoint; no dataset-source or preparation-logic change is needed.
 
-Dependency consistency, imports and preparation/tests are checked locally. GPU inference and the research quality of outputs still need a feasibility trial. Teammates without a local GPU can use the [Colab notebook and source ZIP](notebooks/README.md). The notebook defaults to the answer-only training checker and can save results/checkpoints to Drive. The browser UI and original three-hint demo remain optional. It uses a single project environment that retains Colab's CUDA wheels; see the notebook guide for Google's free-runtime web-UI restrictions. Actual proxy/browser behavior and GPU feasibility still need a real Colab run.
+The browser UI is the tutor's entry point, locally and through the [Colab notebook and source ZIP](notebooks/README.md). The notebook sets up one project environment that retains Colab's CUDA wheels, prepares the audited dataset, downloads/restores the pinned checkpoint, and launches the same UI. It can save data, checkpoints, and results to Drive. Actual Colab proxy/browser behavior and GPU inference require a real Colab run.
 
 ## Prepare ScienceQA
 
@@ -64,6 +64,22 @@ ScienceQA's `hint` field is supplied problem context and becomes `context` in ou
 
 Image presence alone does not establish that a question needs visual reasoning. The separate [assisted visual review](reviews/scienceqa/README.md) now records this judgement for each prepared candidate. Its derived selection is separate from preparation and is not independently adjudicated human ground truth. No tutor outputs or reference answers were used for this selection.
 
+## Prepare the AI2D evaluation sample
+
+AI2D is a separate, frozen **100-question test sample for evaluation without student attempts**. It is not added to the browser tutor or combined with ScienceQA scores. The source is pinned in `configs/ai2d.json`; source downloads use the existing `data/cache/huggingface` cache.
+
+```powershell
+.\.venv\Scripts\python.exe prepare_ai2d.py
+# Rebuild from the same cached source without network access:
+.\.venv\Scripts\python.exe prepare_ai2d.py --offline
+```
+
+Preparation validates all source questions, nonempty choices, answer positions and readable images. It preserves question text, choice text/order/case and original image bytes. It assigns A-D option IDs to this source's four choices and maps the source answer index to the option ID; it does not change labels inside diagrams. The common format accepts 2-26 choices. Missing lecture and solution fields are exported as empty strings with an explicit unavailable flag in the separate references.
+
+Questions sharing a source image filename or identical decoded pixels form one image group. Using seed 42, the script randomly selects 100 groups and one question per group. It exports all usable rows under `data/processed/ai2d/` and the frozen sample under `data/final/ai2d/`, each with separate `questions/test.jsonl`, `references/test.jsonl` and original image files. It preserves the source test split and assigns IDs such as `ai2d_test_000042` from original row positions.
+
+The committed selection lives in `manifests/ai2d/test_final_ids.json` and `test_selection.json`, alongside the all-valid ID list. `reports/ai2d/` records counts, exclusions, checksums, sampling and limitations. Rebuilding must reproduce the frozen configuration, source fingerprints and selection; incompatible inputs fail before replacing final exports. This selection has **no LLM visual-necessity review or manual label-matching pass**. See [the selection policy](reviews/ai2d/README.md) and [preparation report](reports/ai2d/preparation.md). Experiments and judge packages are separate later steps.
+
 ## Inspect questions and apply the visual-need audit
 
 The separate [visual-need audit](reviews/scienceqa/README.md) records assisted decisions for all 2,075 prepared Grade 7-8 candidates. It leaves preparation outputs intact and exports only image-required rows under `data/final/scienceqa/`, with additional `<split>_final_ids.json` manifests.
@@ -74,43 +90,7 @@ The separate [visual-need audit](reviews/scienceqa/README.md) records assisted d
 .\.venv\Scripts\python.exe finalize_data.py
 ```
 
-The inspector defaults to audited final questions and images. It generates a replaceable Markdown page and matching browser page containing the question, context, choices, image, metadata, audit classification and separate reference material. Omit the ID to be prompted, use `--list validation` to list final IDs, or set `--output outputs/inspection/example.md` to keep a separate page. To inspect an excluded candidate, explicitly use `--source processed`, for example `inspect_question.py validation_000003 --source processed --open`. This inspection mode does not change tutor inputs. It needs no model or GPU. Completed audit decisions are stored outside `data/` and survive regeneration of the page or prepared data. See [the audit report](reports/scienceqa/visual_audit.md) for counts and boundaries. The CLI, Python helper, browser tutor and Colab demo use the audited final set; missing final data causes an error instead of a fallback to candidates.
-
-## Answer-only training check
-
-`check_scienceqa_answers.py` is a standalone command for the answer-only development check. It uses only the current audited final **training** selection (natural science, Grades 7–8, image required by the saved audit). It does not train or update the model. Validation/test questions cannot be selected. Dataset preparation still exports the official splits for the rest of the project.
-
-After preparing/finalizing data and setting up a CUDA GPU, check the first ten retained training questions:
-
-```powershell
-.\.venv\Scripts\python check_scienceqa_answers.py --limit 10
-```
-
-Omit `--limit` to check the whole audited training set. To select particular retained training questions, use `--item-id train_000006` and repeat `--item-id` for more IDs. `--model-path` accepts an existing checkpoint folder; the default is the same `Qwen/Qwen2.5-VL-3B-Instruct` model used by the tutor. `--help` needs no GPU or model download.
-
-One loaded model serves all selected questions, with one deterministic call per question. Its inputs are the image, question, supplied context and ordered options. The prompt requests exactly one option letter without a justification. There is no evidence extraction, hint generation or learner-attempt assessment. The checker loads only training reference letters after all generation calls, then compares option IDs directly. Reference lectures/solutions never enter prompts.
-
-Each run creates a new folder under `outputs/answer_checks/`; `--output-dir` can instead name a new folder. `predictions.jsonl` is flushed after each question and retains raw responses, predictions, timing and errors. `run.json` records selected IDs, model/generation settings and run status. `result.json` adds reference letters, correctness and summary counts. Whitespace and letter case are normalized; extra text, empty responses and letters outside the supplied options are invalid. Invalid outputs and generation failures count as unsuccessful in overall accuracy. A random-guess baseline accounts for varying option counts. Missing or invalid references stop scoring rather than shrink the denominator.
-
-These training results are development feedback, not held-out accuracy or evidence of hint quality. This answer-only check is narrower than the proposal's answer-and-explanation condition A. The implementation has been checked with fake model responses; real model results have not been run.
-
-## Run the tutor locally
-
-Check that the selected Python can use CUDA:
-
-```powershell
-.\.venv\Scripts\python -c "import torch; print(torch.cuda.is_available())"
-```
-
-Choose an audited final validation ID and provide the student's actual response and reasoning. Replace the example explanation before running:
-
-```powershell
-.\.venv\Scripts\python run_scienceqa_tutor.py --split validation --item-id validation_000008 --answer "A" --explanation "Replace with the student's own reasoning" --hint-level 1
-```
-
-The first run downloads `Qwen/Qwen2.5-VL-3B-Instruct`; use `--model-path` to select a complete existing checkpoint folder. The engine loads it in 4-bit and uses deterministic generation. The default result is `outputs/scienceqa_tutor.json`; choose a distinct `--output` path to retain multiple runs. The runner reads public questions only and preserves IDs, supplied context, option order and image files. It does not load reference exports.
-
-This remains an exploratory prototype. The terminal entry point generates a response-informed hint. The browser UI additionally supports a pre-answer, answer-independent hint. Once an answer is submitted, the UI compares its choice ID with the separate reference export; if the choice matches, the model checks whether the explanation is supported by the reference lecture/solution. A correct answer with supported reasoning gets positive feedback; an incorrect answer or unclear/weak explanation gets another hint. The reference answer is loaded only for a submitted check and is not included in the question API or displayed as the answer key. Model assessments can still be wrong; they are not verified annotations or a formal grade. This does not implement the full research methodology: evidence validation/caching, three-hint history, disclosure checking, A–E comparisons and human evaluation remain pending. Development uses train/validation; preserve test items for the agreed final evaluation.
+The inspector defaults to audited final questions and images. It generates a replaceable Markdown page and matching browser page containing the question, context, choices, image, metadata, audit classification and separate reference material. Omit the ID to be prompted, use `--list validation` to list final IDs, or set `--output outputs/inspection/example.md` to keep a separate page. To inspect an excluded candidate, explicitly use `--source processed`, for example `inspect_question.py validation_000003 --source processed --open`. This inspection mode does not change tutor inputs. It needs no model or GPU. Completed audit decisions are stored outside `data/` and survive regeneration of the page or prepared data. See [the audit report](reports/scienceqa/visual_audit.md) for counts and boundaries. The browser tutor, inspector and Colab UI use the audited final set; missing final data causes an error instead of a fallback to candidates.
 
 ## Browser interface
 
@@ -124,28 +104,17 @@ The app opens at `http://127.0.0.1:8765`. Before starting the server, startup ch
 
 The server binds to localhost only and uses Python's standard library; it adds no web framework dependency. Tutor generation still requires the NVIDIA CUDA setup described above.
 
-For custom diagrams, the optional root entry points are:
+## Tutor workflow
 
-```powershell
-.\.venv\Scripts\python inspect_diagram.py --image "C:\path\to\diagram.png"
-.\.venv\Scripts\python run_tutor.py --image "C:\path\to\diagram.png" --question "Your matching question" --answer "Student response" --explanation "Student reasoning" --hint-level 1
-```
+`ui_server.py` is the only interactive tutor entry point. It imports `scienceqa_tutor.py` for dataset loading and prompt formatting, `tutor_pipeline.py` for the two tutor branches, and `qwen_engine.py` for the shared model. `hint_prompts.py` and `prompts/initial_hint.txt` provide the no-attempt hint wording.
 
-These paths must refer to a real image. `inspect_diagram.py` reports visible features; `run_tutor.py` saves a custom-question result under `outputs/`. All three entry points support `--help` without loading a model.
+Every model call receives the image plus the question, supplied context when present, and ordered choices. Requesting a hint ignores any attempt currently entered in the form and makes two model calls: evidence extraction, then one hint at the selected tier.
 
-### Reuse one loaded model in Python
+Checking an answer extracts evidence, compares the selected choice against the gold option ID in Python, and asks the model to assess the student's reasoning using the image, public problem inputs, selected choice, reasoning, and reference lecture/solution. The assessment does not receive the extracted evidence. A correct choice with supported reasoning returns fixed positive feedback after two model calls. Otherwise, diagnosis receives the public inputs, attempt, evidence, and misconception categories; hint generation receives the public inputs, evidence, diagnosis, and tier. That branch takes four model calls. Reference material is supplied only to the reasoning assessment; feedback messages are fixed Python strings.
 
-```python
-from qwen_engine import QwenTutor
-from run_scienceqa_tutor import ROOT, load_question, run_question
+The server loads one model lazily and reuses it across requests. Each generation call is a fresh image-and-text message; previous hints and attempts are not added as conversation history. Evidence and diagnosis are raw model strings requested in JSON format, without schema validation or caching. Each completed request is saved as `outputs/ui_<job-id>.json`.
 
-tutor = QwenTutor()  # Load once for this Python session.
-item = load_question(ROOT, "validation", "validation_000008")
-result = run_question(tutor, item, "A", "The student's actual reasoning", hint_level=1)
-# Call run_question(tutor, ...) again for other items or hint levels.
-```
-
-The lower-level `tutor_pipeline.run_pipeline(tutor, image, question, student_answer, explanation, hint_level=1)` also accepts the existing model. Neither function constructs a model. Separate terminal invocations are separate processes and load their own model. This change reuses model weights in memory; evidence and diagnosis are still regenerated on each pipeline call.
+Separate research scripts and protocols remain under `experiments/`. They are outside the UI workflow and are excluded from the Colab UI notebook and source ZIP. The separate [batch-experiment guide](experiments/README.md) covers AI2D/ScienceQA A, B and D, the frozen 30-question AI2D judging sample and per-dataset summaries. Use [IE4422_Experiments.ipynb](notebooks/IE4422_Experiments.ipynb) with `IE4422_Experiments_Source.zip` for Colab batch runs; the browser-tutor notebook remains separate.
 
 ## Folders and GitHub teamwork
 
@@ -155,11 +124,12 @@ finalize_data.py                        apply saved audit decisions
 inspect_question.py                     inspect final questions; explicit candidate inspection option
 qwen_engine.py                          shared image/text model adapter
 tutor_pipeline.py                       prompt stages using a supplied tutor
-run_scienceqa_tutor.py                   audited-question CLI and Python helper
-check_scienceqa_answers.py               answer-only development check; audited train only
-run_tutor.py / inspect_diagram.py        optional custom-diagram entry points
+scienceqa_tutor.py                       shared audited-question loaders and UI helpers
+ui_server.py                            browser tutor entry point
+hint_prompts.py / prompts/              shared hint wording
+experiments/                            separate research scripts and protocols; excluded from UI bundle
 requirements.txt / requirements-lock.txt shared environment and constraints
-notebooks/                              Colab notebook, source ZIP and helpers
+notebooks/                              UI-only Colab notebook, source ZIP and helpers
 configs/ / tests/ / docs/               configuration, checks and review guidance
 data/                                    ignored by Git
   cache/huggingface/                      Hugging Face Hub download cache

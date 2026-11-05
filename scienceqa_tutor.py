@@ -1,13 +1,11 @@
-"""Run the local Qwen tutor on an audited final ScienceQA question."""
+"""Load audited ScienceQA records and connect them to the browser tutor."""
 
-import argparse
 import json
 from pathlib import Path
 
 from tutor_pipeline import (
     run_answered_pipeline,
     run_initial_hint,
-    run_pipeline,
 )
 
 
@@ -116,14 +114,6 @@ def question_prompt(item):
     return "\n\n".join(parts)
 
 
-def run_question(tutor, item, student_answer, explanation, hint_level=1,
-                 on_stage=None):
-    """Generate a linked result using a model that can serve multiple questions."""
-    result = run_pipeline(tutor, item["image_path"], question_prompt(item),
-                          student_answer, explanation, hint_level, on_stage)
-    return {"item_id": item["item_id"], "split": item["split"], **result}
-
-
 def run_hint(tutor, item, hint_level=1, on_stage=None):
     result = run_initial_hint(
         tutor, item["image_path"], question_prompt(item), hint_level, on_stage
@@ -155,34 +145,3 @@ def run_checked_question(tutor, item, reference, student_answer_id,
         on_stage=on_stage,
     )
     return {"item_id": item["item_id"], "split": item["split"], **result}
-
-
-def main(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--split", choices=SPLITS, default="validation")
-    parser.add_argument("--item-id", required=True, help="Audited final ID, e.g. validation_000008")
-    parser.add_argument("--answer", required=True, help="Student response, not a reference answer")
-    parser.add_argument("--explanation", required=True, help="Student's own reasoning")
-    parser.add_argument("--hint-level", type=int, choices=(1, 2, 3), default=1)
-    parser.add_argument("--model-path", default=None)
-    parser.add_argument("--output", type=Path, default=ROOT / "outputs/scienceqa_tutor.json")
-    args = parser.parse_args(argv)
-
-    try:
-        item = load_question(ROOT, args.split, args.item_id)
-    except (FileNotFoundError, ValueError, KeyError) as error:
-        parser.error(str(error))
-    # Keep --help, data loading and unit tests independent of GPU imports.
-    from qwen_engine import QwenTutor
-
-    tutor = QwenTutor(args.model_path) if args.model_path else QwenTutor()
-    result = run_question(tutor, item, args.answer, args.explanation, args.hint_level)
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",
-                           encoding="utf-8")
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-    print(f"Saved to {args.output.resolve()}")
-
-
-if __name__ == "__main__":
-    main()

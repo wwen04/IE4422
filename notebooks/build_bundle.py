@@ -1,4 +1,4 @@
-"""Rebuild the small source ZIP after editing the project or its Colab notebook."""
+"""Package the browser tutor and its Colab launcher without research workflows."""
 
 from datetime import datetime, timezone
 import json
@@ -9,15 +9,18 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_FILES = (
-    "README.md", ".gitignore", "prepare_data.py", "qwen_engine.py", "tutor_pipeline.py",
-    "run_scienceqa_tutor.py", "check_scienceqa_answers.py", "run_tutor.py", "inspect_diagram.py", "finalize_data.py", "inspect_question.py",
+    "README.md", ".gitignore", "prepare_data.py", "qwen_engine.py", "tutor_pipeline.py", "hint_prompts.py",
+    "scienceqa_tutor.py", "finalize_data.py", "inspect_question.py", "prompts/initial_hint.txt",
     "requirements.txt", "requirements-lock.txt", "configs/scienceqa.json",
     "notebooks/README.md", "notebooks/__init__.py",
     "notebooks/IE4422_Colab.ipynb", "notebooks/colab_config.json",
-    "notebooks/colab_support.py", "notebooks/colab_ui.py", "notebooks/run_demo.py", "notebooks/build_bundle.py",
+    "notebooks/colab_support.py", "notebooks/colab_ui.py", "notebooks/build_bundle.py",
     "reviews/scienceqa/README.md", "reviews/scienceqa/annotations.jsonl",
     "reviews/scienceqa/audit_manifest.json", "reports/scienceqa/visual_audit.md",
     "ui_server.py", "ui/index.html", "ui/app.js", "ui/app.css",
+    "tests/test_prepare_data.py", "tests/test_finalize_data.py", "tests/test_inspect_question.py",
+    "tests/test_scienceqa_tutor.py", "tests/test_ui_server.py",
+    "tests/test_colab_workflow.py", "tests/test_colab_ui.py",
 )
 
 
@@ -26,7 +29,7 @@ def build_bundle(root=ROOT, destination=None):
     destination = Path(destination) if destination else root / "notebooks/IE4422_Source.zip"
     files = sorted(set(SOURCE_FILES) | {
         path.relative_to(root).as_posix()
-        for pattern in ("tests/test_*.py", "manifests/scienceqa/*.json", "reports/scienceqa/*.json")
+        for pattern in ("manifests/scienceqa/*.json", "reports/scienceqa/*.json")
         for path in root.glob(pattern)
     })
     for name in files:

@@ -40,4 +40,4 @@ Official splits preserved; no automatic removal of shared images or repeated pub
 
 Run `python finalize_data.py --check-only` to check coverage and source fingerprints. Run `python finalize_data.py` to regenerate final exports, final manifests and this report from the saved decisions. Source changes require a fresh review. Files left in final/images/ from an earlier selection do not define membership; final manifests and question exports do.
 
-The command-line runner, Python helper, browser tutor, inspector defaults and Colab demo use data/final and final-ID manifests. Only explicit candidate inspection (--source processed) reads excluded rows; it does not change tutor inputs.
+The browser tutor, inspector defaults and Colab UI use data/final and final-ID manifests. Only explicit candidate inspection (--source processed) reads excluded rows; it does not change tutor inputs.

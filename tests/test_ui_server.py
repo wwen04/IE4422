@@ -12,7 +12,7 @@ from urllib.request import Request, urlopen
 
 from http.server import ThreadingHTTPServer
 
-import run_scienceqa_tutor as runner
+import scienceqa_tutor as runner
 from ui_server import TutorWebApp, ensure_data_prepared, ensure_data_ready, main, validate_origin
 
 
