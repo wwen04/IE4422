@@ -173,7 +173,7 @@ class BatchExperimentTests(unittest.TestCase):
             evidence_call = self.tutor.ask.call_args_list[index * 2]
             self.assertEqual(evidence_call.args[1], row["evidence_prompt"])
             ui_tutor = Mock()
-            extract_evidence(ui_tutor, evidence_call.args[0], runner.question_prompt(row["public_inputs"]))
+            extract_evidence(ui_tutor, evidence_call.args[0], row["public_inputs"])
             self.assertEqual(evidence_call, ui_tutor.ask.call_args)
         self.assertEqual([call.kwargs["max_new_tokens"] for call in self.tutor.ask.call_args_list], [320, 160] * 6)
 

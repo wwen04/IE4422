@@ -116,7 +116,7 @@ def question_prompt(item):
 
 def run_hint(tutor, item, hint_level=1, on_stage=None):
     result = run_initial_hint(
-        tutor, item["image_path"], question_prompt(item), hint_level, on_stage
+        tutor, item["image_path"], question_prompt(item), hint_level, on_stage, evidence_inputs=item
     )
     return {"item_id": item["item_id"], "split": item["split"], **result}
 
@@ -143,5 +143,6 @@ def run_checked_question(tutor, item, reference, student_answer_id,
         reference=reference_text,
         hint_level=hint_level,
         on_stage=on_stage,
+        evidence_inputs=item,
     )
     return {"item_id": item["item_id"], "split": item["split"], **result}

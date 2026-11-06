@@ -17,26 +17,34 @@ MISCONCEPTIONS = {
 
 
 def evidence_prompt(question):
-    return f"""You are describing an image for someone who cannot see it, so they can answer a science question about it.
+    # Structured public inputs keep context and options separate from visual evidence.
+    context, options = "", ""
+    if isinstance(question, dict):
+        context = question.get("context", "")
+        options = "\n".join(f'{choice["id"]}. {choice["text"]}' for choice in question["choices"])
+        question = question["question"]
+    return f"""You are describing a scientific image for an AI tutor that generates progressive hints.
 
 Question: {question}
+Context: {context}
+Options: {options}
+Image: [attached image]
 
-List the visible observations in the image that are relevant to the question and choices. The choices are given only to show which details matter; their content is not visual evidence.
-Do not select, evaluate, or eliminate answer choices, or add reasoning about which answer follows. Do not refer to answer choices by their option letters. Preserve letters that appear in image labels.
+Extract the minimum sufficient visual observations relevant to the question. Use the question and options only to determine relevance, never as visual evidence.
 
-Format rules:
-- One observation per line, numbered 1., 2., 3., and so on. At most 10 lines. Keep each line brief; use fewer lines when sufficient.
-- Start each line with a type word and a colon: Text, Count, Object, Arrow, Table, Colour, Graph, or another short word if none fits.
-- State the panel, region, row, or other location of each observation.
-- Text: copy visible words and numbers exactly as written, including units and exponents.
-- Count: record counts in each relevant panel or region separately. Do not calculate ratios or other derived quantities.
-- Arrow: write "X -> Y", with the tail (start) first. Use visible endpoint labels, or locations when endpoints are unlabeled. Do not explain what the arrow represents.
-- Table: copy the header and only the rows relevant to the question. A compact header and row may share one line.
-- Colour: for colour-coded maps or charts, give the visible legend's colour-to-value mapping and the colour of the region the question asks about.
-- Graph: record relevant axis labels, units, scale markings, and directly readable plotted values. Do not derive values or trends.
-
-Describe only what is visible. Do not infer, explain, interpret, predict, or draw conclusions. Do not supply labels or identities that are not visually supported. If a detail is unreadable or not visible, leave it out.
-Output only the numbered lines."""
+Rules:
+1. Preserve relevant objects, labels, counts, measurements, units, colours, positions, connections, and directional relationships.
+2. For comparisons, report the corresponding features of each relevant group or panel separately, including size or scale when relevant.
+3. For graphs and tables, record relevant labels, axes, scales, legends, and directly readable values.
+4. Preserve visible text exactly. For arrows, use "X -> Y" (tail to head).
+5. Describe only what is visually observable. Do not infer scientific meaning, calculate derived values, answer the question, evaluate options, or generate hints.
+6. Avoid irrelevant details, repetition, and unsupported assumptions. Omit unreadable information.
+Output:
+- Numbered observations (1., 2., 3., ...), maximum 10.
+- Start each line with a type label: Text, Count, Object, Position, Arrow, Connection, Measurement, Graph, Table, Colour, or another appropriate type.
+- Identify the relevant panel, region, or object.
+- Keep observations concise but preserve all necessary evidence.
+- Output only the numbered observations."""
 
 
 def extract_evidence(tutor, image, question):
@@ -99,13 +107,13 @@ Output one label only."""
     return status, response
 
 
-def run_initial_hint(tutor, image, question, hint_level=1, on_stage=None):
+def run_initial_hint(tutor, image, question, hint_level=1, on_stage=None, *, evidence_inputs=None):
     """Offer useful diagram guidance before the learner submits an answer."""
     if hint_level not in (1, 2, 3):
         raise ValueError("hint_level must be 1, 2, or 3")
     if on_stage is not None:
         on_stage("evidence")
-    evidence = extract_evidence(tutor, image, question)
+    evidence = extract_evidence(tutor, image, question if evidence_inputs is None else evidence_inputs)
     if on_stage is not None:
         on_stage("hint")
     hint = generate_initial_hint(tutor, image, question, evidence, hint_level)
@@ -122,13 +130,13 @@ def run_initial_hint(tutor, image, question, hint_level=1, on_stage=None):
 
 def run_answered_pipeline(tutor, image, question, student_answer,
                           student_explanation, answer_text, correct_answer_id,
-                          reference, hint_level=1, on_stage=None):
+                          reference, hint_level=1, on_stage=None, *, evidence_inputs=None):
     """Check a submitted answer privately, then give feedback or another hint."""
     if hint_level not in (1, 2, 3):
         raise ValueError("hint_level must be 1, 2, or 3")
     if on_stage is not None:
         on_stage("evidence")
-    evidence = extract_evidence(tutor, image, question)
+    evidence = extract_evidence(tutor, image, question if evidence_inputs is None else evidence_inputs)
     if on_stage is not None:
         on_stage("assessment")
 

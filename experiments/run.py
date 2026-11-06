@@ -43,7 +43,7 @@ def make_plans(root, dataset, experiment, items, spec, run_id):
                           "split": item["split"], "tier": tier, "public_inputs": public,
                           "prompt": {"version": VERSIONS[experiment], "rendered_text": prompt,
                                      "sha256": digest(prompt.encode("utf-8"))},
-                          "evidence_prompt": evidence_prompt(question) if experiment == "D" else None}
+                          "evidence_prompt": evidence_prompt(public) if experiment == "D" else None}
     return plans
 
 
@@ -61,7 +61,7 @@ def generate_record(tutor, root, plan, spec):
             row["evidence"] = evidence
             evidence_started = time.perf_counter()
             try:
-                text = extract_evidence(tutor, image, question_prompt(plan["public_inputs"]))
+                text = extract_evidence(tutor, image, plan["public_inputs"])
                 if not isinstance(text, str):
                     raise TypeError("Evidence response must be text")
                 evidence.update(text=text, status="ok" if text.strip() else "empty_output")

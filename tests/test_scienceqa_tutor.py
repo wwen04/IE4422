@@ -68,11 +68,12 @@ class TutorIntegrationTests(unittest.TestCase):
                 return "uncertain"
 
         tutor = FakeTutor()
-        evidence = extract_evidence(tutor, item["image_path"], prompt)
+        evidence = extract_evidence(tutor, item["image_path"], item)
         diagnosis = diagnose(tutor, item["image_path"], prompt, "A", "My reasoning", evidence)
         generate_hint(tutor, item["image_path"], prompt, evidence, diagnosis)
         self.assertEqual(len(calls), 3)
         self.assertNotIn("SECRET", "\n".join(calls))
+        self.assertIn(f'Question: {item["question"]}\nContext: {item["context"]}\nOptions: A. left\nB. up\nImage: [attached image]', calls[0])
 
     def test_missing_data_item_and_image_fail_before_inference(self):
         with self.assertRaisesRegex(FileNotFoundError, "Run prepare_data.py"):

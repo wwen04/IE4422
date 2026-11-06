@@ -30,7 +30,7 @@ def build(destination=None):
     ScienceQA reuses the exact 100 judging questions from the completed B run (300 planned hints per condition).
     No judge is called automatically. Keep datasets and condition results separate.
     """)
-    cell("markdown", "## 1. Upload the experiment source ZIP\nUpload the updated **IE4422_Experiments_Source.zip** alongside this notebook to use the numbered-observation evidence pass. This bundle is built separately from the UI source ZIP. Use a fresh runtime when replacing an older bundle.")
+    cell("markdown", "## 1. Upload the experiment source ZIP\nUpload **IE4422_Experiments_Source.zip** to use the minimum-sufficient-observations evidence prompt. For this prompt update, the existing notebook can be kept: rerun this upload cell and the setup cells with the new source ZIP. This bundle is built separately from the UI source ZIP. Use a fresh runtime when replacing an older bundle.")
     cell("code", """
     from pathlib import Path, PurePosixPath
     from datetime import datetime, timezone
@@ -123,7 +123,7 @@ def build(destination=None):
     for condition, description in (("A", "answer-only check"), ("B", "generic hints"), ("D", "evidence-conditioned hints")):
         instructions = f"## Run {condition}: {description}\nEnable this control when ready. Wait for the previous experiment to finish before running this cell. Each command loads one model, writes every outcome immediately, and exits to release GPU memory."
         if condition == "D":
-            instructions += "\n\nD calls the UI's shared numbered-observation evidence extractor, then the existing tier hint prompt. Evidence stays unverified. For a new D run, set RESUME=False; completed B results can be reused. A D run made with the older JSON evidence prompt requires a new run label."
+            instructions += "\n\nD calls the UI's shared minimum-sufficient-observations evidence prompt, then the existing tier hint prompt. Evidence stays unverified. For this updated prompt, use a new run label and RESUME=False; completed A/B results can be retained. Do not resume a D run generated with an earlier evidence prompt."
         cell("markdown", instructions)
         cell("code", f"""
         RUN_{condition} = False  # @param {{type:'boolean'}}

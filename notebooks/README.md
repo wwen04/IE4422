@@ -32,7 +32,7 @@ The notebook creates one project environment using Colab's existing CUDA PyTorch
 
 Hints before an attempt use evidence extraction followed by one requested-tier hint. The UI and Experiment D call the same `extract_evidence()` function: up to 10 brief numbered observations with types and locations, under a shared 320-token limit. The prompt explicitly excludes inference; its output remains unverified. Answer checks compare the selected choice in Python and assess reasoning against the reference lecture/solution. A correct choice with supported reasoning stops with positive feedback; otherwise diagnosis and hint generation follow. Evidence is regenerated on each request; prior hints are not passed as conversation history.
 
-To pick up this evidence pass in an existing Colab UI session, upload the updated `IE4422_Source.zip` with `UPLOAD_NEW_SOURCE=True` in cell 2, then rerun the setup and launch cells. Source replacement stops the old UI server so the next launch loads the updated extractor. Use the matching updated notebook/source pair; a fresh runtime is recommended.
+For the minimum-sufficient-observations prompt update, keep the existing Colab UI notebook: upload the updated `IE4422_Source.zip` with `UPLOAD_NEW_SOURCE=True` in cell 2, then rerun cells 3–8. Source replacement stops the old UI server so the next launch loads the updated extractor. No notebook code changed for this update. A fresh runtime is recommended when replacing an older bundle.
 
 **Show inspection report** reveals reference material, so leave it closed during student attempts. Model-generated evidence, diagnoses, and assessments remain unvalidated prototype outputs.
 
