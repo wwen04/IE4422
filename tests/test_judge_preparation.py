@@ -110,7 +110,7 @@ class JudgePreparationTests(unittest.TestCase):
         items = load_questions(self.root, "scienceqa")
         spec = batch.load_prompt_spec(self.root)
         plans = batch.make_plans(self.root, "scienceqa", "D", items, spec, "new-d-run")
-        tutor = SimpleNamespace(ask=lambda image, prompt, **kwargs: '{"labels": ["left"]}' if "Return a JSON object" in prompt else "Notice the left block.")
+        tutor = SimpleNamespace(ask=lambda image, prompt, **kwargs: '1. Text: "left", left block.' if kwargs["max_new_tokens"] == 320 else "Notice the left block.")
         records = [batch.generate_record(tutor, self.root, plan, spec) for plan in plans.values()]
         d_run = {"schema_version": batch.SCHEMA_VERSION, "dataset_name": "scienceqa", "experiment": "D",
                  "run_id": "new-d-run", "split": "train", "data_source": "final", "status": "complete",

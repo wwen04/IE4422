@@ -73,6 +73,25 @@ class NotebookUIServerTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "stopped"):
             self.server.status()
 
+    def test_launch_preserves_virtualenv_python_symlink(self):
+        python = self.root / "project_env/bin/python"
+        base_python = Path(sys._base_executable).resolve()
+        resolve = Path.resolve
+
+        def resolve_path(path, *args, **kwargs):
+            # Model Colab's venv symlink on Windows without requiring symlink privileges.
+            return base_python if path == python else resolve(path, *args, **kwargs)
+
+        with patch.object(Path, "resolve", resolve_path), \
+                patch("notebooks.colab_ui.subprocess.Popen") as spawn, \
+                patch("notebooks.colab_ui.socket.socket") as socket_factory, \
+                patch.object(self.server, "status", return_value={"model_loaded": False}):
+            spawn.return_value.poll.return_value = None
+            socket_factory.return_value.__enter__.return_value.connect_ex.return_value = 1
+            self.server.start(python, self.root, **self.options)
+
+        self.assertEqual(spawn.call_args.args[0][0], str(python.absolute()))
+
     def test_incomplete_checkpoint_never_spawns(self):
         (self.root / "models/fixed/model.safetensors").unlink()
         with patch("notebooks.colab_ui.subprocess.Popen") as spawn:

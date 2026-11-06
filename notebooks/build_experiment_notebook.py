@@ -24,11 +24,13 @@ def build(destination=None):
     Each condition is a separate saved run. Do not launch simultaneous runs on the same GPU.
     Generation controls default to off. B and D each produce three independent hint tiers per question.
     D extracts evidence separately for every hint, without caching or learner attempts.
+    D uses the same evidence extractor as the browser tutor: up to 10 brief numbered observations,
+    with types and locations, under a 320-token limit. Evidence is observation-only and unverified.
     AI2D's same frozen 30 questions supply both B and D judging packages (90 planned hints each).
     ScienceQA reuses the exact 100 judging questions from the completed B run (300 planned hints per condition).
     No judge is called automatically. Keep datasets and condition results separate.
     """)
-    cell("markdown", "## 1. Upload the experiment source ZIP\nUpload **IE4422_Experiments_Source.zip**, built separately from the UI source ZIP.")
+    cell("markdown", "## 1. Upload the experiment source ZIP\nUpload the updated **IE4422_Experiments_Source.zip** alongside this notebook to use the numbered-observation evidence pass. This bundle is built separately from the UI source ZIP. Use a fresh runtime when replacing an older bundle.")
     cell("code", """
     from pathlib import Path, PurePosixPath
     from datetime import datetime, timezone
@@ -119,7 +121,10 @@ def build(destination=None):
     print('Checkpoint:', MODEL)
     """)
     for condition, description in (("A", "answer-only check"), ("B", "generic hints"), ("D", "evidence-conditioned hints")):
-        cell("markdown", f"## Run {condition}: {description}\nEnable this control when ready. Wait for the previous experiment to finish before running this cell. Each command loads one model, writes every outcome immediately, and exits to release GPU memory.")
+        instructions = f"## Run {condition}: {description}\nEnable this control when ready. Wait for the previous experiment to finish before running this cell. Each command loads one model, writes every outcome immediately, and exits to release GPU memory."
+        if condition == "D":
+            instructions += "\n\nD calls the UI's shared numbered-observation evidence extractor, then the existing tier hint prompt. Evidence stays unverified. For a new D run, set RESUME=False; completed B results can be reused. A D run made with the older JSON evidence prompt requires a new run label."
+        cell("markdown", instructions)
         cell("code", f"""
         RUN_{condition} = False  # @param {{type:'boolean'}}
         if RUN_{condition}:

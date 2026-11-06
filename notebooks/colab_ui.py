@@ -59,7 +59,9 @@ class NotebookUIServer:
         from ui_server import validate_origin
 
         root = Path(root).resolve()
-        python = Path(python).resolve()
+        # Colab's venv Python is a symlink. Resolving it selects system Python
+        # and loses the dependencies installed in the project environment.
+        python = Path(python).expanduser().absolute()
         if not 1 <= port <= 65535:
             raise ValueError("Choose a port between 1 and 65535.")
         proxy_origin = validate_origin(proxy_origin)

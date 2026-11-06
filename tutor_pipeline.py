@@ -3,6 +3,8 @@ import json
 
 from hint_prompts import INITIAL_HINT_MAX_NEW_TOKENS, render_initial_hint
 
+EVIDENCE_MAX_NEW_TOKENS = 320
+
 # Illustrative categories only. Replace or refine from research-based inventories.
 MISCONCEPTIONS = {
     "arrow_direction": "Misinterprets what a diagram arrow represents or its direction",
@@ -15,14 +17,30 @@ MISCONCEPTIONS = {
 
 
 def evidence_prompt(question):
-    return f"""Science question: {question}
-Describe only visible diagram evidence relevant to this question.
-Return a JSON object with keys: entities, labels, arrows, relationships, uncertainties.
-Do not guess missing or unreadable details. Return JSON only."""
+    return f"""You are describing an image for someone who cannot see it, so they can answer a science question about it.
+
+Question: {question}
+
+List the visible observations in the image that are relevant to the question and choices. The choices are given only to show which details matter; their content is not visual evidence.
+Do not select, evaluate, or eliminate answer choices, or add reasoning about which answer follows. Do not refer to answer choices by their option letters. Preserve letters that appear in image labels.
+
+Format rules:
+- One observation per line, numbered 1., 2., 3., and so on. At most 10 lines. Keep each line brief; use fewer lines when sufficient.
+- Start each line with a type word and a colon: Text, Count, Object, Arrow, Table, Colour, Graph, or another short word if none fits.
+- State the panel, region, row, or other location of each observation.
+- Text: copy visible words and numbers exactly as written, including units and exponents.
+- Count: record counts in each relevant panel or region separately. Do not calculate ratios or other derived quantities.
+- Arrow: write "X -> Y", with the tail (start) first. Use visible endpoint labels, or locations when endpoints are unlabeled. Do not explain what the arrow represents.
+- Table: copy the header and only the rows relevant to the question. A compact header and row may share one line.
+- Colour: for colour-coded maps or charts, give the visible legend's colour-to-value mapping and the colour of the region the question asks about.
+- Graph: record relevant axis labels, units, scale markings, and directly readable plotted values. Do not derive values or trends.
+
+Describe only what is visible. Do not infer, explain, interpret, predict, or draw conclusions. Do not supply labels or identities that are not visually supported. If a detail is unreadable or not visible, leave it out.
+Output only the numbered lines."""
 
 
 def extract_evidence(tutor, image, question):
-    return tutor.ask(image, evidence_prompt(question), max_new_tokens=320)
+    return tutor.ask(image, evidence_prompt(question), max_new_tokens=EVIDENCE_MAX_NEW_TOKENS)
 
 
 def diagnose(tutor, image, question, student_answer, explanation, evidence):

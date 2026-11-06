@@ -133,12 +133,14 @@ class ColabWorkflowTests(unittest.TestCase):
 
     def test_setup_skips_ensurepip_and_targets_project_python(self):
         commands = []
+        working_directories = []
 
         def simulate_colab(command, **kwargs):
             command = list(map(str, command))
             if "venv" in command and "--without-pip" not in command:
                 raise subprocess.CalledProcessError(1, command)  # Reported ensurepip failure.
             commands.append(command)
+            working_directories.append(kwargs.get("cwd"))
 
         requirements = self.root / "requirements.txt"
         environment = self.root / "project_env"
@@ -155,6 +157,9 @@ class ColabWorkflowTests(unittest.TestCase):
         self.assertEqual(commands[2][5:7], ["install", "-r"])
         self.assertEqual(commands[3][2], "check")
         self.assertIn("torch.cuda.is_available()", commands[4][-1])
+        self.assertIn("import qwen_engine", commands[4][-1])
+        self.assertEqual(commands[4][0], commands[2][4])
+        self.assertEqual(working_directories[4], self.root)
 
     def test_torch_211_bound_preserves_compatible_colab_setuptools(self):
         (self.root / "requirements.txt").write_text(
@@ -242,6 +247,27 @@ class ColabWorkflowTests(unittest.TestCase):
             )
             self.assertEqual(help_result.returncode, 0, help_result.stderr)
             self.assertIn("usage:", help_result.stdout)
+
+    def test_source_upload_discards_old_launcher_before_loading_updated_source(self):
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        code = next(cell["source"] for cell in notebook["cells"] if cell["id"] == "source-upload")
+        code = code.split("# Validate paths before extracting the package.", 1)[0]
+        code = code.replace("Path('/content/IE4422')", "WORK")
+        code = code.replace("Path('/content/IE4422_Source.zip')", "SOURCE_ZIP")
+        files = Mock()
+        files.upload.return_value = {"IE4422_Source.zip": b"updated source bundle"}
+        google = ModuleType("google")
+        colab = ModuleType("google.colab")
+        colab.files = files
+        google.colab = colab
+        server = Mock()
+        archive = self.root / "source.zip"
+        namespace = {"WORK": self.root, "SOURCE_ZIP": archive, "UI_SERVER": server}
+        with patch.dict(sys.modules, {"google": google, "google.colab": colab}):
+            exec(compile(code, "source-upload", "exec"), namespace)
+        server.stop.assert_called_once()
+        self.assertIsNone(namespace["UI_SERVER"])
+        self.assertEqual(archive.read_bytes(), b"updated source bundle")
 
     def test_notebook_ui_launch_uses_proxy_embed_and_drive_without_model_import(self):
         notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")

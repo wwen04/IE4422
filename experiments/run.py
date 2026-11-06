@@ -14,17 +14,17 @@ from experiments.data import ROOT, load_questions, load_references, public_snaps
 from experiments.common import answer_prompt, score_predictions, digest, json_digest, load_prompt_spec, model_identity, runtime_versions, write_json
 from hint_prompts import render_initial_hint
 from scienceqa_tutor import question_prompt
-from tutor_pipeline import evidence_prompt
+from tutor_pipeline import EVIDENCE_MAX_NEW_TOKENS, evidence_prompt, extract_evidence
 
 
 SCHEMA_VERSION = "no-attempt-batch-v1"
-VERSIONS = {"A": "answer-only-v1", "B": "b-ui-prompt-without-evidence-v2", "D": "d-ui-prompt-with-evidence-v1"}
+VERSIONS = {"A": "answer-only-v1", "B": "b-ui-prompt-without-evidence-v2", "D": "d-ui-prompt-with-evidence-v2"}
 OUTPUT_FIELDS = {"hint_text", "word_count", "raw_response", "predicted_option_id", "generation", "evidence", "effective_prompt"}
 
 
 def settings(experiment):
     return {"do_sample": False, "max_new_tokens": 8 if experiment == "A" else 160,
-            "evidence_max_new_tokens": 320 if experiment == "D" else None,
+            "evidence_max_new_tokens": EVIDENCE_MAX_NEW_TOKENS if experiment == "D" else None,
             "evidence_reuse": False}
 
 
@@ -61,7 +61,7 @@ def generate_record(tutor, root, plan, spec):
             row["evidence"] = evidence
             evidence_started = time.perf_counter()
             try:
-                text = tutor.ask(image, plan["evidence_prompt"], max_new_tokens=320)
+                text = extract_evidence(tutor, image, question_prompt(plan["public_inputs"]))
                 if not isinstance(text, str):
                     raise TypeError("Evidence response must be text")
                 evidence.update(text=text, status="ok" if text.strip() else "empty_output")

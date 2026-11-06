@@ -18,7 +18,7 @@ from experiments.prepare_judging import prepare, verify_run
 from experiments.summarize import summarize
 from experiments.judge_validate import read_judgment
 from prepare_ai2d import METHOD, prepare_rows
-from tutor_pipeline import generate_initial_hint
+from tutor_pipeline import extract_evidence, generate_initial_hint
 
 
 def judgment():
@@ -156,17 +156,25 @@ class BatchExperimentTests(unittest.TestCase):
         self.assertEqual(json.loads((output / "run.json").read_text())["status"], "failed")
 
     def test_d_uses_two_calls_per_tier_without_prior_hint_history_or_gold(self):
-        self.tutor.ask.side_effect = lambda image, prompt, **kwargs: ('{"labels": ["w"]}' if 'Return a JSON object' in prompt else 'Notice label w.')
-        output = self.run_cli("D", extra=("--limit", "2"))
+        evidence = '1. Text: "w", upper left.\n2. Arrow: upper left -> lower right.'
+        self.tutor.ask.side_effect = lambda image, prompt, **kwargs: (evidence if kwargs["max_new_tokens"] == 320 else 'Notice label w.')
+        with patch.object(runner, "extract_evidence", wraps=extract_evidence) as shared_extractor:
+            output = self.run_cli("D", extra=("--limit", "2"))
+        self.assertEqual(shared_extractor.call_count, 6)
         self.assertEqual(self.tutor.ask.call_count, 12)
         run, records, _, _, _ = verify_run(self.root, output)
         self.assertEqual(run["generation"]["evidence_reuse"], False)
         self.assertEqual(len(records), 6)
-        for row in records:
-            self.assertEqual(row["evidence"]["text"], '{"labels": ["w"]}')
-            self.assertIn('Visual evidence (unverified): {"labels": ["w"]}', row["effective_prompt"])
+        for index, row in enumerate(records):
+            self.assertEqual(row["evidence"]["text"], evidence)
+            self.assertIn(f'Visual evidence (unverified): {evidence}', row["effective_prompt"])
             self.assertNotIn("Notice label w.", row["effective_prompt"])
             self.assertEqual(row["generation"]["status"], "ok")
+            evidence_call = self.tutor.ask.call_args_list[index * 2]
+            self.assertEqual(evidence_call.args[1], row["evidence_prompt"])
+            ui_tutor = Mock()
+            extract_evidence(ui_tutor, evidence_call.args[0], runner.question_prompt(row["public_inputs"]))
+            self.assertEqual(evidence_call, ui_tutor.ask.call_args)
         self.assertEqual([call.kwargs["max_new_tokens"] for call in self.tutor.ask.call_args_list], [320, 160] * 6)
 
     def test_interruption_resume_preserves_saved_errors_and_rejects_changed_checkpoint(self):
@@ -187,7 +195,7 @@ class BatchExperimentTests(unittest.TestCase):
 
     def test_same_frozen_30_and_all_tiers_are_packaged_for_b_and_d_without_provenance(self):
         b = self.run_cli("B")
-        self.tutor.ask.side_effect = lambda image, prompt, **kwargs: ('{"labels": ["w"]}' if 'Return a JSON object' in prompt else 'Notice label w.')
+        self.tutor.ask.side_effect = lambda image, prompt, **kwargs: ('1. Text: "w", upper left.' if kwargs["max_new_tokens"] == 320 else 'Notice label w.')
         d = self.run_cli("D")
         expected = {entry["item_id"] for entry in self.frozen["items"]}
         for output in (b, d):

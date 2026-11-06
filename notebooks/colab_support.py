@@ -156,11 +156,12 @@ def setup_environment(root, environment):
     run_visible([*pip, "--version"])
     print("Installing shared dependencies into the project environment.", flush=True)
     run_visible([*pip, "install", "-r", requirements])
-    print("Checking project dependencies and CUDA.", flush=True)
+    print("Checking project dependencies, model adapter imports and CUDA.", flush=True)
     run_visible([python, Path(__file__).resolve(), "check", requirements])
-    run_visible([python, "-c", "import torch, torchvision; "
+    run_visible([python, "-c", "import torch, torchvision; import qwen_engine; "
                  "assert torch.cuda.is_available(), 'CUDA unavailable in the project environment'; "
-                 "print('CUDA:', torch.version.cuda, 'GPU:', torch.cuda.get_device_name(0))"])
+                 "print('Model adapter imports successfully.'); "
+                 "print('CUDA:', torch.version.cuda, 'GPU:', torch.cuda.get_device_name(0))"], cwd=root)
 
 
 CACHE_PREFIXES = ("data/processed/scienceqa/", "data/final/scienceqa/",

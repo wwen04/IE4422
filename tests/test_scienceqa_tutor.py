@@ -173,7 +173,8 @@ class TutorIntegrationTests(unittest.TestCase):
 
     def test_initial_hint_needs_no_student_answer_or_explanation(self):
         tutor = Mock()
-        tutor.ask.side_effect = ["Evidence", "Start by noticing the labels."]
+        evidence = '1. Count: left panel, 3 circles.\n2. Text: "A", above left panel.'
+        tutor.ask.side_effect = [evidence, "Start by noticing the labels."]
         stages = []
 
         result = run_initial_hint(
@@ -183,7 +184,10 @@ class TutorIntegrationTests(unittest.TestCase):
         self.assertEqual(stages, ["evidence", "hint"])
         self.assertEqual(result["outcome"], "hint")
         self.assertIsNone(result["diagnosis"])
+        self.assertEqual(result["evidence"], evidence)
         self.assertEqual(result["hint"], "Start by noticing the labels.")
+        self.assertIn(f"Visual evidence (unverified): {evidence}\n", tutor.ask.call_args_list[1].args[1])
+        self.assertEqual([call.kwargs["max_new_tokens"] for call in tutor.ask.call_args_list], [320, 160])
         self.assertNotIn("Student answer", tutor.ask.call_args_list[1].args[1])
 
     def test_correct_answer_and_supported_explanation_get_feedback(self):
