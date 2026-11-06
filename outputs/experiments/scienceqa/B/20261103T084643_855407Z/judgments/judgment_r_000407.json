@@ -1,0 +1,34 @@
+{
+  "tier_compliance": {
+    "reason": "The hint concludes that Sample A's particles move faster, applying its claimed concept to decide a comparison rather than simply connecting a visible detail to an idea.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It specifically refers to Sample A's lower particle mass and Sample B's higher particle mass, shown as 20 u and 34 u.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The samples 'will have different speeds'; both are labeled with an average particle speed of 1,800 m/s.",
+      "The lower-mass particles in Sample A 'will move faster' than those in Sample B; their displayed average speeds are equal.",
+      "'Therefore, Sample A will have particles moving faster than those in Sample B' repeats a comparison contradicted by the equal displayed average speeds."
+    ],
+    "count": 3
+  },
+  "scientific_correctness": {
+    "reason": "Different particle masses and equal particle counts do not imply different speeds. Kinetic energy depends on both mass and speed; the given equal speeds make Sample B's heavier particles higher in kinetic energy.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "By emphasizing speed as the determinant of kinetic energy and claiming Sample A moves faster, the hint directs the student toward Sample A instead of the gold answer, Sample B.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The claim that Sample A moves faster, combined with the stated speed–kinetic-energy connection, strongly favors Sample A without explicitly naming the higher-temperature answer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The hint supplies a claimed explanation and conclusion but gives the student no usable next action to perform.",
+    "score": 1
+  }
+}

@@ -1,5 +1,3 @@
-from contextlib import redirect_stdout
-from io import StringIO
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -8,7 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 from evaluate_visual_evidence import answer_prompt
-import run_scienceqa_tutor as runner
+import scienceqa_tutor as runner
 from tutor_pipeline import (
     assess_explanation,
     diagnose,
@@ -16,7 +14,6 @@ from tutor_pipeline import (
     generate_hint,
     run_answered_pipeline,
     run_initial_hint,
-    run_pipeline,
 )
 
 
@@ -25,21 +22,24 @@ class TutorIntegrationTests(unittest.TestCase):
         self.directory = tempfile.TemporaryDirectory(dir=runner.ROOT)
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
-        (self.root / "data/images").mkdir(parents=True)
-        (self.root / "data/images/example.png").write_bytes(b"mock image")
-        self.questions = self.root / "data/processed/scienceqa/questions"
+        (self.root / "data/final/scienceqa/images").mkdir(parents=True)
+        (self.root / "data/final/scienceqa/images/example.png").write_bytes(b"mock image")
+        self.questions = self.root / "data/final/scienceqa/questions"
         self.questions.mkdir(parents=True)
-        self.references = self.root / "data/processed/scienceqa/references"
+        self.references = self.root / "data/final/scienceqa/references"
         self.references.mkdir(parents=True)
         self.item = {
             "item_id": "validation_000003", "split": "validation",
             "question": "Which arrow points up?", "context": "Use the arrow labels.",
             "choices": [{"id": "A", "text": "left"}, {"id": "B", "text": "up"}],
-            "image_path": "data/images/example.png",
+            "image_path": "data/final/scienceqa/images/example.png",
             "answer": "SECRET GOLD", "lecture": "SECRET LECTURE", "solution": "SECRET SOLUTION",
         }
         self.write_question()
         self.write_reference()
+        manifest = self.root / "manifests/scienceqa/validation_final_ids.json"
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text(json.dumps([self.item["item_id"]]), encoding="utf-8")
 
     def write_question(self):
         (self.questions / "validation.jsonl").write_text(json.dumps(self.item) + "\n", encoding="utf-8")
@@ -71,9 +71,9 @@ class TutorIntegrationTests(unittest.TestCase):
         tutor = FakeTutor()
         evidence = extract_evidence(tutor, item["image_path"], prompt)
         evidence_prompt = calls[0]
-        self.assertIn("minimum information", evidence_prompt)
-        self.assertIn("exact labels, values, units", evidence_prompt)
-        self.assertIn('"observations" and "uncertainties"', evidence_prompt)
+        self.assertIn("List the visible observations", evidence_prompt)
+        self.assertIn("One observation per line", evidence_prompt)
+        self.assertIn("Do not infer, explain, interpret, predict", evidence_prompt)
         diagnosis = diagnose(tutor, item["image_path"], prompt, "A", "My reasoning", evidence)
         generate_hint(tutor, item["image_path"], prompt, evidence, diagnosis)
         self.assertEqual(len(calls), 3)
@@ -102,7 +102,7 @@ class TutorIntegrationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "not found"):
             runner.load_question(self.root, "validation", "validation_999999")
         (self.root / self.item["image_path"]).unlink()
-        with self.assertRaisesRegex(FileNotFoundError, "Missing prepared image"):
+        with self.assertRaisesRegex(FileNotFoundError, "Missing final image"):
             runner.load_question(self.root, "validation", self.item["item_id"])
 
     def test_reference_loader_is_separate_from_public_question(self):
@@ -111,6 +111,33 @@ class TutorIntegrationTests(unittest.TestCase):
         self.assertNotIn("gold_option_id", item)
         self.assertEqual(reference["gold_option_id"], "B")
         self.assertNotIn("SECRET", str(reference))
+
+    def test_default_rejects_excluded_processed_rows_and_missing_final_exports(self):
+        processed = self.root / "data/processed/scienceqa/questions"
+        processed.mkdir(parents=True)
+        excluded = {**self.item, "item_id": "validation_000999"}
+        (processed / "validation.jsonl").write_text(json.dumps(excluded) + "\n", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "not found"):
+            runner.load_question(self.root, "validation", excluded["item_id"])
+        with self.assertRaisesRegex(ValueError, "audited"):
+            runner.load_reference(self.root, "validation", excluded["item_id"])
+        (self.questions / "validation.jsonl").unlink()
+        with self.assertRaisesRegex(FileNotFoundError, "finalize_data.py"):
+            runner.load_question(self.root, "validation", excluded["item_id"])
+
+    def test_final_manifest_and_final_image_directory_are_enforced(self):
+        manifest = self.root / "manifests/scienceqa/validation_final_ids.json"
+        manifest.write_text("[]", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "audited.*manifest"):
+            runner.load_question(self.root, "validation", self.item["item_id"])
+        manifest.write_text(json.dumps([self.item["item_id"]]), encoding="utf-8")
+        image = self.root / "data/processed/scienceqa/images/example.png"
+        image.parent.mkdir(parents=True)
+        image.write_bytes(b"old candidate")
+        self.item["image_path"] = image.relative_to(self.root).as_posix()
+        self.write_question()
+        with self.assertRaisesRegex(ValueError, "audited images"):
+            runner.load_question(self.root, "validation", self.item["item_id"])
 
     def test_split_mismatch_and_image_outside_repository_are_rejected(self):
         self.item["split"] = "test"
@@ -123,39 +150,18 @@ class TutorIntegrationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "inside the repository"):
             runner.load_question(self.root, "validation", self.item["item_id"])
 
-    def test_cli_passes_student_response_and_saves_linked_result(self):
-        output = self.root / "outputs/result.json"
-        tutor = Mock()
-        constructor = Mock(return_value=tutor)
-        with patch.object(runner, "ROOT", self.root), patch.object(
-                runner, "run_pipeline", return_value={"evidence": "E", "diagnosis": "D", "hint": "H"}
-        ) as pipeline, patch.dict("sys.modules", {
-            "qwen_engine": SimpleNamespace(QwenTutor=constructor)
-        }), redirect_stdout(StringIO()):
-            runner.main(["--item-id", self.item["item_id"], "--answer", "A",
-                         "--explanation", "My reasoning", "--hint-level", "2",
-                         "--output", str(output)])
-        arguments = pipeline.call_args.args
-        self.assertIs(arguments[0], tutor)
-        self.assertEqual(arguments[3:6], ("A", "My reasoning", 2))
-        constructor.assert_called_once_with()
-        self.assertNotIn("SECRET", str(arguments))
-        result = json.loads(output.read_text(encoding="utf-8"))
-        self.assertEqual(result["item_id"], self.item["item_id"])
-        self.assertEqual(result["hint"], "H")
-
     def test_multiple_questions_reuse_the_supplied_tutor_without_loading_a_model(self):
         item = runner.load_question(self.root, "validation", self.item["item_id"])
         tutor = Mock()
-        tutor.ask.side_effect = ["E1", "D1", "H1", "E2", "D2", "H2"]
+        tutor.ask.side_effect = ["E1", "H1", "E2", "H2"]
         constructor = Mock(side_effect=AssertionError("The pipeline must not load a model"))
         with patch.dict("sys.modules", {
             "qwen_engine": SimpleNamespace(QwenTutor=constructor)
         }):
-            first = runner.run_question(tutor, item, "A", "My reasoning", 1)
-            second = runner.run_question(tutor, item, "B", "Another attempt", 2)
+            first = runner.run_hint(tutor, item, 1)
+            second = runner.run_hint(tutor, item, 2)
         constructor.assert_not_called()
-        self.assertEqual(tutor.ask.call_count, 6)
+        self.assertEqual(tutor.ask.call_count, 4)
         self.assertEqual((first["hint"], second["hint"]), ("H1", "H2"))
         self.assertEqual(first["item_id"], second["item_id"])
         self.assertNotIn("SECRET", str(tutor.ask.call_args_list))
@@ -163,25 +169,34 @@ class TutorIntegrationTests(unittest.TestCase):
     def test_invalid_hint_level_fails_before_generation(self):
         tutor = Mock()
         with self.assertRaisesRegex(ValueError, "hint_level"):
-            run_pipeline(tutor, "image.png", "Question", "A", "My reasoning", 4)
+            run_initial_hint(tutor, "image.png", "Question", 4)
+        with self.assertRaisesRegex(ValueError, "hint_level"):
+            run_answered_pipeline(tutor, "image.png", "Question", "A", "My reasoning",
+                                  "A. left", "B", "Reference", 4)
         tutor.ask.assert_not_called()
 
-    def test_pipeline_reports_stages_in_order(self):
+    def test_checked_question_links_result_and_limits_reference_to_assessment(self):
+        item = runner.load_question(self.root, "validation", self.item["item_id"])
+        reference = runner.load_reference(self.root, "validation", self.item["item_id"])
         tutor = Mock()
-        tutor.ask.side_effect = ["Evidence", "Diagnosis", "Hint"]
+        tutor.ask.side_effect = ["Evidence", "NEEDS_WORK", "Diagnosis", "Hint"]
         stages = []
-
-        result = run_pipeline(
-            tutor, "image.png", "Question", "A", "My reasoning",
+        result = runner.run_checked_question(
+            tutor, item, reference, "A", "My reasoning",
             on_stage=stages.append,
         )
-
-        self.assertEqual(stages, ["evidence", "diagnosis", "hint"])
+        self.assertEqual(stages, ["evidence", "assessment", "diagnosis", "hint"])
+        self.assertEqual(result["item_id"], self.item["item_id"])
         self.assertEqual(result["hint"], "Hint")
+        for index, call in enumerate(tutor.ask.call_args_list):
+            self.assertIn("A. left\nB. up", call.args[1])
+            self.assertEqual("Reference lecture" in call.args[1], index == 1)
+            self.assertEqual("Reference solution" in call.args[1], index == 1)
 
     def test_initial_hint_needs_no_student_answer_or_explanation(self):
         tutor = Mock()
-        tutor.ask.side_effect = ["Evidence", "Start by noticing the labels."]
+        evidence = '1. Count: left panel, 3 circles.\n2. Text: "A", above left panel.'
+        tutor.ask.side_effect = [evidence, "Start by noticing the labels."]
         stages = []
 
         result = run_initial_hint(
@@ -191,7 +206,10 @@ class TutorIntegrationTests(unittest.TestCase):
         self.assertEqual(stages, ["evidence", "hint"])
         self.assertEqual(result["outcome"], "hint")
         self.assertIsNone(result["diagnosis"])
+        self.assertEqual(result["evidence"], evidence)
         self.assertEqual(result["hint"], "Start by noticing the labels.")
+        self.assertIn(f"Visual evidence (unverified): {evidence}\n", tutor.ask.call_args_list[1].args[1])
+        self.assertEqual([call.kwargs["max_new_tokens"] for call in tutor.ask.call_args_list], [320, 160])
         self.assertNotIn("Student answer", tutor.ask.call_args_list[1].args[1])
 
     def test_correct_answer_and_supported_explanation_get_feedback(self):

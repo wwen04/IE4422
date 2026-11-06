@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint states what E supposedly depicts rather than suggesting a small reasoning step for the student.", "verdict": "no"},
+  "visual_grounding": {"reason": "It specifically identifies letter E and the claimed illuminated side of that Moon image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["Letter E depicts a phase with a visible crescent on the right side; E actually shows the left half illuminated."], "count": 1},
+  "scientific_correctness": {"reason": "Describing E as a right-side crescent contradicts its last-quarter phase in the gold answer, which shows the left half illuminated.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The claimed right-side crescent directs the student away from the correct last-quarter phase.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It supplies a purported phase-defining illumination pattern that would rule out options, although that pattern is incorrect.", "score": 1},
+  "actionability": {"reason": "It gives a purported observation but no usable next reasoning action for identifying the phase.", "score": 1}
+}

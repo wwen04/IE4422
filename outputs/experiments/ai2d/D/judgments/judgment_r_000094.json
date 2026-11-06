@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"King cobra consumes Mouse\" supplies one of the consumers being asked for, rather than connecting a visible detail to a concept without applying it.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint names Mouse and the snake annotated King cobra, which are identifiable in the image and joined by a feeding arrow.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The arrow from Mouse to the snake annotated King cobra supports the stated feeding relationship.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It identifies a genuine mouse consumer and does not claim that it is the only one.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It reveals one of the two mouse consumers, supplying part of the answer without stating the total.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It provides a specific feeding relationship to start from, but the student must work out how to find and count the remaining consumers.",
+    "score": 3
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Solution A contains more yellow balls” supplies an observation rather than a concrete reasoning step for the student to perform.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The comparison identifies the yellow balls in the labeled Solution A and Solution B containers.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Solution A visibly contains five yellow balls and Solution B two; the comparison is correct.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The comparison supports Solution A, the gold answer, because the displayed solvent volumes are equal.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "With both solvent volumes shown as 25 mL, naming Solution A as containing more solute gives the deciding comparison without explicitly stating the concentration answer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The particle comparison provides a clear focus, but the student must work out how to use the displayed solvent volumes.",
+    "score": 3
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint explains the concept and supplies the deciding rule, 'the sample with the higher mass ... corresponds to a higher temperature,' rather than leaving a small reasoning step for the student.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Both samples have ... the same average speed' refers to the matching 1,000 m/s labels and is needed for the mass comparison.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "At equal particle speed, greater particle mass means greater average kinetic energy and therefore higher temperature, consistent with the reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing mass at the stated equal speeds leads to sample A, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'The sample with the higher mass ... corresponds to a higher temperature' supplies the deciding fact, leaving only a lookup of the mass labels without naming sample A.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The mass comparison provides a clear direction, but the hint presents an explanation rather than a concrete action for the student to perform.",
+    "score": 3
+  }
+}

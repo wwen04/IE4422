@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“The distance ... in Pair 1 is longer” only identifies a visual difference; it does not connect that detail to a science idea as Tier 2 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The comparison identifies the specific gaps between the magnets in Pair 1 and Pair 2.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The stated distance comparison is accurate and contradicts neither the reference nor school-level science.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It highlights the larger gap in Pair 1, a relevant observation for reaching the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It states the gap comparison but leaves the student to determine how distance affects magnetic force; no force option is favoured or ruled out.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The gap comparison gives a clear focus, but the student must work out how to use it to compare the forces.",
+    "score": 3
+  }
+}

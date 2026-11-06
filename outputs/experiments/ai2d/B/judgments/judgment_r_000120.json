@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The pink stone is likely to be rose quartz supplies the answer instead of a small reasoning step.", "verdict": "no"},
+  "visual_grounding": {"reason": "The pink stone identifies the visibly pink specimen in the lower-left cell.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Rose quartz has a characteristic pink colour, consistent with the gold answer and pictured specimen.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint identifies rose quartz, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The pink stone is likely to be rose quartz directly names the correct answer despite the hedge.", "score": 2},
+  "actionability": {"reason": "It gives the answer and a fact, with no usable reasoning action for the student.", "score": 1}
+}

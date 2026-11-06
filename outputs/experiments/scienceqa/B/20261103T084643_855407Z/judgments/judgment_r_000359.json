@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint states the speed–kinetic-energy–temperature reasoning chain rather than naming a small action for the student to perform.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Both samples have the same number of particles but different average speeds' refers to the equal particle counts and the displayed speeds of 1,700 m/s and 1,500 m/s.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Higher average kinetic energy means higher temperature; comparing the displayed speeds is valid here because both samples have particles of mass 28 u.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The higher-speed rule directs the student toward sample A, consistent with the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'The sample with the higher average speed ... [has] a higher temperature' supplies the deciding fact and leaves only looking up which displayed speed is higher.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The higher-speed rule gives a clear direction, but the hint does not explicitly ask the student to compare the two displayed speeds.",
+    "score": 3
+  }
+}

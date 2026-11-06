@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Each cell represents one possible offspring combination” connects the visible cells to possible offspring genotypes without deciding the probability.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "“Four possible outcomes” and “each cell” refer to the four visible Ee cells in this Punnett square.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The EE and ee parents have different eye colors, and each cell represents a possible offspring allele combination.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Interpreting the cells as possible offspring combinations is consistent with calculating the probability of red eyes.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint does not identify the offspring eye color, count red-eyed outcomes, or favor any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "“Each cell represents one possible offspring combination” gives a clear focus, but the student must determine how to use the cells to calculate the probability.",
+    "score": 3
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that letter E shows' directs attention to one visual detail without explaining a concept or procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint specifically identifies letter E and its illuminated portion.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["Letter E shows a crescent moon.", "Letter E has a small portion of the dark side illuminated."], "count": 2},
+  "scientific_correctness": {"reason": "Calling E a crescent misidentifies its half-illuminated last-quarter phase; a dark portion is not an illuminated portion.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The asserted crescent phase directs the student away from the correct last-quarter identification.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "'Letter E shows a crescent moon' directly supplies an asserted answer to the phase-identification question, although it is incorrect.", "score": 2},
+  "actionability": {"reason": "The student can immediately inspect the illuminated portion of moon E, although the supplied observation is wrong.", "score": 4}
+}

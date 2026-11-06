@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint supplies the chain from equal speeds to higher mass, higher kinetic energy and higher temperature, leaving only a mass-label lookup rather than a small reasoning step.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to both samples having the same average particle speed matches the two 1,900 m/s labels and is needed for the mass comparison.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "At equal particle speeds, greater particle mass gives greater kinetic energy, and average kinetic energy is proportional to absolute temperature, consistent with the reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Following the higher-mass comparison selects sample A, whose particles are labeled 28 u versus 26 u, matching the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The statement that the sample with higher mass has higher temperature supplies the deciding rule and reduces the answer to looking up the two mass labels.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The hint gives a clear direction to use mass at equal speeds, but does not explicitly ask the student to perform a concrete comparison and supplies the key reasoning.",
+    "score": 3
+  }
+}

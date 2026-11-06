@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"They will have the same average kinetic energy\" applies the idea to give a conclusion instead of linking a visible detail to a concept without deciding the answer.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "\"The same average particle speed\" refers to the matching 1,100 m/s labels beneath the two samples, which are central to the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "\"The same average particle speed\" does not imply equal average kinetic energy when particle masses differ: the image gives 32 u for sample A and 44 u for sample B. Kinetic energy depends on both mass and speed.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The conclusion of equal average kinetic energy leads to equal temperatures, option A, whereas the gold answer is sample B, option C.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "\"They will have the same average kinetic energy\" states a conclusion that immediately implies the same-temperature option, although that conclusion is incorrect.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The hint supplies assertions and a completed conclusion, without a usable action for the student to perform.",
+    "score": 1
+  }
+}

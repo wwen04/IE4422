@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "‘Notice ... the color bar at the bottom’ directs attention to a specific visible legend and its color trend, without a procedure or conclusion.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The bottom color bar and its green higher-value end are specific, visible elements needed for the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The legend shows specific humidity, with green shades at higher values than the purple shades.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Attending to the legend and its green higher-value end supports interpreting the outlined air mass correctly.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint neither gives a humidity range for the outlined area nor identifies or eliminates an option.", "score": 0},
+  "actionability": {"reason": "The student can immediately inspect the bottom color bar and its green higher-value end, but must work out how to use it for the outlined area.", "score": 4}
+}

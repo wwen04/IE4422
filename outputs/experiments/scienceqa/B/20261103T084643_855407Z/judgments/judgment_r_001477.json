@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"Notice that Sample B contains particles with a higher mass than Sample A\" points to one visible comparison without explaining the science or drawing a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The particle-mass labels show 32 u for Sample B and 26 u for Sample A, directly supporting the named comparison.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The stated mass comparison agrees with the image and gold solution and makes no incorrect scientific inference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Noticing the larger particle mass in Sample B is relevant to the correct comparison and does not direct the student to a wrong answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint identifies a visible mass difference but does not explain its effect on kinetic energy or temperature, or favour or eliminate an answer option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "Comparing the particle masses of the two named samples is an immediate, specific observation, though it is only a small part of the reasoning.",
+    "score": 4
+  }
+}

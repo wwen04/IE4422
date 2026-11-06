@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Compare Jupiter's volume ... to Mars' volume' gives a small, question-specific comparison step without completing the reasoning.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies the Jupiter and Mars rows and their displayed volumes, 1.43 x 10^15 and 1.63 x 10^11 km³.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Both quoted volumes match the table, and comparing these volumes is relevant to evaluating the stated ratio.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It does not assert an incorrect relationship or suggest a wrong conclusion; the student must still evaluate the 10,000-times comparison.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It supplies the relevant table values without deciding their ratio or favoring true or false.", "score": 0},
+  "actionability": {"reason": "'Compare' gives a clear direction using specific values, but the student must work out how to account for the 10,000-times threshold.", "score": 3}
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"Notice that the flower is labeled as \\\"Producer.\\\"\" directs attention to one visible label without explaining the concept.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The flower and its \"Producer\" label are specific, visible elements needed for the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The image labels the flower as a producer, which is scientifically correct.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Identifying the producer does not direct the student toward an incorrect primary consumer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Calling the flower a producer rules out the flower option as a primary consumer, without identifying the caterpillar.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The student can immediately inspect the specified flower label, but this is a small observation rather than a substantive reasoning step.",
+    "score": 4
+  }
+}

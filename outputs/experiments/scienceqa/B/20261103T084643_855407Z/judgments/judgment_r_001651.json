@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The black-and-white pattern is linked to killer-whale identity, not to a useful science idea for identifying an omnivore.", "verdict": "no"},
+  "visual_grounding": {"reason": "The hint identifies the labeled orca and its visible black-and-white body pattern.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Orcas are large predators with characteristic black-and-white markings; these statements are scientifically correct.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Singling out the orca and its identifying features directs attention toward option D without helping distinguish omnivory; the gold answer is kelp bass.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "Identifying the orca by appearance does not state which organism is omnivorous or rule any option in or out.", "score": 0},
+  "actionability": {"reason": "The hint describes the orca but gives no usable next move for identifying an omnivore.", "score": 1}
+}

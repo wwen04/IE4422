@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Four possible outcomes based on the combination of alleles from both parents” explains what the boxes represent, going beyond noticing a visual detail for Tier 1.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "“The Punnett square shows four possible outcomes” refers to its four visible interior boxes.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The four boxes correctly represent four equally likely combinations of parental alleles.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Noticing the four outcomes does not direct the student toward a probability different from 4/4.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It identifies the total number of outcomes without indicating how many have a greenish-brown body or favouring an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to the four outcomes, but leaves the student to determine how to use their genotypes.",
+    "score": 3
+  }
+}

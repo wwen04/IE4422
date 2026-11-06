@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'The number of green particles in each beaker' connects a visible feature to solute concentration without comparing the solutions or selecting an answer.", "verdict": "yes"},
+  "visual_grounding": {"reason": "'Green particles in each beaker' identifies the pictured solute particles in the two containers and is central to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Both pictured solvent volumes are 40 mL, so particle number indicates relative concentration for these two solutions.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Comparing green-particle numbers at the equal pictured solvent volumes leads toward Solution B, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint links particle number to concentration but does not compare the counts, favor an option, or state the answer.", "score": 0},
+  "actionability": {"reason": "It directs attention to particle number, but leaves the student to work out counting and comparing the two beakers.", "score": 3}
+}

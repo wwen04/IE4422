@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Look for arrows pointing towards the black bear that lead back to the persimmon tree' gives a concrete tracing step without completing the reasoning.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The black bear, persimmon tree, and arrows connecting them are identifiable in the image and needed for the tracing instruction.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Food-web arrows show the transfer of matter and energy from food to consumer; the tracing instruction does not contradict this.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The black bear is an unnecessary detour, but tracing its food sources does not favor the beaver over the swallowtail caterpillar.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint identifies neither choice as correct or incorrect and does not state the deciding path to either choice.", "score": 0},
+  "actionability": {"reason": "Tracing arrows into the labeled black bear back toward the persimmon tree is immediately doable, although the student must still connect this detour to the answer choices.", "score": 4}
+}

@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint states concepts and a conclusion about speeds, but gives no concrete reasoning step for the requested Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "\"Both samples have the same number of particles but different masses\" refers to the depicted particles and their 20 u and 34 u mass labels.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "\"They will have different average speeds\" contradicts the image, which labels both average particle speeds as 1,800 m/s."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "Equal particle counts and different particle masses do not imply different average speeds; both samples here have the same average speed.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The incorrect speed claim adds confusion but gives no direction for ranking the samples or choosing a specific wrong answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint gives the general temperature–average kinetic energy relationship without ranking the samples or ruling out an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The hint supplies general relationships but no concrete comparison, calculation, or other next action.",
+    "score": 2
+  }
+}

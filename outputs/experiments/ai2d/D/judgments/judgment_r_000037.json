@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... the pointed shapes ... distinct' directs attention to one visual relation without explaining a concept or giving a procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The 'pointed shapes' identify the visible pointed forms, including E and G, whose appearances are relevant to distinguishing kinds.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The pointed forms visibly differ, and the hint contains no scientific claim that contradicts the reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Noticing differences among the pointed forms is consistent with identifying the two kinds in the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint does not give a number or identify which options to select or eliminate; the student must locate and count the pointed kinds.", "score": 0},
+  "actionability": {"reason": "It clearly directs attention to differences among pointed shapes, but leaves the student to work out how to identify and count the kinds.", "score": 3}
+}

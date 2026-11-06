@@ -1,0 +1,33 @@
+{
+  "tier_compliance": {
+    "reason": "The hint asserts particle counts and a volume comparison instead of naming a concrete next action for the student, so it does not meet Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "“Both solutions” and “purple particles (5)” identify the two pictured solutions and their solute particles, and the volume comparison depends on their labels.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "Both solutions contain the same number of purple particles (5): Solution A has six purple circles and Solution B has five.",
+      "The solutions have different volumes of solvent: both labels state 30 mL."
+    ],
+    "count": 2
+  },
+  "scientific_correctness": {
+    "reason": "The hint contains no incorrect general science principle; its errors concern the pictured particle counts and volume labels, assessed under unsupported visual claims.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Although its visual assertions are false, it does not identify either solution as having less solvent or otherwise direct the student to a particular alternative to Solution A.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Equal particle counts with different solvent volumes would rule out the equal-concentrations option, so the hint supplies an option-eliminating clue, despite its visual errors.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "Particle counts and solvent volumes provide a clear direction, but the student must determine what comparison to perform; no concrete next action is specified.",
+    "score": 3
+  }
+}

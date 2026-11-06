@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "\"The top row indicates that both parents have the dominant allele M\" draws a conclusion about the parents rather than only inviting observation of a visual detail.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to \"the top row\" and its allele labels identifies a specific part of this Punnett square and is essential to the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "\"The top row indicates that both parents have the dominant allele M\": the top labels are m and m, while the left labels are M and m; only one parent carries M."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The claim that both parents carry dominant M misreads the parental genotypes: this cross is mm by Mm.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Treating both parents as carrying M suggests a cross yielding at least three affected offspring out of four, rather than the gold 2:2 ratio.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The claim that both parents carry dominant M favours ratios dominated by affected offspring and rules out some options, although it does not state a ratio.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "\"Notice ... the top row\" provides a clear place to look, but gives no concrete next action for using its labels to compare offspring phenotypes.",
+    "score": 3
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "It states that E is 'in the early stages of waxing gibbous' instead of suggesting a small reasoning step.", "verdict": "no"},
+  "visual_grounding": {"reason": "It specifically identifies letter E and describes its illuminated shape.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["Letter E has a visible crescent on one side; E actually shows its left half illuminated."], "count": 1},
+  "scientific_correctness": {"reason": "E is last quarter, not waxing gibbous; a crescent also does not identify a waxing gibbous phase.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Calling E waxing gibbous directs the student to option C instead of the gold answer, last quarter (D).", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It directly identifies E as waxing gibbous, an offered answer, although that identification is wrong.", "score": 2},
+  "actionability": {"reason": "It supplies a conclusion and gives the student no usable next action.", "score": 1}
+}

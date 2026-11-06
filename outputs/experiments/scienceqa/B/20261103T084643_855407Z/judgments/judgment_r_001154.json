@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... four boxes, each containing the genotype FF' directs attention to one visual detail without explaining inheritance.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The four Punnett-square boxes and their FF labels are specific visible elements needed for the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "All four offspring boxes visibly contain FF; the hint makes no incorrect genetics claim.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Observing the FF genotypes supports the correct smooth-to-fuzzy ratio after applying dominance.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint identifies the displayed genotypes but does not identify their phenotype, state the ratio, or select an option.", "score": 0},
+  "actionability": {"reason": "The student can immediately inspect the four offspring boxes and their FF labels, then determine what those genotypes imply.", "score": 4}
+}

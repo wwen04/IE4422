@@ -1,0 +1,33 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice' directs attention to particle counts and solvent volumes without explaining a concept or giving a procedure.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The green balls and solvent volumes are identifiable features of these two labeled solutions.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "Both solutions contain the same number of green balls; Solution A has four and Solution B has five.",
+      "The solutions have different volumes of solvent; both are labeled 30 mL."
+    ],
+    "count": 2
+  },
+  "scientific_correctness": {
+    "reason": "The hint introduces no incorrect scientific principle; its errors concern the displayed counts and volumes.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Claiming equal particle counts can lead the student to choose equal concentrations when both displayed solvent volumes are 30 mL, contrary to the gold answer Solution B.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "It neither identifies a higher-concentration solution nor specifies which solution supposedly has less solvent, leaving the answer unresolved.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It identifies specific features to examine, but supplies false observations instead of a concrete counting or comparison action.",
+    "score": 3
+  }
+}

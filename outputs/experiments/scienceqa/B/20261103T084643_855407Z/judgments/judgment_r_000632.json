@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Solution A contains more yellow balls' supplies an observation rather than suggesting a concrete next reasoning step for Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The comparison of yellow balls in the labeled Solution A and Solution B refers to specific visible objects.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Solution A visibly has more yellow particles; the hint makes no incorrect scientific claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The particle comparison points toward Solution A, consistent with the gold answer and the equal solvent volumes shown.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Giving which solution has more particles supplies the deciding comparison when both solvent volumes are 40 mL, without explicitly stating which has higher concentration.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The particle comparison gives a clear focus, but the student must work out how to use it with the solvent volumes.",
+    "score": 3
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint directs attention to the 46 u and 44 u particle masses without explaining the science or drawing a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the mass labels beneath Sample A and Sample B.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The stated particle masses match the image and do not contradict the reference science.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing these masses is relevant to Sample A's higher kinetic energy and does not direct the student toward an incorrect option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It points to the mass labels without explaining their effect on kinetic energy or temperature, or favouring an answer option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately locate and compare the two specific mass labels, while the energy and temperature reasoning remains to be done.",
+    "score": 4
+  }
+}

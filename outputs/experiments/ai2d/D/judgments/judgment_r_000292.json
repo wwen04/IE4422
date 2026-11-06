@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "\"G\" gives the answer instead of suggesting a small reasoning step.", "verdict": "no"},
+  "visual_grounding": {"reason": "\"G\" identifies the visible label beside the twig's terminal bud.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "\"G\" matches the gold answer and labels the terminal bud.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "\"G\" is the gold answer, so it does not direct the student to a wrong option.", "verdict": "no"},
+  "answer_disclosure": {"reason": "\"G\" directly states the correct answer text.", "score": 2},
+  "actionability": {"reason": "\"G\" supplies an answer but no usable next reasoning action.", "score": 1}
+}

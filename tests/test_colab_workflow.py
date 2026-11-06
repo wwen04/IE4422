@@ -1,4 +1,3 @@
-import copy
 from contextlib import redirect_stdout
 from io import StringIO
 import json
@@ -6,13 +5,13 @@ from pathlib import Path
 import tempfile
 import subprocess
 import sys
+from types import ModuleType
 import unittest
 from unittest.mock import Mock, patch
 import zipfile
 
 from notebooks import colab_support as support
 from notebooks.build_bundle import ROOT, build_bundle
-from notebooks.run_demo import run_demo
 
 
 class ColabWorkflowTests(unittest.TestCase):
@@ -25,14 +24,19 @@ class ColabWorkflowTests(unittest.TestCase):
         (root / "configs").mkdir(parents=True, exist_ok=True)
         support.write_json(root / "configs/scienceqa.json", {"dataset_revision": "fixed"})
         (root / "prepare_data.py").write_text("# preparation\n", encoding="utf-8")
+        for name in support.AUDIT_SOURCES:
+            target = root / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("{}\n", encoding="utf-8")
         (root / "requirements-lock.txt").write_text("datasets==5.1.0\n", encoding="utf-8")
         for name in support.prepared_files():
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("[]\n", encoding="utf-8")
-        image = root / "data/processed/scienceqa/images/example.png"
-        image.parent.mkdir(parents=True)
-        image.write_bytes(b"original image bytes")
+        for stage in ("processed", "final"):
+            image = root / f"data/{stage}/scienceqa/images/example.png"
+            image.parent.mkdir(parents=True)
+            image.write_bytes(b"original image bytes")
 
     def test_prepared_cache_roundtrip_and_stale_source_rejection(self):
         self.fixture(self.root)
@@ -40,15 +44,47 @@ class ColabWorkflowTests(unittest.TestCase):
         support.archive_prepared(self.root, archive)
         target = self.root / "restored"
         (target / "configs").mkdir(parents=True)
-        for name in ("configs/scienceqa.json", "prepare_data.py", "requirements-lock.txt"):
+        for name in ("configs/scienceqa.json", "prepare_data.py", "requirements-lock.txt", *support.AUDIT_SOURCES):
+            (target / name).parent.mkdir(parents=True, exist_ok=True)
             (target / name).write_bytes((self.root / name).read_bytes())
         self.assertTrue(support.restore_prepared(target, archive))
         self.assertEqual((target / "data/processed/scienceqa/images/example.png").read_bytes(),
                          b"original image bytes")
         self.assertTrue((target / "data/processed/scienceqa/references/validation.jsonl").is_file())
+        self.assertEqual((target / "data/final/scienceqa/images/example.png").read_bytes(), b"original image bytes")
+        self.assertTrue((target / "manifests/scienceqa/validation_final_ids.json").is_file())
         (target / "prepare_data.py").write_text("# changed", encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "REBUILD_DATA"):
             support.restore_prepared(target, archive)
+
+    def test_prepared_cache_rejects_changed_audit_decisions(self):
+        self.fixture(self.root)
+        archive = self.root / "prepared.zip"
+        support.archive_prepared(self.root, archive)
+        (self.root / "reviews/scienceqa/annotations.jsonl").write_text('{"changed": true}\n', encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "REBUILD_DATA"):
+            support.restore_prepared(self.root, archive)
+
+    def test_notebook_finalizes_before_caching_and_revalidates_reused_data(self):
+        self.fixture(self.root)
+        support.write_json(self.root / "reports/scienceqa/visual_audit.json", {"final_counts": {}})
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        code = next(cell["source"] for cell in notebook["cells"] if cell["id"] == "prepare-data")
+        events = []
+        namespace = {
+            "WORK": self.root, "PYTHON": Path(sys.executable), "PERSISTENT": None,
+            "REBUILD_DATA": False, "prepared_signature": support.prepared_signature,
+            "prepared_files": support.prepared_files, "read_json": support.read_json,
+            "write_json": support.write_json,
+            "run_visible": lambda command, **kwargs: events.append(command[1]),
+            "archive_prepared": lambda *args: events.append("archive"),
+        }
+        with redirect_stdout(StringIO()):
+            exec(compile(code, "prepare-data", "exec"), namespace)
+            self.assertEqual(events, ["prepare_data.py", "finalize_data.py", "archive"])
+            events.clear()
+            exec(compile(code, "prepare-data", "exec"), namespace)
+        self.assertEqual(events, ["finalize_data.py"])
 
     def test_missing_preparation_and_unsafe_archives_fail(self):
         with self.assertRaises(FileNotFoundError):
@@ -97,12 +133,14 @@ class ColabWorkflowTests(unittest.TestCase):
 
     def test_setup_skips_ensurepip_and_targets_project_python(self):
         commands = []
+        working_directories = []
 
         def simulate_colab(command, **kwargs):
             command = list(map(str, command))
             if "venv" in command and "--without-pip" not in command:
                 raise subprocess.CalledProcessError(1, command)  # Reported ensurepip failure.
             commands.append(command)
+            working_directories.append(kwargs.get("cwd"))
 
         requirements = self.root / "requirements.txt"
         environment = self.root / "project_env"
@@ -119,6 +157,9 @@ class ColabWorkflowTests(unittest.TestCase):
         self.assertEqual(commands[2][5:7], ["install", "-r"])
         self.assertEqual(commands[3][2], "check")
         self.assertIn("torch.cuda.is_available()", commands[4][-1])
+        self.assertIn("import qwen_engine", commands[4][-1])
+        self.assertEqual(commands[4][0], commands[2][4])
+        self.assertEqual(working_directories[4], self.root)
 
     def test_torch_211_bound_preserves_compatible_colab_setuptools(self):
         (self.root / "requirements.txt").write_text(
@@ -166,29 +207,6 @@ class ColabWorkflowTests(unittest.TestCase):
         self.assertIn("stdout detail", output.getvalue())
         self.assertIn("stderr detail", output.getvalue())
 
-    def test_demo_reuses_model_and_intermediates_without_reference_fields(self):
-        item = {"item_id": "validation_000003", "split": "validation", "image_path": "image.png",
-                "question": "Which arrow points up?", "context": "Read labels",
-                "choices": [{"id": "A", "text": "up"}, {"id": "B", "text": "down"}],
-                "answer": "SECRET GOLD", "solution": "SECRET SOLUTION"}
-        tutor = Mock()
-        tutor.ask.side_effect = ["Evidence", "Diagnosis", "Visual hint", "Concept hint", "Reasoning hint"]
-        saved = []
-        result = run_demo(tutor, item, "B", "Student reasoning", [1, 2, 3],
-                          lambda value: saved.append(copy.deepcopy(value)))
-        self.assertEqual(tutor.ask.call_count, 5)
-        self.assertEqual(result["hints"]["3"], "Reasoning hint")
-        self.assertEqual(len(saved), 5)
-        self.assertEqual(saved[0]["hints"], {})
-        self.assertNotIn("SECRET", str(tutor.ask.call_args_list))
-        for call in tutor.ask.call_args_list[2:]:
-            self.assertIn("Evidence", call.args[1])
-            self.assertIn("Diagnosis", call.args[1])
-        tutor.reset_mock()
-        with self.assertRaises(ValueError):
-            run_demo(tutor, item, "B", "Student reasoning", [4], saved.append)
-        tutor.ask.assert_not_called()
-
     def test_notebook_code_compiles_and_bundle_contains_only_selected_source(self):
         notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
         self.assertEqual(notebook["nbformat"], 4)
@@ -196,22 +214,134 @@ class ColabWorkflowTests(unittest.TestCase):
             if cell["cell_type"] == "code":
                 compile(cell["source"], cell["id"], "exec")
                 self.assertEqual(cell["outputs"], [])
+                self.assertIsNone(cell["execution_count"])
         archive = build_bundle(ROOT, self.root / "source.zip")
         with zipfile.ZipFile(archive) as source:
             names = source.namelist()
-            self.assertIn("IE4422/prepare_data.py", names)
-            self.assertIn("IE4422/notebooks/run_demo.py", names)
-            self.assertEqual(source.read("IE4422/notebooks/IE4422_Colab.ipynb"),
-                             (ROOT / "notebooks/IE4422_Colab.ipynb").read_bytes())
+            for required in (*support.AUDIT_SOURCES, "prepare_data.py", "inspect_question.py",
+                             "scienceqa_tutor.py", "hint_prompts.py", "prompts/initial_hint.txt",
+                             "ui_server.py", "ui/app.js", "notebooks/colab_ui.py"):
+                self.assertIn("IE4422/" + required, names)
+            for name in ("notebooks/IE4422_Colab.ipynb", "scienceqa_tutor.py"):
+                self.assertEqual(source.read("IE4422/" + name), (ROOT / name).read_bytes())
+            for removed in ("run_scienceqa_tutor.py", "run_tutor.py", "inspect_diagram.py",
+                            "judge_validate.py", "notebooks/run_demo.py",
+                            "tests/test_answer_checker.py", "tests/test_hint_experiment.py",
+                            "tests/test_judge_preparation.py"):
+                self.assertNotIn("IE4422/" + removed, names)
             self.assertTrue(all(name.startswith("IE4422/") for name in names))
-            for prefix in ("IE4422/data/", "IE4422/models/", "IE4422/.venv/", "IE4422/.git/"):
+            for prefix in ("IE4422/data/", "IE4422/models/", "IE4422/.venv/", "IE4422/.git/",
+                           "IE4422/experiments/"):
                 self.assertFalse(any(name.startswith(prefix) for name in names))
-            self.assertNotIn("IE4422/AGENTS.md", names)
-            self.assertNotIn("IE4422/IMPLEMENTATION_PLAN.md", names)
-            self.assertNotIn("IE4422/notebooks/IE4422_Source.zip", names)
+            for omitted in ("AGENTS.md", "IMPLEMENTATION_PLAN.md", "notebooks/IE4422_Source.zip"):
+                self.assertNotIn("IE4422/" + omitted, names)
             info = json.loads(source.read("IE4422/bundle_info.json"))
             self.assertEqual(set(info["files"]), {name.removeprefix("IE4422/") for name in names
                                                  if name != "IE4422/bundle_info.json"})
+        # Exercise imports from the UI-only archive without loading a GPU model.
+        support.safe_extract(archive, self.root / "unpacked")
+        for entry in ("ui_server.py", "inspect_question.py"):
+            help_result = subprocess.run(
+                [sys.executable, entry, "--help"], cwd=self.root / "unpacked/IE4422",
+                capture_output=True, text=True,
+            )
+            self.assertEqual(help_result.returncode, 0, help_result.stderr)
+            self.assertIn("usage:", help_result.stdout)
+
+    def test_source_upload_discards_old_launcher_before_loading_updated_source(self):
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        code = next(cell["source"] for cell in notebook["cells"] if cell["id"] == "source-upload")
+        code = code.split("# Validate paths before extracting the package.", 1)[0]
+        code = code.replace("Path('/content/IE4422')", "WORK")
+        code = code.replace("Path('/content/IE4422_Source.zip')", "SOURCE_ZIP")
+        files = Mock()
+        files.upload.return_value = {"IE4422_Source.zip": b"updated source bundle"}
+        google = ModuleType("google")
+        colab = ModuleType("google.colab")
+        colab.files = files
+        google.colab = colab
+        server = Mock()
+        archive = self.root / "source.zip"
+        namespace = {"WORK": self.root, "SOURCE_ZIP": archive, "UI_SERVER": server}
+        with patch.dict(sys.modules, {"google": google, "google.colab": colab}):
+            exec(compile(code, "source-upload", "exec"), namespace)
+        server.stop.assert_called_once()
+        self.assertIsNone(namespace["UI_SERVER"])
+        self.assertEqual(archive.read_bytes(), b"updated source bundle")
+
+    def test_notebook_ui_launch_uses_proxy_embed_and_drive_without_model_import(self):
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        cells = {cell["id"]: cell for cell in notebook["cells"]}
+        ids = list(cells)
+        self.assertLess(ids.index("prepare-data"), ids.index("prepare-model"))
+        self.assertLess(ids.index("prepare-model"), ids.index("start-ui"))
+        output = Mock()
+        output.eval_js.side_effect = ["https://session.example.com/", "https://output.example.com"]
+        google = ModuleType("google")
+        colab = ModuleType("google.colab")
+        colab.output = output
+        google.colab = colab
+        server = Mock()
+        server.start.return_value = {"model_loaded": False}
+        namespace = {"WORK": self.root, "PYTHON": Path(sys.executable),
+                     "PERSISTENT": self.root / "drive", "UI_SERVER": server}
+        with patch.dict(sys.modules, {"google": google, "google.colab": colab}), redirect_stdout(StringIO()):
+            exec(compile(cells["start-ui"]["source"], "start-ui", "exec"), namespace)
+        self.assertEqual(server.start.call_args.kwargs["proxy_origin"], "https://session.example.com")
+        self.assertEqual(server.start.call_args.kwargs["persistent_output"], self.root / "drive/runs/ui")
+        self.assertEqual(server.start.call_args.kwargs["frame_ancestors"],
+                         ("https://colab.research.google.com", "https://output.example.com"))
+        output.serve_kernel_port_as_iframe.assert_called_once_with(8765, height=1100, cache_in_notebook=False)
+        server.stop.assert_not_called()
+
+    def test_run_all_leaves_ui_running_until_stop_is_requested(self):
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        cells = {cell["id"]: cell for cell in notebook["cells"]}
+        code_ids = [cell["id"] for cell in notebook["cells"] if cell["cell_type"] == "code"]
+        self.assertEqual(code_ids, ["runtime-check", "source-upload", "storage-settings",
+                                   "environment-setup", "project-tests", "prepare-data",
+                                   "prepare-model", "start-ui", "ui-logs", "stop-ui", "download-results"])
+        server = Mock()
+        namespace = {"UI_SERVER": server}
+        with patch("builtins.input", side_effect=AssertionError("Use the UI for student inputs")), \
+                redirect_stdout(StringIO()):
+            for cell_id in ("stop-ui", "download-results"):
+                exec(compile(cells[cell_id]["source"], cell_id, "exec"), namespace)
+            server.stop.assert_not_called()
+            exec(cells["stop-ui"]["source"].replace("STOP_UI = False", "STOP_UI = True"), namespace)
+        server.stop.assert_called_once()
+
+    def test_notebook_downloads_ui_results_including_local_recovery_files(self):
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        cells = {cell["id"]: cell for cell in notebook["cells"]}
+        support.write_json(self.root / "outputs/ui_complete.json", {"hint": "Saved"})
+        support.write_json(self.root / "outputs/ui_recovery.json", {"hint": "Drive copy failed"})
+        support.write_json(self.root / "outputs/custom_tutor.json", {"hint": "Unrelated"})
+        support.write_json(self.root / "outputs/experiments/B/run.json", {"status": "complete"})
+        files = Mock()
+        colab = ModuleType("google.colab")
+        colab.files = files
+        google = ModuleType("google")
+        google.colab = colab
+        namespace = {"WORK": self.root, "zipfile": zipfile}
+        code = cells["download-results"]["source"].replace("DOWNLOAD_RESULTS = False", "DOWNLOAD_RESULTS = True")
+        with patch.dict(sys.modules, {"google": google, "google.colab": colab}), redirect_stdout(StringIO()):
+            exec(compile(code, "download-results", "exec"), namespace)
+        files.download.assert_called_once()
+        with zipfile.ZipFile(files.download.call_args.args[0]) as archive:
+            self.assertEqual(set(archive.namelist()), {"ui_complete.json", "ui_recovery.json"})
+            self.assertEqual(json.loads(archive.read("ui_recovery.json")), {"hint": "Drive copy failed"})
+
+    def test_notebook_download_reports_when_no_ui_results_exist(self):
+        notebook = support.read_json(ROOT / "notebooks/IE4422_Colab.ipynb")
+        code = next(cell["source"] for cell in notebook["cells"] if cell["id"] == "download-results")
+        code = code.replace("DOWNLOAD_RESULTS = False", "DOWNLOAD_RESULTS = True")
+        colab = ModuleType("google.colab")
+        colab.files = Mock()
+        with patch.dict(sys.modules, {"google.colab": colab}):
+            with self.assertRaisesRegex(RuntimeError, "No saved UI results"):
+                exec(compile(code, "download-results", "exec"), {"WORK": self.root})
+        colab.files.download.assert_not_called()
 
 
 if __name__ == "__main__":

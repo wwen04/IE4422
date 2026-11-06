@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'The fourth insect ... is a mosquito, which is known for having wings' supplies the decisive fact instead of suggesting a small reasoning action.", "verdict": "no"},
+  "visual_grounding": {"reason": "'The fourth insect in the image' identifies the rightmost, visibly winged mosquito model.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The pictured adult mosquito has wings, consistent with the gold answer and school-level insect biology.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The winged fourth figure corresponds to the adult stage, so the hint directs the student toward the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It identifies the winged figure, leaving only the simple task of matching that figure to its life-cycle stage, without naming the adult stage.", "score": 1},
+  "actionability": {"reason": "It clearly directs attention to the fourth figure, but the student must infer the action of identifying its stage.", "score": 3}
+}

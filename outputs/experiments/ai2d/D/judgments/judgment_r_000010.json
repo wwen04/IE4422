@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint says H 'represents the outer protective covering,' giving the answer rather than inviting observation of one visual detail.", "verdict": "no"},
+  "visual_grounding": {"reason": "It specifically identifies H, whose pointer marks the seed's outer boundary.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Identifying H as the protective seed covering agrees with the image and gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs the student to H, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It explicitly states that H is the outer protective covering, directly answering the question.", "score": 2},
+  "actionability": {"reason": "The student can immediately inspect H, but the hint supplies its interpretation and completes the task.", "score": 4}
+}

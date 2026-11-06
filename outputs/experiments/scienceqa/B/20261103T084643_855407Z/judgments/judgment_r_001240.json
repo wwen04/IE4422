@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint gives a purported conclusion about which sample has higher kinetic energy instead of suggesting a small reasoning step.", "verdict": "no"},
+  "visual_grounding": {"reason": "The references to both samples having the same number of particles and the same average particle speed identify specific displayed features needed for its argument.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The lower-mass sample contains more particles overall; the image shows eight particles in each sample."], "count": 1},
+  "scientific_correctness": {"reason": "At equal speed, kinetic energy increases with particle mass, so the claim that lower-mass particles have higher average kinetic energy is false. Particle count also does not determine average kinetic energy.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Its lower-mass claim points to sample B (16 u), whereas the gold answer is sample A (34 u).", "verdict": "yes"},
+  "answer_disclosure": {"reason": "Saying the lower-mass sample has higher average kinetic energy, after linking kinetic energy to temperature, states a conclusion that makes the intended answer immediate, albeit incorrect.", "score": 2},
+  "actionability": {"reason": "It supplies an erroneous explanation and conclusion without a usable next reasoning action for the student.", "score": 1}
+}

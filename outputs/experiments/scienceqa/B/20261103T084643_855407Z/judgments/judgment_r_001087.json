@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "'The sea otter is shown eating kelp' interprets a feeding relationship instead of pointing to one relevant visual detail.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the pictured sea otter and kelp and relies on their alleged feeding relationship.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The sea otter is shown eating kelp; no arrow connects kelp to the sea otter."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The claim that the sea otter eats kelp misrepresents its diet; sea otters eat animals.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The false feeding claim directs attention toward the sea otter as the organism to select, rather than the sea cucumber.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "It gives no decomposer-identifying fact and does not rule any option in or out as the answer.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It names organisms to inspect but gives no useful action for identifying a decomposer, and the alleged relationship is absent.",
+    "score": 2
+  }
+}

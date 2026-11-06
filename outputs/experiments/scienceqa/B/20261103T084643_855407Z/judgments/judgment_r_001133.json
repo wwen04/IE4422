@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... the top row' invites attention to one visual detail without explaining a concept or performing a reasoning step.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to the Punnett square's 'top row' and allele labels identifies a specific part of this image needed to understand the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The top row indicates the parents' genotypes as Ee and ee; the top labels are e and e, while the left labels are E and e."], "count": 1},
+  "scientific_correctness": {"reason": "Ee and ee are the correct parental genotypes for the displayed cross; the hint adds no incorrect genetics principle. Its incorrect attribution to the top row is a visual error.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The named parental genotypes Ee and ee match the cross and do not suggest a ratio different from the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint names parental genotypes but supplies no offspring phenotype counts, ratio, or option elimination.", "score": 0},
+  "actionability": {"reason": "'Notice ... the top row' gives a clear place to look, but the student must decide what to do with the allele information and reconcile the incorrect description.", "score": 3}
+}

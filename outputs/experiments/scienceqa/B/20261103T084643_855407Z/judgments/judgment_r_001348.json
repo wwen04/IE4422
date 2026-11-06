@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... the top row' asks the student to observe a visual detail without explaining a concept or procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint specifically refers to the Punnett square's top row and its allele labels.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The top row indicates the parents' genotypes as 'li' and 'li'; it actually shows the single alleles i and i, while the left side shows I and i."], "count": 1},
+  "scientific_correctness": {"reason": "Calling the top-row entries the two parents' genotypes misrepresents gamete allele labels as complete parental genotypes; the shown cross is Ii by ii.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Treating both parents as having the stated 'li' genotype can lead the student to use a different cross, rather than the displayed Ii by ii cross giving 2:2.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint names no offspring ratio, phenotype count, or correct option and leaves the phenotype reasoning undone.", "score": 0},
+  "actionability": {"reason": "'Notice ... the top row' gives a clear place to look, but does not tell the student how to use it and misidentifies its labels.", "score": 3}
+}

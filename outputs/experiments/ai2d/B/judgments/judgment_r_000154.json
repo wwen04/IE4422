@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... arrows pointing towards it from two other organisms' invites observation of a specific visual detail without explaining the science.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The Kingfisher and the two incoming arrows are identifiable elements of this food web and are essential to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The hint accurately describes incoming arrows from the small fish and frog and makes no incorrect scientific claim.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Observing the Kingfisher's incoming food-web arrows supports consideration of the gold answer and does not misdirect the student.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It points to the Kingfisher and its arrows but does not explain what the arrows mean or identify any organism as a carnivore.", "score": 0},
+  "actionability": {"reason": "The student can immediately inspect the two arrows entering the Kingfisher, although this is only a small observational step.", "score": 4}
+}

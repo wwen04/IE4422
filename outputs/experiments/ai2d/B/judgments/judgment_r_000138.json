@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "“Label Z … is characteristic of a heart-shaped leaf” identifies the answer rather than suggesting a small reasoning step.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "“Label Z” identifies a specific leaf in the image and is central to the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The leaf at Label Z has a “rounded tip that tapers into a point”; its tip is pointed, while the rounded lobes are at the base."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "“A rounded tip that tapers into a point” misdescribes the defining shape: heart-shaped leaves have rounded basal lobes and a pointed tip.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint explicitly directs the student to Label Z, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It directly identifies Label Z as the leaf with the characteristic heart shape.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It supplies an identification without giving the student a usable reasoning action.",
+    "score": 1
+  }
+}

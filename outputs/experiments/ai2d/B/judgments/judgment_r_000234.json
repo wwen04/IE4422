@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint says Z is 'resembling a heart shape,' applying the visual feature to give the answer instead of leaving the connection for the student to use.", "verdict": "no"},
+  "visual_grounding": {"reason": "It identifies the leaf labeled Z and its rounded shape and central indentation, which are visible in the image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Identifying Z as heart-shaped agrees with its visible outline and the gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It directs the student to Z, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying that the leaf labeled Z resembles a heart directly supplies the conclusion asked for.", "score": 2},
+  "actionability": {"reason": "The student can immediately inspect Z's outline and indentation, but the hint supplies the key identification.", "score": 4}
+}

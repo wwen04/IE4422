@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Look for a figure where the rock units appear to be sliding past each other' supplies an identifying conclusion for the choice rather than leaving a small reasoning step, so it does not meet Tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "The instruction to inspect the rock units and their relative displacement refers to identifiable features of the pictured block diagrams.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "'Sliding past each other' and a 'clear separation' describe fault displacement, whereas flexure involves bending of rock layers, as in the gold figure B.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Searching for separated, sliding blocks would favor a fault diagram instead of the bent layers in the gold figure B.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The sliding-block criterion favors fault diagrams and rules against the bent-layer choice, providing a strong but incorrect selection clue without naming a figure.", "score": 1},
+  "actionability": {"reason": "'Look for a figure where the rock units appear to be sliding past each other' gives an immediate, concrete visual comparison, although its scientific criterion is wrong.", "score": 4}
+}

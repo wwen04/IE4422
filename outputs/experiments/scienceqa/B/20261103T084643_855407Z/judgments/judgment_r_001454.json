@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice' directs attention to particle counts and solvent volumes without explaining a science concept or giving a reasoning procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The purple balls and solvent-volume labels are specific, identifiable elements of the two pictured solutions.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["Both solutions contain the same number of purple balls: Solution A shows six and Solution B shows five.", "The solutions have different volumes of solvent: both labels state 30 mL."], "count": 2},
+  "scientific_correctness": {"reason": "The hint states no incorrect science principle; its errors concern the pictured particle counts and volumes, recorded under unsupported visual claims.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Claiming equal particle counts and unequal volumes redirects the student away from the actual deciding difference: six versus five particles in equal volumes.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint does not identify a higher-concentration solution, specify which volume is smaller, or explicitly select or eliminate an option.", "score": 0},
+  "actionability": {"reason": "'Notice' identifies concrete features to inspect, but the student must determine how to use the asserted comparisons, which are both false.", "score": 3}
+}

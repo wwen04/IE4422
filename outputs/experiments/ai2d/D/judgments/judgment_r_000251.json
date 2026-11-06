@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint concludes that black spruce has no predators instead of giving a concrete reasoning step for the student.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It specifically identifies the pictured and labeled black spruce as a plant.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The claim that black spruce does not have predators in this food web is unsupported; an arrow connects black spruce to the moose that consumes it."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "Being a plant does not establish that an organism has no consumers; the hint misleadingly uses producer status to infer absence of predators in a food web.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It directs the student toward black spruce, which is not an offered option, instead of the gold answer blackbear.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "It directly gives black spruce as an organism with no predators, stating a purported answer to the question even though that conclusion is wrong.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It offers a purported conclusion and no usable next action for comparing the answer choices.",
+    "score": 1
+  }
+}

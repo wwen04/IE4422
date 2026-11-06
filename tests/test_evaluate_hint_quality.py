@@ -39,6 +39,12 @@ class HintQualityEvaluationTests(unittest.TestCase):
             "".join(json.dumps(item) + "\n" for item in self.items),
             encoding="utf-8",
         )
+        manifests = self.root / "manifests/scienceqa"
+        manifests.mkdir(parents=True)
+        (manifests / "validation_final_ids.json").write_text(
+            json.dumps([item["item_id"] for item in self.items]),
+            encoding="utf-8",
+        )
         references = self.root / "data/final/scienceqa/references"
         references.mkdir(parents=True)
         (references / "validation.jsonl").write_text(

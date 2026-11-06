@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "It identifies A as characteristic of a compound umbel rather than suggesting a small reasoning step.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It refers specifically to label A and the multiple branches extending from a central point, which are visible.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The branching described for A is consistent with a compound umbel and the gold answer.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It directs the student toward compound umbel, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Saying A is characteristic of a compound umbel directly identifies the correct option text.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It states the identification without giving the student a usable next action.",
+    "score": 1
+  }
+}

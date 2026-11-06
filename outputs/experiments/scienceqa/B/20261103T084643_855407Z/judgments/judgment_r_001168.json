@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Consider whether the number of purple particles in each beaker is greater or less' asks for a concrete comparison without performing it or explaining the concentration conclusion.", "verdict": "yes"},
+  "visual_grounding": {"reason": "'Purple particles in each beaker' identifies the visible solute particles in the two containers, which are necessary for the requested comparison.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Comparing solute particle counts is valid here because both containers show 30 mL of solvent; the hint makes no incorrect scientific claim.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The comparison reveals more purple particles in Solution A, consistent with the gold answer because solvent volumes are equal.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint asks the student to compare counts without stating which has more, favouring an option, or supplying the relationship to concentration.", "score": 0},
+  "actionability": {"reason": "Comparing the purple-particle counts is an immediate, specific action; the student must still relate that comparison to the equal solvent volumes and concentration.", "score": 5}
+}

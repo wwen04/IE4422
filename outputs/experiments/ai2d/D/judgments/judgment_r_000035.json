@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that the trachea is labeled' points to one relevant visible detail without explaining a concept or giving a conclusion.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies the specific Trachea label visible in the image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The trachea is labeled, and the hint contains no scientific error.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Directing attention to the trachea does not suggest an incorrect option and can orient the student to the airway.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint neither names the bronchus nor states which structure leads directly to the lungs or excludes an option.", "score": 0},
+  "actionability": {"reason": "The student can immediately locate the specific Trachea label, although the observation is a small step.", "score": 4}
+}

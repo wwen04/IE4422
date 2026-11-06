@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint links the parents' visible ee genotype to passing on e alleles, without determining the offspring phenotype ratio.", "verdict": "yes"},
+  "visual_grounding": {"reason": "Both parents' ee genotypes are identifiable from the two e labels above and the two e labels beside the square.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Parents with genotype ee can pass only the e allele to their offspring.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Recognizing that both parents pass e supports the correct straight-to-curled ratio of 4:0.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying both ee parents pass e supplies a strong clue that every offspring receives only recessive alleles, while leaving the phenotype and ratio unstated.", "score": 1},
+  "actionability": {"reason": "Identifying the parental genotypes and transmitted allele gives a clear reasoning direction, but does not name a concrete action for the student to perform.", "score": 3}
+}

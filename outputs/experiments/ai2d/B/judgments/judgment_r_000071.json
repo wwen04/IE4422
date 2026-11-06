@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice' directs attention to the shape and position of G without explaining the science or identifying it as a bud.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies G and the small structure at the top of the stem, both visible in the image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The hint's description of the terminal structure contains no scientific error.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It directs attention to G, which matches the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Explicitly singling out 'option A' favors the correct option, though the hint does not state that G is a bud.", "score": 1},
+  "actionability": {"reason": "The student can immediately inspect G's shape and position at the top of the stem, but this is only a noticing step.", "score": 4}
+}

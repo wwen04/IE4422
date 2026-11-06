@@ -36,6 +36,11 @@ class VisualEvidenceEvaluationTests(unittest.TestCase):
         (questions / "validation.jsonl").write_text(
             json.dumps(self.question) + "\n", encoding="utf-8"
         )
+        manifests = self.root / "manifests/scienceqa"
+        manifests.mkdir(parents=True)
+        (manifests / "validation_final_ids.json").write_text(
+            json.dumps([self.question["item_id"]]), encoding="utf-8"
+        )
         (references / "validation.jsonl").write_text(
             json.dumps({
                 "item_id": self.question["item_id"],
@@ -117,6 +122,9 @@ class VisualEvidenceEvaluationTests(unittest.TestCase):
                     "solution": "",
                 }) + "\n",
                 encoding="utf-8",
+            )
+            (self.root / f"manifests/scienceqa/{split}_final_ids.json").write_text(
+                json.dumps([item_id]), encoding="utf-8"
             )
         tutor = Mock()
         tutor.ask.side_effect = [

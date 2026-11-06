@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'The distance ... in Pair 1 is greater' states a visual comparison but gives no concrete reasoning action, so it does not meet Tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "The comparison identifies the gaps between the magnets in the labeled Pair 1 and Pair 2.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The stated distance comparison is accurate and contradicts neither the reference nor school-level science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The greater separation in Pair 1 is relevant to its smaller magnetic force, consistent with the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint supplies the decisive distance comparison between the pairs, strongly favoring Pair 1 having the smaller force without stating that conclusion.", "score": 1},
+  "actionability": {"reason": "It clearly directs attention to the relative gaps, but the student must work out how to use that comparison to judge force.", "score": 3}
+}

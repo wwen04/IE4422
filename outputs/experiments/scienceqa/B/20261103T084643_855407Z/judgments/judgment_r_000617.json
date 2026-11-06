@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'The size of the magnets affects' states a general concept without linking it to a specific visible detail, as Tier 2 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'The size of the magnets' identifies no particular magnet or pair; the statement is generic to this topic.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "'Size ... affects the strength' agrees with the supplied lecture and solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Considering magnet size is relevant to the gold answer and does not direct the student toward another option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint does not say which pair has the greater force or explain how size changes force, so it does not favour an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It suggests considering size but gives no concrete comparison or action to perform.",
+    "score": 2
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint connects an asserted feeding relationship involving the elephant seal to the idea of dietary dependence, without deciding the population outcome, as requested for Tier 2.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The claim that 'the elephant seal feeds on other seals' identifies specific pictured organisms and is essential to the hint's reasoning.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The diagram shows that the elephant seal feeds on other seals."], "count": 1},
+  "scientific_correctness": {"reason": "The asserted feeding relationship is incorrect: the diagram shows fish feeding the elephant seal, not other seals; elephant seals are fish and squid predators at this level.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Emphasizing the seal's dietary independence from whales directs the student toward little or no population change, overlooking the depicted predation by smaller toothed whales that supports the gold answer, Increase.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint does not state a population outcome, select or exclude an option, or supply the predation fact that decides the question.", "score": 0},
+  "actionability": {"reason": "It directs attention to a specific feeding relationship and dietary dependence, but the student must work out how to use that suggestion to assess population change.", "score": 3}
+}

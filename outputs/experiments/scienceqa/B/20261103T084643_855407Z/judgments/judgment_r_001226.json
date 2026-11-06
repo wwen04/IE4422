@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint explains the kinetic-energy concept and concludes that the higher-mass sample has the higher temperature, rather than suggesting a small reasoning step.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "Both samples having the same number of particles and the same average particle speed refers to the six particles in each container and the matching 1,600 m/s labels.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "At the equal speeds shown, greater particle mass means greater average kinetic energy and higher temperature, consistent with the supplied solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Following the higher-mass comparison leads to sample A, whose particles are labeled 30 u versus sample B's 17 u, matching the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The statement that the sample with higher mass has higher temperature supplies the deciding fact and leaves only a trivial lookup of the mass labels, without naming sample A.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The hint gives a clear direction to compare masses, but does not explicitly name a concrete action for the student to perform.",
+    "score": 3
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Which suggests' interprets the food web and explains dietary dependence instead of inviting notice of one visual detail, as Tier 1 requires.", "verdict": "no"},
+  "visual_grounding": {"reason": "The claim that the elephant seal 'feeds on other seals' refers to specific identifiable animals and a feeding relationship in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The diagram shows that the elephant seal feeds on other seals."], "count": 1},
+  "scientific_correctness": {"reason": "The asserted feeding relationship is incorrect: the image shows fish feeding the elephant seal, with no feeding arrow from other seals to the elephant seal.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Emphasizing that the elephant seal's diet is 'not directly dependent on whales' encourages an unchanged-population answer, overlooking whale predation; the gold answer is Increase.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The claim of dietary independence implicitly favors Neither increase nor decrease, providing a strong clue toward an option without explicitly stating a population outcome.", "score": 1},
+  "actionability": {"reason": "The hint offers an interpretation of diet but no concrete action for tracing the effect of removing whales.", "score": 2}
+}

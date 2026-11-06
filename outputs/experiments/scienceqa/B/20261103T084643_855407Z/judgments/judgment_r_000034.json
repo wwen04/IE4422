@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint only identifies an arrow and does not connect that detail to a science idea, so it does not provide the requested Tier 2 support.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to an arrow from the labeled silver maple to the labeled bolete fungus is specific to this image.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The arrow leading from the silver maple points to the bolete fungus. The image instead shows the silver maple arrow pointing to the beaver; the route to the fungus passes through the beaver and bobcat."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The hint makes no separate scientific claim beyond its incorrect description of the arrow; matter can in fact travel from the silver maple to the bolete fungus through the food web.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It directs the student to the bolete fungus, which is the gold answer, despite describing the route incorrectly.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Saying the silver maple arrow points to the bolete fungus makes that answer immediate under the supplied explanation that arrows show matter movement.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It gives a clear direction to inspect a named connection, but provides no accurate next reasoning step and claims a connection the student cannot find.",
+    "score": 3
+  }
+}

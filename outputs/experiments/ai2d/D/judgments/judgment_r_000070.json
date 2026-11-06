@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that C is located on the equator' invites noticing a single visual detail, as Tier 1 requests.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint specifically identifies label C and its claimed position relative to Earth's equator.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["C is located on the equator of the Earth; in the image C is outside Earth beside the incoming yellow radiation arrows."], "count": 1},
+  "scientific_correctness": {"reason": "The error is a visual mislocation of C; the hint states no separate incorrect science concept.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Calling C a location on Earth's equator directs attention to a surface location such as the subsolar point instead of the incoming solar radiation identified by the key.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint supplies only a claimed location to notice and does not identify what C labels or explicitly select or eliminate an option.", "score": 0},
+  "actionability": {"reason": "'Notice' C's position relative to the equator gives a specific visual check the student can immediately attempt, although the claimed position is wrong.", "score": 4}
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Each purple ball represents one particle of solute' links a visible symbol to the relevant science idea of solute particles without comparing concentrations.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The reference to 'each purple ball' in 'both solutions' identifies the purple circles visible in the two flasks and explains their meaning.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Identifying each purple ball as one solute particle agrees with the supplied context and gold reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint identifies the solute particles without suggesting an incorrect comparison or choice.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint does not compare particle counts or concentrations, favour any option, or give the deciding concentration relationship.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "'Notice' the purple balls gives a clear focus, but the student must determine how to use the particles and solvent volumes to compare concentrations.",
+    "score": 3
+  }
+}

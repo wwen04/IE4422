@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint only states that the palm leaf is above the dinosaur footprint; it does not connect this visible detail to a science idea, as Tier 2 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The palm leaf and dinosaur footprint are identifiable fossils, and their relative positions are central to the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The stated relative positions are accurate and do not contradict the science of an undisturbed sedimentary sequence.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The accurate comparison of fossil positions is relevant to identifying the older fossil and does not misdirect the student.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint describes relative positions without saying which fossil is older or explaining how depth determines age.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The positional comparison gives a clear focus, but the student must work out how to use it to determine fossil age.",
+    "score": 3
+  }
+}

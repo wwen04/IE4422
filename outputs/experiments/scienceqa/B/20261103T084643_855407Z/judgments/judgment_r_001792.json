@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice' directs attention to one relevant temperature trend without explaining heat transfer.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The initial and final temperature columns for both bottles are specific, identifiable table elements needed for the observation.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Both bottles warm: the brown bottle rises from 19 to 25 degrees Celsius and the clear bottle from 19 to 22 degrees Celsius.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The observed warming supports the gold answer that energy entered each bottle from the surroundings.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It highlights the temperature trend but leaves the student to infer the direction of thermal energy transfer; neither option is named or excluded.", "score": 0},
+  "actionability": {"reason": "It clearly directs attention to both bottles' initial and final temperatures, but leaves the student to decide how to use that observation.", "score": 3}
+}

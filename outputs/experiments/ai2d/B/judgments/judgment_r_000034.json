@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "\"Notice ... from left to right\" only directs attention to a claimed arrangement; it does not connect a visible detail to a science concept as Tier 2 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to the Moon phases and their claimed left-to-right arrangement identifies image content needed for the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The diagram shows the phases of the Moon in sequence from left to right; the phases are arranged around a circular path with directional arrows."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "Moon phases occur in a sequence; the error concerns the depicted arrangement rather than a scientific concept.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Following a left-to-right sequence instead of the circular arrows would likely send the student to an incorrect next phase.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "It does not identify the phase after first quarter or favour or eliminate any listed option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It gives a clear scanning direction, but the student must determine how to use it to locate the next phase.",
+    "score": 3
+  }
+}

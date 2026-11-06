@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice ... a structure within the brain labeled ... B” invites attention to one visual detail without explaining a concept.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint specifically identifies label B and the brain structure its line points to.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The image has a label B pointing to a structure within the brain; the hint makes no incorrect scientific identification.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It does not identify any alternative answer gland or equate the image label B with answer choice B.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It names no gland and does not rule any answer choice in or out.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately locate label B and inspect the structure indicated, although this observation alone offers limited help identifying the gland.",
+    "score": 4
+  }
+}

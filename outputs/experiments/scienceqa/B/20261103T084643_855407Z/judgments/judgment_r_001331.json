@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'The size of the magnets affects the strength' states a concept but gives no concrete reasoning step for Tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "'The size of the magnets' does not identify either pair or a particular magnet; the advice is generic to this topic.", "verdict": "no"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "'The size of the magnets affects the strength' agrees with the supplied lecture and solution.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It directs attention to the relevant factor, magnet size, without suggesting an incorrect comparison.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It mentions a relevant concept but gives neither the direction of its effect nor a pair comparison, and does not favour or eliminate an option.", "score": 0},
+  "actionability": {"reason": "It suggests considering size but provides no concrete action or specific magnets to compare.", "score": 2}
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The 'number of yellow balls' is linked to the number of solute particles without deciding which solution is more concentrated, as required for Tier 2.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "'Yellow balls in each beaker' identifies the visible particles in both solution models and is necessary to the hint's explanation.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The yellow balls represent solute particles, consistent with the problem context; the hint does not equate particle count alone with concentration.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Relating the balls to solute particles supports the intended comparison and does not direct the student toward an incorrect choice.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint explains the particle representation without comparing counts or concentrations or favoring an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to the number of yellow balls, but the student must decide to count them and relate the counts to solvent volume.",
+    "score": 3
+  }
+}

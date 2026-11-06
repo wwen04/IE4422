@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"Notice ... the trachea leading into the lungs\" points to a visible airway relation without explaining a concept or giving a procedure.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The labeled trachea and lungs identify the specific airway region to inspect.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The trachea leads toward the lungs through the bronchi; the hint does not claim it enters them directly.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Inspecting the trachea-to-lung region can lead to the bronchi and does not favor a different listed option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It identifies the relevant region without naming the bronchus or explaining which structure leads directly into each lung.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately inspect the labeled trachea and its visible connection toward the lungs.",
+    "score": 4
+  }
+}

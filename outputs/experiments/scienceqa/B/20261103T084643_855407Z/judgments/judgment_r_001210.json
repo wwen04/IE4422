@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint assigns the highlighted area a humidity range, applying the map's color-value relationship to reach a result rather than just connecting a visible detail to a science idea.", "verdict": "no"},
+  "visual_grounding": {"reason": "The highlighted area's shading refers specifically to the outlined region on this map.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The highlighted area's color corresponds to specific humidity between 8 and 12 g/kg; the outlined region instead shows green shades corresponding to approximately 18-24 g/kg."], "count": 1},
+  "scientific_correctness": {"reason": "The stated range of 8-12 grams of water vapor per kilogram of air contradicts the reference's 18-24 g/kg range for this air mass.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Using the stated 8-12 g/kg range would exclude the correct answer, 23 g/kg, and leaves no listed choice within the suggested range.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint supplies a purported decisive numerical range, thereby ruling out the listed options, although that range is incorrect.", "score": 1},
+  "actionability": {"reason": "It directs attention to the outlined area's shading and a numerical range, but leaves the student to work out how to use that information and gives no explicit next action.", "score": 3}
+}

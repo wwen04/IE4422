@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "Notice the Mercury volume of 60 billion km3: this points to one relevant table entry without explaining a concept or procedure.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the Mercury volume entry, which the table shows as 60 billion km3.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The stated Mercury volume of 60 billion km3 agrees with the table and gold solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint directs attention to the correct Mercury volume needed for the comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Identifying the Mercury volume does not favor either option; the student must still determine one-tenth of the Earth volume and compare.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately locate the Mercury volume entry, although the hint supplies no further reasoning step.",
+    "score": 4
+  }
+}

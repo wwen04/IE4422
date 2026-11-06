@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"Four possible offspring combinations\" connects the four cells of the visible Punnett square to possible offspring genotypes, without determining their body color.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "\"The Punnett square shows four\" refers to the four visible offspring cells, which provide the basis for the explanation.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Each of the four cells represents one possible combination of parental alleles, consistent with the reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The explanation of the four outcomes does not favor an incorrect body-color probability.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint does not identify which cells produce greenish-brown fish or favor or eliminate any listed probability.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "Interpreting the four cells as possible offspring provides a clear direction, but the student must decide how to classify and count them.",
+    "score": 3
+  }
+}

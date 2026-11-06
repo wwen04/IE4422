@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'The fossil with the oldest age would be found in the deepest layer' states the age-depth principle rather than naming a concrete next reasoning step for Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint refers generally to a sedimentary rock sequence without identifying a fossil, label, or particular layer in this image.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Deeper layers are older in the stated undisturbed sedimentary sequence, consistent with the reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Using depth to infer age supports wood, which is deeper than the mammal tooth and matches the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'The oldest age ... deepest layer' gives the deciding fact and reduces the choice to locating the deeper of the two fossils.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The depth-age rule gives a clear direction, but the student must work out how to identify and compare the two fossil positions.",
+    "score": 3
+  }
+}

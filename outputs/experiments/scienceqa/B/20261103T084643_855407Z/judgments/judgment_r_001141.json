@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The phrase 'based on the combination of alleles from both parents' explains what the outcomes represent, going beyond Tier 1 visual noticing.", "verdict": "no"},
+  "visual_grounding": {"reason": "'Four possible outcomes' identifies the four offspring cells visible in this Punnett square.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The four cells correctly represent possible combinations of alleles from the two parents.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Noticing the total number of outcomes does not direct the student toward an incorrect probability.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It gives the total number of outcomes without identifying which have red eyes or favouring any listed probability.", "score": 0},
+  "actionability": {"reason": "It directs attention to the four outcomes, but leaves the student to work out how to use their genotypes to find the probability.", "score": 3}
+}

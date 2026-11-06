@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Layer B is the next inner layer' supplies an observation rather than a concrete reasoning step for the student to perform, so it does not meet tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "'Layer B' identifies the labeled ring between A and C, and the stated inward sequence depends on this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "B is inward of A in the illustrated layer sequence; the hint states no incorrect scientific relationship.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Emphasizing the inner layer B directs the student toward B, whereas the layer surrounding the mantle is the outer layer D.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "Singling out B as the relevant next layer favors an available option, although it does not explicitly state an answer and favors the wrong layer.", "score": 1},
+  "actionability": {"reason": "The hint directs attention inward toward B but gives no concrete action for identifying the layer that surrounds the mantle.", "score": 2}
+}

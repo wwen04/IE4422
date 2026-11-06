@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "Connects the visible flower's Producer label to making its own food by photosynthesis, without determining the primary consumer.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The flower and its Producer label are specific, visible elements used to introduce the concept.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "A flower is a producer that makes food through photosynthesis.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Identifying the producer provides a valid starting point for finding the primary consumer and does not direct the student to an incorrect consumer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Calling the flower a producer rules out the flower option as a primary consumer, without identifying the correct consumer.", "score": 1},
+  "actionability": {"reason": "Directs attention to the flower's label and meaning, but leaves the student to determine how to use this to find a primary consumer.", "score": 3}
+}

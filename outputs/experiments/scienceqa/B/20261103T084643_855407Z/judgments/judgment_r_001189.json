@@ -1,0 +1,9 @@
+{
+"tier_compliance":{"reason":"'The fossil with the oldest age would be found deeper' restates the relevant concept rather than naming a concrete next action required for Tier 3.","verdict":"no"},
+"visual_grounding":{"reason":"'The sedimentary rock sequence' is generic; the hint identifies no particular fossil, layer, or label in this image.","verdict":"no"},
+"unsupported_visual_claims":{"unsupported_claims":[],"count":0},
+"scientific_correctness":{"reason":"'Oldest age ... deeper' correctly expresses relative dating in the stated undisturbed sedimentary sequence.","verdict":"yes"},
+"steers_toward_wrong_answer":{"reason":"Using depth leads toward the dinosaur footprint, which is below the palm leaf and matches the gold answer.","verdict":"no"},
+"answer_disclosure":{"reason":"'Oldest age ... deeper' supplies the specific fact deciding between the options, leaving only a simple depth lookup.","score":1},
+"actionability":{"reason":"The depth rule gives a clear direction, but the student must infer the action of comparing the two fossils' layers.","score":3}
+}

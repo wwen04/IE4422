@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint identifies the greatest curvature as being in the 'i' drawing, completing the comparison instead of leaving a small reasoning step for the student.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to the 'i' drawing identifies the bird labelled I, whose long curved beak is visible.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Comparing the curvature of the upper beak is appropriate, and the drawing labelled I has the most strongly curved beak.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint directs attention to I, consistent with the gold answer 'iiki'.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Saying that the greatest curvature is 'as seen in the i shape' identifies the winning drawing and makes the answer immediate.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It gives a clear feature to compare, the upper beak's curvature, but supplies the comparison's result rather than a concrete next action that preserves the reasoning.",
+    "score": 3
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that the topmost layer' invites attention to one visual detail without explaining a concept or reasoning procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to label E and visible plant roots identifies specific features of this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The hint says the topmost soil layer is labeled E; E marks the surface boundary, while D labels the topmost soil layer."], "count": 1},
+  "scientific_correctness": {"reason": "Describing the upper material with plant roots as soil is scientifically sound; the label error is visual.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It does not identify the upper soil as bedrock or recommend an incorrect choice, although it offers little help locating bedrock.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It neither identifies bedrock nor favours or eliminates any answer option.", "score": 0},
+  "actionability": {"reason": "The student can immediately inspect the upper surface and roots, but this observation contributes little to identifying bedrock.", "score": 4}
+}

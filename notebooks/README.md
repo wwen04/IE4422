@@ -1,43 +1,55 @@
-# Run IE4422 on Google Colab
+# Run the browser tutor on Google Colab
 
-Send teammates these two files together:
+For separate AI2D/ScienceQA batch experiments A, B and D, use **IE4422_Experiments.ipynb** with **IE4422_Experiments_Source.zip**. Its controls cover Drive persistence, resume, judge-package downloads and returned-score summaries. See [the experiment guide](../experiments/README.md). Rebuild that bundle with `python notebooks/build_experiment_bundle.py`. The instructions below refer only to the browser tutor.
+
+Share these two files together:
 
 - `IE4422_Colab.ipynb`
 - `IE4422_Source.zip`
 
-No local GPU, Python installation, GitHub access or Hugging Face account is needed for these public downloads.
+The notebook launches the same `ui_server.py` used locally. Questions, hints, and answer checks all happen in the browser UI.
 
-1. Open [Google Colab](https://colab.research.google.com/) and choose **File → Upload notebook**. Upload `IE4422_Colab.ipynb`.
-2. Choose **Runtime → Change runtime type → GPU** (a T4 is a suitable starting point if offered). Use a current Python 3.12+ runtime. A TPU does not work with this CUDA engine.
-3. Run the notebook cells in order. When prompted, upload the current `IE4422_Source.zip` and approve mounting your own Google Drive. Leave `UPLOAD_NEW_SOURCE=True` when replacing an older bundle.
-4. Leave the default settings for a first run. The notebook creates one project environment, prepares ScienceQA, displays a validation question, and asks for the student's actual response and reasoning.
-5. It downloads the pinned Qwen checkpoint, then runs the existing prototype's evidence, diagnosis and three hint levels with one model instance. Completed stages/results are saved under **My Drive/IE4422/runs/**.
+## Start the tutor
 
-The notebook is a launcher; all project jobs use one project environment with access to Colab's existing CUDA PyTorch. Creation uses `--without-pip --system-site-packages`, bypassing the failing `ensurepip` bootstrap in Colab's system Python. Colab's existing pip explicitly targets the project Python through `--python`, so installs go into the project environment without bootstrapping another pip. Project packages install without modifying the notebook kernel, so no kernel restart is needed. Setup checks this pip route before installing dependencies, and displays command output/errors live.
+1. Open [Google Colab](https://colab.research.google.com/), choose **File → Upload notebook**, and upload `IE4422_Colab.ipynb`.
+2. Choose **Runtime → Change runtime type → GPU**. A T4 is suitable when available; use Python 3.12+. Use a runtime eligible for web-UI interaction under the [Colab FAQ](https://research.google.com/colaboratory/faq.html).
+3. Run cells **1–7** in order. Upload the matching source ZIP when prompted. Cell 3 controls Drive saving, model caching, and rebuilding data. There is no workflow selector.
+4. Run cell **8** to start and embed the UI. Choose a train/validation question, ask for a hint, or submit an answer and reasoning. The model loads on the first request and stays loaded for later requests. Test questions are unavailable in this session.
+5. Cell **9** shows server status and logs. Rerun cell 8 with `RESTART_UI=False` to reuse the server, or `True` to replace it.
+6. Set `STOP_UI=True` and run cell **10** when finished to release GPU memory.
+7. Set `DOWNLOAD_RESULTS=True` in cell **11** to download saved UI results as a ZIP. With Drive enabled, completed results also save immediately to **My Drive/IE4422/runs/ui/**.
 
-The profile preserves the actual torch/torchvision wheels and respects all their active dependency limits, including exact pins and ranges such as `setuptools<82`. Compatible shared pins are retained. If a Windows transitive pin conflicts, the profile uses a compatible installed runtime version or lets pip resolve the required range inside the project environment. The local lock is unchanged, and the profile records its overrides in `tmp/colab-dependencies/runtime_pins.json`. The relevant project dependency graph and CUDA availability are checked. Colab's unrelated preinstalled applications are not part of this environment's validation.
+**Run all** starts the UI and leaves it running. Stop and download are disabled by default. Keep the notebook open while using its embedded UI; the Colab proxy provides session access, not public hosting. No tunnel account is needed.
 
-## Downloads and saved files
+## Setup and saved files
 
-- Dataset: approximately 626 MB on the first fresh preparation. Public questions and evaluation references remain in separate files. Test items are never selected for this demo.
-- Model: approximately 7.5 GB of original weights plus small supporting files. Four-bit quantization happens during model loading; it does not reduce the original download. The model ID and exact revision are in `colab_config.json`.
-- Working files live in Colab's temporary `/content/IE4422` folder. Drive retains a prepared-data ZIP, an optional complete checkpoint folder, and generated results. Allow at least 8 GB free Drive space for model caching, plus space for data/results.
-- On later sessions, the notebook restores matching artifacts from Drive. It checks preparation source/configuration before reusing data and checks the model revision and required files before loading a checkpoint.
-- Set `REBUILD_DATA=True` to repeat full dataset preparation. Set `SAVE_MODEL_TO_DRIVE=False` to download weights to temporary Colab storage each new session. With `USE_DRIVE=False`, results can be downloaded at the end, but temporary files disappear when Colab deletes the runtime.
-- Notebook runtime settings and actual package/GPU versions are recorded with every run. Model loading happens once per generation-cell invocation, with evidence/diagnosis reused for that item's requested hint levels. The worker exits afterwards and releases its model memory. Rerunning generation starts a new model instance and keeps the previous run in a separate directory.
+The notebook creates one project environment using Colab's existing CUDA PyTorch wheels. It uses `--without-pip --system-site-packages` and Colab's pip with an explicit project-Python target, avoiding the earlier `ensurepip` failure. Dependencies install without changing the notebook kernel. Setup preserves torch/torchvision and their active dependency constraints, including bounded requirements such as `setuptools<82`; overrides are recorded in `tmp/colab-dependencies/runtime_pins.json`. Setup imports the model adapter in the project environment before any model is loaded. The UI launcher preserves the environment's Python entry point, including Colab's symlink, so the server sees the same installed packages.
 
-This demonstrates the current exploratory prototype. Its diagnosis uses a student response; evidence/diagnosis are unvalidated strings. Reusing these strings in one demo run is not a validated evidence cache or a frozen A–E protocol. Main-project research comparisons, hint history and disclosure checking remain pending. No reference answers/lectures/solutions are sent to the model.
+- **Dataset:** approximately 626 MB on the first download. Preparation preserves official splits, separates public inputs from references, and applies the saved visual-need audit. A matching prepared-data archive can be restored from Drive. Finalization revalidates the audit on every setup.
+- **Model:** approximately 7.5 GB of original checkpoint files. Quantization happens when loading the model. The revision is pinned in `colab_config.json`. Allow at least 8 GB of Drive space for optional model caching, plus data/results.
+- **Working files:** `/content/IE4422` is temporary. `USE_DRIVE=True` retains prepared data and results; `SAVE_MODEL_TO_DRIVE` controls checkpoint caching. `REBUILD_DATA=True` repeats preparation.
+- **Results:** local files are `outputs/ui_*.json`; Drive copies live under `runs/ui/`. Cell 11 also exports recovery files retained after a failed Drive copy. GPU memory and in-memory job status do not survive shutdown.
+
+Hints before an attempt use evidence extraction followed by one requested-tier hint. The UI and Experiment D call the same `extract_evidence()` function: up to 10 brief numbered observations with types and locations, under a shared 320-token limit. The prompt explicitly excludes inference; its output remains unverified. Answer checks compare the selected choice in Python and assess reasoning against the reference lecture/solution. A correct choice with supported reasoning stops with positive feedback; otherwise diagnosis and hint generation follow. Evidence is regenerated on each request; prior hints are not passed as conversation history.
+
+To pick up this evidence pass in an existing Colab UI session, upload the updated `IE4422_Source.zip` with `UPLOAD_NEW_SOURCE=True` in cell 2, then rerun the setup and launch cells. Source replacement stops the old UI server so the next launch loads the updated extractor. Use the matching updated notebook/source pair; a fresh runtime is recommended.
+
+**Show inspection report** reveals reference material, so leave it closed during student attempts. Model-generated evidence, diagnoses, and assessments remain unvalidated prototype outputs.
 
 ## Troubleshooting
 
-- **`ensurepip` failed in an older bundle:** download both updated files and open the updated notebook. Run cells 1–4, upload the updated ZIP in cell 2, and leave `UPLOAD_NEW_SOURCE=True`. The revised setup skips `ensurepip` and can reuse the partially created environment. Keep the existing Drive folder and saved files.
-- **torch 2.11 requires `setuptools<82`, but a constraint requests 84.2.1:** download the latest source ZIP, rerun cell 2 with `UPLOAD_NEW_SOURCE=True`, then rerun cell 4. The corrected profile handles bounded requirements as well as exact pins. Keep the runtime and Drive files.
-- **No CUDA GPU:** select a GPU runtime and reconnect. Colab does not guarantee GPU availability. A GPU in your laptop is unnecessary.
-- **Old Python or PyTorch:** select a current Colab runtime. The notebook stops rather than changing the shared data stack or silently using CPU inference.
-- **Installation or generation error:** keep the visible error. Check `run.json` and any completed `result.json` under Drive; a run is successful only when its status is `complete`. Re-run the failed cell after fixing the cause.
-- **Insufficient Drive space:** turn off model caching or free space in your Drive, then rerun the model cell. A partially copied checkpoint is not reused as complete.
-- **Interrupted model download:** rerun the model cell; Hugging Face can reuse completed files. Dataset caches are written only after full preparation.
-- **Source files edited:** rebuild the ZIP so teammates run the updated code, not an older snapshot. Start a fresh Colab runtime when replacing an already uploaded source bundle.
+- **UI blank or connection refused:** run cell 9, then rerun cell 8 to recreate the iframe. Allow Colab kernel access if prompted. A fresh runtime needs setup again; localhost on your laptop is not the Colab server.
+- **Settings or source changed:** set `RESTART_UI=True` and rerun cell 8. Uploading source or rebuilding dependencies/data stops the old server first. Use a fresh runtime when replacing an older bundle.
+- **First request is slow:** the checkpoint is loading into GPU memory. Check cell 9; later requests reuse the model.
+- **`No module named 'qwen_vl_utils'` on the first request:** older UI launchers followed the project Python symlink to system Python, which could not see the installed project packages. Upload the corrected notebook/source pair in cell 2, rerun cell 4, then launch cell 8. Source replacement stops the old worker and discards its launcher object. This fix does not require rebuilding ScienceQA or downloading the checkpoint again.
+- **Port occupied:** change `UI_PORT`, or stop the process that owns that port. The launcher does not kill unrelated processes.
+- **Drive copy failed:** local results remain in `outputs/`. Fix Drive access/space or download them in cell 11. A job completes only after its enabled Drive copy succeeds.
+- **No CUDA GPU:** select a GPU runtime and reconnect. Colab does not guarantee availability; TPU and CPU runtimes cannot run this model adapter.
+- **Older setup fails in `ensurepip` or a setuptools constraint:** upload the latest notebook/source pair and rerun cells 1–4. Setup avoids bootstrapping pip and respects Colab's CUDA dependency constraints.
+- **Changed preparation source or audit:** set `REBUILD_DATA=True` and rerun cell 6. Candidate-only archives are not accepted as finalized data.
+- **Interrupted download or insufficient Drive space:** rerun cell 7 after resolving access/space. Incomplete checkpoints are not accepted for loading.
+
+## Rebuild the source ZIP
 
 From the repository root:
 
@@ -45,8 +57,8 @@ From the repository root:
 .\.venv\Scripts\python notebooks/build_bundle.py
 ```
 
-`colab_support.py` contains setup/storage helpers, `run_demo.py` calls the existing model/prompt stages, and `build_bundle.py` packages an explicit list of source files. Model weights, datasets, environments, secrets and local proposal/agent notes are excluded from the source ZIP.
+The bundle contains the UI, shared modules, preparation/finalization, inspector, saved audit decisions, and their tests. `colab_support.py` handles setup/storage; `colab_ui.py` manages the server process, readiness, and logs. Alternate tutor runners, notebook demos, and experiment launchers are excluded. Existing research files remain separately under `experiments/` in the repository. Data, weights, environments, secrets, and local project notes are excluded.
 
-Local tests and notebook structure can be checked without a GPU. An actual Colab CUDA run is still required to verify assigned-hardware feasibility and model output quality.
+Local tests cover notebook structure and server lifecycle without loading a model. Actual Colab proxy/iframe behavior and GPU inference still require a real Colab run.
 
-Sources: [Colab storage and resource limits](https://research.google.com/colaboratory/faq.html), [Hugging Face checkpoint downloads](https://huggingface.co/docs/huggingface_hub/guides/download).
+Sources: [Colab FAQ](https://research.google.com/colaboratory/faq.html), [Colab port helpers](https://github.com/googlecolab/colabtools/blob/main/google/colab/output/_util.py), [Hugging Face checkpoint downloads](https://huggingface.co/docs/huggingface_hub/guides/download).

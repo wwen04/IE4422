@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint explains the complete mass-to-kinetic-energy-to-temperature reasoning instead of suggesting a small step for the student.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "\"The same average particle speed\" refers to the matching 1,400 m/s labels, and the mass comparison uses the displayed particle masses.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "At equal particle speeds, greater particle mass means greater kinetic energy; greater average kinetic energy means higher temperature.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The mass comparison directs the student toward sample A, whose particles are labeled 46 u versus 40 u in sample B.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "\"The sample with the higher mass will have ... a higher temperature\" gives the deciding fact and leaves only a trivial lookup of the mass labels.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The hint clearly directs attention to comparing masses, but does not state a concrete action for the student to perform.",
+    "score": 3
+  }
+}

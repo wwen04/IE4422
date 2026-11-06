@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint concludes that the sea cucumber 'plays a role as a decomposer,' applying the concept to decide the answer rather than only connecting a visible detail to it.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to 'the sea cucumber' identifies a labeled organism in this image and is central to the hint's conclusion.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The claim that 'the sea cucumber is shown consuming detritus' is not verifiable: the image has no labeled or identifiable detritus, and its incoming arrows originate from organisms."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "Decomposers break down dead organic matter, and the sea cucumber's decomposer role agrees with the supplied solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint identifies the sea cucumber as a decomposer, directing the student to the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Saying the sea cucumber 'plays a role as a decomposer' directly supplies the organism requested by the question.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The hint supplies a definition and the answer without a usable next action for the student to perform.",
+    "score": 1
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint goes beyond noticing arrows by interpreting them as evidence that the bear has predators, which exceeds Tier 1.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It specifically identifies the black bear and the multiple arrows pointing toward it.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The black bear has several predators in this food web."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "Arrows point from food to consumer; arrows toward the black bear identify its food, not its predators.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Saying the black bear has several predators leads the student to reject the gold answer, blackbear.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "It rules out blackbear as an organism with no predator, although that exclusion is incorrect.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It directs attention to arrows entering the black bear, but gives an interpretation rather than a concrete next reasoning action.",
+    "score": 3
+  }
+}

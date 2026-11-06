@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Compare the number of yellow balls in each beaker' gives a concrete next step while leaving the comparison and answer to the student.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The yellow balls in the two containers are specific visible elements needed for the suggested comparison.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both containers show 50 mL of solvent, so comparing particle counts correctly compares particles per milliliter.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing the visible counts at equal volumes leads toward Solution A, consistent with the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint does not give either count, identify the larger count, or favor an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "Comparing the yellow balls is an immediate, specific action that leaves the student to count and infer the higher concentration.",
+    "score": 5
+  }
+}

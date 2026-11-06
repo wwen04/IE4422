@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint explains equinoxes and solstices but gives no concrete reasoning step for identifying F.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The general reference to Earth orbiting the Sun identifies no particular labelled position or visible tilt to use; the explanation would fit any question on this topic.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The descriptions of equinoxes and solstices are consistent with school-level science.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The general explanation does not direct the student toward a different orbital stage.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint does not classify F or distinguish September from March, and does not rule out any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It suggests considering tilt only implicitly and gives no concrete action involving F.",
+    "score": 2
+  }
+}

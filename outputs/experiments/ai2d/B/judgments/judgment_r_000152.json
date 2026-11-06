@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "verdict": "yes",
+    "reason": "\"Notice that option B is labeled\" directs attention to one purported visual detail, without explaining science or giving a conclusion, as requested for Tier 1."
+  },
+  "visual_grounding": {
+    "verdict": "yes",
+    "reason": "The hint specifically identifies B and its purported indicator; the reference depends on this image."
+  },
+  "unsupported_visual_claims": {
+    "count": 1,
+    "unsupported_claims": [
+      "B is labeled with a vertical line pointing upwards; the image instead shows B beside a bracket with horizontal leader lines and no upward-pointing line."
+    ]
+  },
+  "scientific_correctness": {
+    "verdict": "yes",
+    "reason": "The hint makes no scientific assertion that contradicts the gold answer or school-level science."
+  },
+  "steers_toward_wrong_answer": {
+    "verdict": "no",
+    "reason": "Despite misdescribing the indicator, directing attention to B does not favor any incorrect answer choice."
+  },
+  "answer_disclosure": {
+    "reason": "The hint does not identify the head or favor or eliminate any answer choice.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It clearly directs attention to B, but the student must resolve the inaccurate description of its indicator before using that direction.",
+    "score": 3
+  }
+}

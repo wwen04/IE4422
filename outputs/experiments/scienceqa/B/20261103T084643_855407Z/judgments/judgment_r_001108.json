@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Compare Jupiter's volume ... with Saturn's volume' gives a comparison task but does not connect the visible data to a useful science idea, as Tier 2 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the Jupiter and Saturn rows and their exact volume values in the table.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both volume values are correct, and comparing them against the stated tenfold relationship is valid.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It directs attention to the correct quantities without suggesting an incorrect relationship or answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It supplies the relevant displayed values but does not state their ratio or favor either true or false.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "'Compare' identifies the two quantities, but the student must work out how to test the tenfold relationship.",
+    "score": 3
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint explains that map colors represent humidity ranges but gives no concrete next reasoning step, so it does not meet Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'The outlined area is shaded' identifies the specific marked region and its color coding.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The map uses color shades to represent specific humidity ranges, consistent with the reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint directs attention to the relevant color coding and does not suggest an incorrect value.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It gives no humidity value or range and does not favor or eliminate any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It identifies color coding but gives only vague guidance, without asking the student to compare the outlined shades with the legend.",
+    "score": 2
+  }
+}

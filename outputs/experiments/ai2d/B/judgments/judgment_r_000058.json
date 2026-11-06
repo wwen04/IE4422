@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "Notice that the yellow circle directs attention to one specific object, without a procedure or answer conclusion.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The yellow circle identifies the visible central yellow object and is essential to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The yellow circle represents the Earth's position in its orbit around the Sun; the yellow circle is the Sun, while the Earth is shown by blue globes on the orbit."], "count": 1},
+  "scientific_correctness": {"reason": "Calling the central yellow circle the Earth's orbital position confuses the Sun with Earth in this orbital diagram.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The mistaken object identification does not favour any particular alternative seasonal stage over September Equinox.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint names no seasonal stage and neither selects nor eliminates an option.", "score": 0},
+  "actionability": {"reason": "It gives a specific object to look at, but leaves the student to determine how to use it to interpret F.", "score": 3}
+}

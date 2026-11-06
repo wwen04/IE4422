@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "verdict": "no",
+    "reason": "\"Notice how the positions ... change\" points to a visual detail but does not connect it to a science idea, so it is T1 rather than T2."
+  },
+  "visual_grounding": {
+    "verdict": "yes",
+    "reason": "The Earth and the Moon are specific, identifiable objects in this diagram, and their positions are central to the hint."
+  },
+  "unsupported_visual_claims": {
+    "count": 1,
+    "unsupported_claims": [
+      "The hint says the Earth changes position over time in the diagram, but only one Earth is shown in a fixed central position."
+    ]
+  },
+  "scientific_correctness": {
+    "verdict": "yes",
+    "reason": "Changing positions of the Earth and Moon over time is scientifically possible; the unsupported description of this image is counted under visual claims."
+  },
+  "steers_toward_wrong_answer": {
+    "verdict": "no",
+    "reason": "Looking at the Earth and Moon arrangement does not direct the student toward cat, volcano, or Sun."
+  },
+  "answer_disclosure": {
+    "score": 0,
+    "reason": "The hint identifies the Earth and Moon but does not state moon phases, describe the changing illuminated appearance, or rule out an option."
+  },
+  "actionability": {
+    "score": 3,
+    "reason": "It gives a clear direction to examine positions, but leaves the student to work out how that identifies what the diagram depicts."
+  }
+}

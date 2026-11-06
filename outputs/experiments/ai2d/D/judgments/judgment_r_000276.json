@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... body' directs attention to one visual detail without explaining a concept or giving a procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The comparison explicitly identifies the butterfly's and dragonfly's bodies in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The butterfly has a more slender body compared to the dragonfly; the dragonfly's body is visibly narrower and more elongated."], "count": 1},
+  "scientific_correctness": {"reason": "The hint offers no scientific concept or mechanism that contradicts school science; its erroneous visual comparison is recorded above.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The inaccurate comparison concerns slenderness and does not establish any incorrect option about body length or color.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint neither identifies which body is longer nor favors or eliminates an answer option.", "score": 0},
+  "actionability": {"reason": "It directs attention to the two bodies, but the student must determine how to use that observation to compare their lengths.", "score": 3}
+}

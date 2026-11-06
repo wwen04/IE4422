@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that both solutions have the same volume of solvent (50 mL)' points out one visible detail without explaining the concept or giving a procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "Both pictured flasks have the specific label 'Solvent volume: 50 mL', which is the detail the hint asks the student to notice.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The equal solvent volumes are accurately stated and consistent with comparing solute concentration.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Noticing the equal solvent volumes supports a valid comparison and does not suggest an incorrect answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint identifies equal volumes but does not compare particle counts, favour an option, or state the deciding concentration relationship.", "score": 0},
+  "actionability": {"reason": "The student can immediately inspect the two 50 mL labels, while still needing to compare solute particles and infer concentration.", "score": 4}
+}

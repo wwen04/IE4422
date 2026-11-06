@@ -6,7 +6,7 @@ import json
 import random
 from pathlib import Path
 
-import run_scienceqa_tutor as runner
+import scienceqa_tutor as runner
 from evaluate_visual_evidence import read_question_ids
 from tutor_pipeline import extract_evidence, generate_hint_candidate
 

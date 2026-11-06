@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Sample B have a higher kinetic energy' applies the concept to reach the deciding conclusion, exceeding tier 2.", "verdict": "no"},
+  "visual_grounding": {"reason": "The comparison of average speeds in Sample B and Sample A uses their specific displayed speed values.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Kinetic energy increases with speed, and Sample B has higher average kinetic energy; omitting its greater particle mass does not contradict the reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The stated higher kinetic energy of Sample B directs the student toward the gold answer, sample B.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'Sample B have a higher kinetic energy' states the deciding conclusion in a question asking which sample has higher temperature from average kinetic energy.", "score": 2},
+  "actionability": {"reason": "The energy comparison gives a clear direction, but no concrete action; the student must connect the stated energy difference to temperature.", "score": 3}
+}

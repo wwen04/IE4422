@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "verdict": "no",
+    "reason": "“They will pass on the dominant trait to their offspring” applies the concept to assert an outcome rather than making a Tier 2 connection."
+  },
+  "visual_grounding": {
+    "verdict": "yes",
+    "reason": "“Both parents have the dominant allele M” specifically refers to the parental alleles shown around this Punnett square."
+  },
+  "unsupported_visual_claims": {
+    "count": 1,
+    "unsupported_claims": [
+      "The claim that both parents have the dominant allele M is false: the top parent contributes m and m, while the left parent contributes M and m."
+    ]
+  },
+  "scientific_correctness": {
+    "verdict": "no",
+    "reason": "“They will pass on the dominant trait to their offspring” misleadingly treats dominance as guaranteed inheritance; an Mm parent can transmit m, and the displayed cross includes mm offspring."
+  },
+  "steers_toward_wrong_answer": {
+    "verdict": "yes",
+    "reason": "The assertion that the offspring will inherit the dominant trait suggests all offspring have the condition, leading toward 4:0 instead of the gold 2:2."
+  },
+  "answer_disclosure": {
+    "score": 2,
+    "reason": "“They will pass on the dominant trait to their offspring” states an unconditional offspring outcome that makes the incorrect 4:0 choice immediate."
+  },
+  "actionability": {
+    "score": 1,
+    "reason": "The hint asserts an outcome and gives no usable next action for examining the offspring genotypes."
+  }
+}

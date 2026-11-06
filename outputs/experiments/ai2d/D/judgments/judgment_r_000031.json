@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'The figure with the most visible fractures or breaks ... is likely to show active flexures' supplies a selection rule and applies it to choosing a figure, exceeding the requested concept-linking tier.", "verdict": "no"},
+  "visual_grounding": {"reason": "'Fractures or breaks in the rock layers' identifies visible features of the illustrated rock blocks that the student is asked to compare.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Identifying active flexures by the most fractures or layers 'breaking or moving apart' confuses bending of rock layers with fracturing or separation; fracture abundance does not identify flexures.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Looking for the most conspicuous breaks directs attention toward the fractured blocks such as G or D, rather than the gold figure B.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "'The figure with the most visible fractures or breaks' provides an explicit answer-selection criterion, strongly favoring some figures without naming an option.", "score": 1},
+  "actionability": {"reason": "'Look for areas where the rock layers appear to be breaking or moving apart' gives an immediate, concrete visual comparison, although its criterion is scientifically misleading.", "score": 4}
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint links the visible color bar to the science quantity, 'specific humidity levels,' without using it to select an answer.", "verdict": "yes"},
+  "visual_grounding": {"reason": "It identifies the central highlighted area and the specific humidity color bar visible below the map.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The color bar does indicate specific humidity levels, consistent with the map and reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It directs attention to the relevant area and legend without suggesting an incorrect level.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It gives no humidity value, range, color match, or option preference.", "score": 0},
+  "actionability": {"reason": "Identifying the outlined area and color bar gives a clear direction, but the student must work out how to compare their colors.", "score": 3}
+}

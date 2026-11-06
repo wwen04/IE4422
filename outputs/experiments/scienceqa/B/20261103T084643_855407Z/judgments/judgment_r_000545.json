@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice that Sample B has particles moving faster” highlights a visible difference in the labeled average speeds without explaining the temperature concept.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "“Sample B” and “Sample A” identify the two pictured samples, whose average particle speeds are labeled 1,200 m/s and 1,000 m/s.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "“Sample B has particles moving faster” agrees with the labeled higher average speed and the gold solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The higher average speed in Sample B supports the gold answer, since both samples have the same particle mass.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "“Sample B has particles moving faster” supplies the specific speed comparison that decides the question, but does not state which sample has the higher temperature.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "“Notice” directs the student to compare the speeds of the two named samples immediately, although it supplies the comparison itself.",
+    "score": 4
+  }
+}

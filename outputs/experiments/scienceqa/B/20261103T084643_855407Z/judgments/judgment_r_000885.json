@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice' directs attention only to the shared 50 mL solvent volume, without explaining or concluding.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "Both pictured containers are explicitly labeled 'Solvent volume: 50 mL', the detail the hint identifies.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The two solutions have equal labeled solvent volumes, consistent with the reference's concentration comparison.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Noticing equal solvent volumes supports comparing particle counts and does not imply equal concentrations.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint identifies a relevant volume detail without comparing particles, favouring an option, or stating the deciding fact.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately inspect the two 50 mL labels, but this small observation leaves the comparison step unspecified.",
+    "score": 4
+  }
+}

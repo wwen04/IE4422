@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import re
 
-import run_scienceqa_tutor as runner
+import scienceqa_tutor as runner
 from tutor_pipeline import extract_evidence
 
 

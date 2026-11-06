@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The reference to E is followed by its association with the hypothalamus, adding scientific interpretation beyond a Tier 1 visual observation.", "verdict": "no"},
+  "visual_grounding": {"reason": "The hint specifically identifies label E, whose pointer ends in the hypothalamic region of this brain diagram.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Associating E with the hypothalamus is consistent with its location above the pituitary stalk.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hypothalamus reference does not favour an incorrect listed gland.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint identifies a brain region but does not name the pituitary gland, describe its connection, or favour any listed option.", "score": 0},
+  "actionability": {"reason": "The student can immediately locate and inspect label E, although the hint gives little direction for using that observation.", "score": 4}
+}

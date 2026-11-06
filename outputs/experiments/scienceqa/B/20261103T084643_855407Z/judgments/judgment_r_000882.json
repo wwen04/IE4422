@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice ... the top row' directs attention to a visual detail without giving a procedure or phenotype rule.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint specifically identifies the top row and its M allele.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The top row indicates that both parents have the M allele; the column labels are M and m, while the other parent's row labels are m and m."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "'Both parents have the M allele' incorrectly interprets this Mm × mm cross; only one parent carries M.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Treating both parents as carrying M can lead to an affected-by-affected cross and a ratio such as 3:1 instead of 2:2.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The hint gives no offspring ratio, phenotype classification, or correct option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It identifies the top row to inspect, but the student must determine how to use its alleles.",
+    "score": 3
+  }
+}

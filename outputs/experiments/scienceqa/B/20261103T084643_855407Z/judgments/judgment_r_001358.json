@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'The magnets in Pair 1 are larger' points to a visual size comparison without explaining a concept or solving the question.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The named Pair 1 and Pair 2 magnets are identifiable image elements whose sizes are the hint's focus.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The magnets in Pair 1 are larger than those in Pair 2: the small left magnet is the same size in both pairs; only the right circular magnet is larger in Pair 1."], "count": 1},
+  "scientific_correctness": {"reason": "The hint makes a visual size claim but states no scientific principle that contradicts the reference or school-level science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Despite overstating which magnets differ in size, the comparison directs attention toward Pair 1, consistent with the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It points to magnet size without stating how size affects force or favouring any force option.", "score": 0},
+  "actionability": {"reason": "The size comparison supplies a clear focus, but the student must determine how to use it to reason about magnetic force.", "score": 3}
+}

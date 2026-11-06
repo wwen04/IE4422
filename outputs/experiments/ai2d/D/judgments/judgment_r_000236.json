@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'which might be considered heart-shaped' supplies the shape conclusion instead of only inviting attention to a visual detail.", "verdict": "no"},
+  "visual_grounding": {"reason": "'option Z' and its rounded base identify a specific visible leaf and region.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Z has a heart-shaped outline with rounded basal lobes, consistent with the gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint points to Z, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Calling Z 'heart-shaped', even tentatively, directly supplies the answer to which leaf is heart-shaped.", "score": 2},
+  "actionability": {"reason": "'Notice' the rounded base of Z gives a concrete visual inspection the student can perform immediately, but also supplies the conclusion.", "score": 4}
+}

@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "“The distance ... is twice as long” states a visual comparison but does not suggest a concrete reasoning action, as Tier 3 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint specifically compares the gaps between the magnets in Pair 1 and Pair 2.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The distance between the magnets in Pair 2 is twice as long as in Pair 1; the image labels the gaps 17.4 mm and 7.8 mm, which are not a two-to-one ratio."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The hint makes no incorrect scientific claim about magnetic force; its inaccurate numerical comparison is a visual error.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It still directs attention to the larger gap in Pair 2, which is consistent with the smaller magnetic force there.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It identifies a distance comparison without stating how distance affects force or selecting or excluding an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The specific gap comparison provides a clear focus, but the student must decide how to use it to reason about magnetic force.",
+    "score": 3
+  }
+}

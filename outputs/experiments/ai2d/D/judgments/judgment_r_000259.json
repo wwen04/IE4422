@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "Calling the diagram a characteristic of 'lunar phases' identifies the depicted phenomenon instead of only connecting a visible detail to a concept without deciding the answer.", "verdict": "no"},
+  "visual_grounding": {"reason": "'The Moon's position relative to Earth' refers to the visible Moon images arranged around Earth and supplies the basis for the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The Moon's position relative to Earth is relevant to lunar phases, consistent with the depicted arrangement and gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The reference to 'lunar phases' points toward the gold answer, moon phases.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'Lunar phases' names the phenomenon in the correct option, making the answer immediate.", "score": 2},
+  "actionability": {"reason": "The hint directs attention to the Moon's position relative to Earth, but leaves the student to work out a concrete action or comparison.", "score": 3}
+}

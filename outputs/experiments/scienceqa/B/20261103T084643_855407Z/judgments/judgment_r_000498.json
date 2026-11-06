@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"The size of the magnets affects\" states a general concept without linking it to a specific visible detail, so it does not meet Tier 2.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint names no particular magnet, pair, or visible size comparison and would apply equally to other magnet questions.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Magnet size affects magnetic-force magnitude, consistent with the supplied reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It directs attention to the relevant factor and does not suggest a competing answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It does not say which size produces greater force or favour any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It suggests considering magnet size but gives no concrete comparison or other next action.",
+    "score": 2
+  }
+}

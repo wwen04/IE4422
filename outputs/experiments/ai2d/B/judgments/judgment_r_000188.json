@@ -1,0 +1,35 @@
+{
+  "tier_compliance": {
+    "reason": "The hint makes phase-identification claims and supplies no concrete reasoning step for finding what follows first quarter.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It refers specifically to the visible F, G and H labels, which are central to its claims.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "F is identified as new moon, although the nearby Moon is visibly partly illuminated.",
+      "H is identified as full moon, although H labels the incoming light arrow rather than a full Moon.",
+      "G is described as the next phase after F, although the left-hand half-Moon position lies between their positions along the cycle.",
+      "G is identified as first quarter, although the nearby Moon is a crescent rather than a half Moon."
+    ],
+    "count": 4
+  },
+  "scientific_correctness": {
+    "reason": "Calling first quarter the next phase after new moon skips waxing crescent, and the stated phase identifications misrepresent the cycle.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The erroneous new-moon-to-first-quarter sequence directs the student away from the actual phase following first quarter, waxing gibbous.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "It does not identify waxing gibbous, favour or eliminate an offered option, or state the fact that decides the answer.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It gives phase claims but no usable next action for determining what follows first quarter.",
+    "score": 1
+  }
+}

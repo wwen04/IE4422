@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice that each purple ball represents one particle of solute” draws attention to one visual detail without explaining concentration or giving a procedure.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The purple balls in both solutions are specific, visible elements essential to the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The statement that each purple ball represents a solute particle agrees with the supplied context and reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Identifying the solute particles does not favor an incorrect solution.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint identifies the particle representation without comparing concentrations or favoring an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It clearly directs attention to the purple balls, but the student must determine how to use them to compare concentration.",
+    "score": 3
+  }
+}

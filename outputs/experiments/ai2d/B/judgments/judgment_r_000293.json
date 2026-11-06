@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'More curved compared to the others' supplies the comparison that answers the question, exceeding Tier 1's invitation to notice a detail.", "verdict": "no"},
+  "visual_grounding": {"reason": "The beak of the bird labeled 'i' identifies the visible bird labeled I and its distinctive beak.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The bird labeled I visibly has the most strongly curved beak; the hint contains no scientific error.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The indicated bird's curved beak is consistent with the gold answer, iiki.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying this beak is more curved than the others states the conclusion needed to identify the most curved beak.", "score": 2},
+  "actionability": {"reason": "'Notice' directs the student immediately to a specific labeled beak, but supplies the key comparison.", "score": 4}
+}

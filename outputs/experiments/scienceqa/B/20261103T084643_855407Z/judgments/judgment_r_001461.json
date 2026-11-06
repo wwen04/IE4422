@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint gives the decisive range, 'between 18 and 24,' applying the legend to the outlined area instead of only connecting a visible detail to a concept for Tier 2.", "verdict": "no"},
+  "visual_grounding": {"reason": "'The highlighted area is shaded in green' identifies the green region inside the white outline and connects it to the map's humidity scale.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The green shading and stated range of 18 to 24 grams of water vapor per kilogram of air agree with the legend and gold solution.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The stated range leads toward 19 g/kg, the gold answer; 11 and 12 g/kg lie outside it.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'Between 18 and 24' supplies the deciding fact and rules out both other options, leaving a trivial comparison without explicitly naming the answer.", "score": 1},
+  "actionability": {"reason": "The supplied humidity range gives a clear direction for comparing the choices, but the hint does not explicitly ask the student to perform an action and has already interpreted the legend.", "score": 3}
+}

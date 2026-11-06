@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Compare Earth's volume ... with Mars's volume' directs a comparison but does not connect the visible values to a useful science idea, as Tier 2 requires.", "verdict": "no"},
+  "visual_grounding": {"reason": "The hint identifies Earth's and Mars's volume entries and accurately quotes their values in the table.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The quoted volumes are correct, and comparing them is relevant; no scientific claim contradicts the reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Comparing the correct volumes does not favor an incorrect conclusion, although the student must account for the tenfold threshold.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint quotes the relevant table entries without stating their ratio, applying the tenfold threshold, or favoring either option.", "score": 0},
+  "actionability": {"reason": "'Compare' gives a clear direction using specific values, but the student must determine how to test the more-than-ten-times condition.", "score": 3}
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint infers that B 'might be part of the mantle' instead of naming a concrete reasoning step for identifying A.", "verdict": "no"},
+  "visual_grounding": {"reason": "It explicitly relates the identifiable labels A, B and C in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["Layer B is located between layers A and C: B is below A toward the centre, while C is above A toward the outside; A and B occupy the same orange region."], "count": 1},
+  "scientific_correctness": {"reason": "Suggesting that B is part of the mantle misidentifies the orange region shared with A, which the answer key identifies as the outer core.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The false ordering and mantle identification for B encourage an incorrect interpretation of A's position and layer identity.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It does not identify A or rule in or out an answer option for A; its mantle suggestion concerns B.", "score": 0},
+  "actionability": {"reason": "It directs attention to the relative positions of A, B and C, but leaves the student to work out what to do with that comparison.", "score": 3}
+}

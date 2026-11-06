@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint only asks the student to notice the two relevant volume entries, without explaining a concept or comparison procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "Jupiter's 1.43 × 10^15 km³ and Saturn's 8.27 × 10^14 km³ are identifiable entries in the image's volume column.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Both quoted volumes match the table and the gold reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs attention to the correct quantities for comparing Jupiter's volume with ten times Saturn's volume.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint supplies the relevant table entries but neither compares them nor favours true or false; the tenfold comparison remains for the student.", "score": 0},
+  "actionability": {"reason": "The student can immediately locate and read the two specified volume entries, though the hint does not suggest the next comparison step.", "score": 4}
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint gives only the general idea that magnet size affects force; it does not connect a specific visible detail to that idea as Tier 2 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'The size of the magnets' identifies no particular magnet or size relationship in this image and could apply to any magnet question.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Magnet size can affect magnetic force; the general statement is scientifically valid, although it omits the relevant distance difference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The corresponding magnets appear the same size in both pairs. Focusing only on size would likely suggest equal forces, whereas the gold answer depends on Pair 2's smaller separation.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The hint makes no comparison between the pairs and does not state a deciding fact or explicitly favour or eliminate an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention vaguely to size without giving a concrete comparison or next action.",
+    "score": 2
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“The pink stone ... is likely rose quartz” gives the answer instead of connecting a visual detail to an idea without deciding it.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "“The pink stone in the image” identifies the visibly pink specimen at bottom left, which is needed for the identification.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Rose quartz is characteristically pink, and the identification agrees with the gold answer.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint directs the student to rose quartz, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "“The pink stone ... is likely rose quartz” directly names the correct answer despite the hedge.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It supplies the identification rather than a usable next action for the student.",
+    "score": 1
+  }
+}

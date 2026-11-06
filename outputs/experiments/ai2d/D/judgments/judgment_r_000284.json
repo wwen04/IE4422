@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint identifies A as the crust, supplying its proposed answer to which layer surrounds the mantle rather than leaving that application to the student.", "verdict": "no"},
+  "visual_grounding": {"reason": "The reference to the layer labeled A identifies a specific region of this image and is essential to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The outermost layer in the image is labeled as A; the outermost thin rim is indicated by D, while A labels the layer beneath it."], "count": 1},
+  "scientific_correctness": {"reason": "The hint calls A the Earth's crust, but A represents the mantle beneath the crust indicated by D.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Identifying A as the crust leads toward the option with text A, whereas the gold answer is D.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "By naming A as the crust, the hint supplies its proposed surrounding layer and makes its intended answer immediate, although that answer is wrong.", "score": 2},
+  "actionability": {"reason": "The hint states an incorrect identification without providing a usable reasoning action for the student.", "score": 1}
+}

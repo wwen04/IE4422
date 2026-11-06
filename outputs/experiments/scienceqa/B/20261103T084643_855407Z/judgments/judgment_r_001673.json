@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Consider the possible genotypes' does not specify a concrete reasoning action; the remainder explains what Punnett-square cells represent.", "verdict": "no"},
+  "visual_grounding": {"reason": "'The Punnett square' and 'each cell' are generic references; the hint identifies no particular allele label or genotype in this image.", "verdict": "no"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Each cell does represent a possible offspring genotype formed by combining parental alleles, consistent with the reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Considering the displayed offspring genotypes does not direct the student toward an incorrect probability.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint gives no genotype count, probability, or fact distinguishing the answer choices.", "score": 0},
+  "actionability": {"reason": "'Consider the possible genotypes' supplies a clear direction, but the student must decide how to identify and count homozygous recessive outcomes.", "score": 3}
+}

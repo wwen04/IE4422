@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice ... the same number of particles but different masses' directs attention to visible details without explaining the science or drawing a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the particle counts and the mass labels for the two pictured samples.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both samples have eight particles, and their labeled particle masses differ; the hint makes no incorrect scientific claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Directing attention to the differing masses is relevant to the correct comparison and does not favor a wrong option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It neither identifies which sample has greater mass nor explains how mass determines kinetic energy or temperature, so it does not favor or eliminate an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately compare the pictured particle counts and mass labels, although this is only a small observation step.",
+    "score": 4
+  }
+}

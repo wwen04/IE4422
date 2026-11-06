@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "'Characteristic of its adult stage' supplies the answer instead of linking a visible detail to a concept without deciding the answer.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to the pictured insect's wings identifies a specific visible feature needed for the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "count": 1,
+    "unsupported_claims": [
+      "The pictured insect 'has four wings'; the image shows two wings."
+    ]
+  },
+  "scientific_correctness": {
+    "reason": "The pictured mosquito has one pair of functional wings, so attributing four wings to it is scientifically incorrect.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Despite the incorrect wing count, 'adult stage' directs the student to the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'Characteristic of its adult stage' directly identifies the stage asked for.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It directs attention to the wings, but gives the stage and offers no further reasoning action.",
+    "score": 3
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "verdict": "no",
+    "reason": "“Absorbed more heat” applies the temperature evidence to a heat-transfer conclusion, rather than only connecting a visible detail to a concept."
+  },
+  "visual_grounding": {
+    "verdict": "yes",
+    "reason": "The comparison between the “brown bottle” and “clear bottle” identifies the two rows whose temperature increases differ."
+  },
+  "unsupported_visual_claims": {
+    "count": 0,
+    "unsupported_claims": []
+  },
+  "scientific_correctness": {
+    "verdict": "yes",
+    "reason": "The otherwise identical brown bottle warmed by 6°C versus 3°C for the clear bottle, consistent with greater net heat absorption."
+  },
+  "steers_toward_wrong_answer": {
+    "verdict": "no",
+    "reason": "Heat absorption points toward energy entering the bottles, consistent with the gold answer."
+  },
+  "answer_disclosure": {
+    "reason": "Saying the brown bottle “absorbed” heat rules out energy leaving each bottle, although the complete transfer statement is not given.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The heat-absorption comparison gives a direction for thinking, but no concrete action for determining the transfer endpoints.",
+    "score": 3
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that each yellow ball represents one particle' directs attention to a relevant visual detail without explaining concentration or giving a procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "'Each yellow ball' identifies the visible yellow particles in the two solutions and is essential to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The yellow balls represent individual solute particles, consistent with the supplied context and reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint identifies the particle representation without suggesting an incorrect comparison or answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint neither compares the solutions nor favours or eliminates an option.", "score": 0},
+  "actionability": {"reason": "It clearly directs attention to the yellow balls, but the student must determine how to use them to compare concentrations.", "score": 3}
+}

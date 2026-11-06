@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice that the flower is labeled as \"Producer\"” invites attention to one visible label without explaining the concept.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint specifically identifies the flower and its visible “Producer” label.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The flower is correctly identified as a producer.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Identifying the producer provides a relevant starting point and does not direct the student to an incorrect consumer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Calling the flower a producer rules out the flower option as a primary consumer, without identifying the correct consumer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The student can immediately locate the flower and read its “Producer” label, but this is a small observation that leaves the consumer reasoning untouched.",
+    "score": 4
+  }
+}

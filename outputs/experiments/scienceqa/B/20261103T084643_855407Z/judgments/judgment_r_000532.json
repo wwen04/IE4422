@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Sample B have a higher kinetic energy' applies the concept to decide the comparison, exceeding Tier 2.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'440 m/s vs. 350 m/s' refers to the specific average speeds printed beneath samples B and A.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Kinetic energy depends on speed, and B does have higher kinetic energy here; its greater particle mass is omitted but the stated conclusion is correct.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The higher kinetic energy identified for sample B supports the gold answer, sample B.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'The particles in Sample B have a higher kinetic energy' supplies the comparison that immediately determines which sample has the higher temperature.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The hint supplies a conceptual explanation and conclusion but gives no concrete action for the student to perform.",
+    "score": 2
+  }
+}

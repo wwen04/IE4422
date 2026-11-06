@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "It connects the visible topmost layer with the concept of surface soil without identifying bedrock, as Tier 2 requests.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "\"The topmost layer\" identifies a specific visible region of this soil profile.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "\"Organic matter like soil or topsoil\" incorrectly treats soil itself as organic matter; soil contains mineral particles as well as organic matter.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Although it focuses on the surface, it does not tell the student to identify that layer as bedrock or otherwise favour a wrong answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Identifying the top soil layer as surface soil helps rule out its label D as bedrock without identifying the correct label.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It directs attention to the topmost layer, but the student must work out how to use that information to locate bedrock.",
+    "score": 3
+  }
+}

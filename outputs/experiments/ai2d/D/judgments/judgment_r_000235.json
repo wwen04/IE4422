@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'B is connected to the eyes' supplies an interpretation but gives no concrete reasoning step for the student to perform, so it does not meet Tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "The reference to B and its purported connection to the eyes identifies specific image elements essential to the hint, although that connection is incorrect.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The diagram shows that B is connected to the eyes."], "count": 1},
+  "scientific_correctness": {"reason": "The broad association with facial features contains no separate scientific error; the incorrect claim about the label connections is a visual error.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Directing the student toward the eyes and facial features is likely to favor 'face' over the ears indicated by B.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint neither identifies ears nor supplies a deciding fact or clearly eliminates an option; 'facial features' is too broad to decide among these choices.", "score": 0},
+  "actionability": {"reason": "'Related to facial features' offers only a vague direction and no concrete task for identifying B.", "score": 2}
+}

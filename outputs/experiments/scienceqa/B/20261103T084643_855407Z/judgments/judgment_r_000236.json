@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice ... the same number of particles but different masses' directs attention to visible details without explaining science or drawing a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The particle drawings have equal counts, and the mass labels show 32 u and 44 u per particle.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Equal particle counts and different particle masses agree with the image and references; no incorrect scientific relationship is asserted.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Attention to particle mass is relevant to comparing kinetic energy and does not direct the student toward an incorrect option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint identifies a relevant difference without saying which sample has greater mass, kinetic energy, or temperature, or favouring an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It clearly directs attention to particle counts and masses, but the student must decide what to do with those observations.",
+    "score": 3
+  }
+}

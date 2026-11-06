@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "verdict": "no",
+    "reason": "The hint only states a fact about producers; it gives no concrete reasoning step for the requested Tier 3."
+  },
+  "visual_grounding": {
+    "verdict": "no",
+    "reason": "No specific organism, label, or arrow in the image is identified; the statement is generic."
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "verdict": "yes",
+    "reason": "Producers begin this food chain and make their own food through photosynthesis."
+  },
+  "steers_toward_wrong_answer": {
+    "verdict": "no",
+    "reason": "The producer fact does not direct the student to an incorrect choice."
+  },
+  "answer_disclosure": {
+    "score": 0,
+    "reason": "The hint gives a general producer concept without identifying the primary consumer or favouring an option."
+  },
+  "actionability": {
+    "score": 2,
+    "reason": "It suggests thinking about producers but supplies no concrete action for finding the primary consumer."
+  }
+}

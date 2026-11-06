@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Compare Jupiter’s volume ... to Earth’s volume' gives a question-specific next step without performing the comparison or deciding the statement.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the Jupiter and Earth volume entries, accurately quoting 1.43 × 10^15 and 1.08 × 10^12 km³ from the table.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Comparing the stated volumes is relevant and both values are correct; the hint makes no incorrect scientific claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint selects the correct quantities and does not suggest a false comparison or conclusion.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint supplies the two table values but does not evaluate the 1,000-fold relationship, favour an option, or state the conclusion.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It gives the exact quantities to compare, but the student must work out how to incorporate the factor of 1,000 into that comparison.",
+    "score": 3
+  }
+}

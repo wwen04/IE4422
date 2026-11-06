@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint identifies option C as pink, supplying a conclusion rather than only inviting observation of a visual detail.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to C and its pink colour identifies the pink specimen labelled C in the image.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "Option C is described as having a pink color: no such description appears, and choice C is fluorite; the pink image specimen is labelled C but is rose quartz."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "It misleadingly assigns the deciding pink identification to choice C, fluorite, while the pictured pink stone and gold answer are rose quartz.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Following the explicit reference to option C leads to fluorite instead of the gold answer A, rose quartz.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "Saying option C has the colour requested by the question directly supplies an answer, although it is the wrong option.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "Notice option C is an immediately usable, specific direction, although its identification is misleading and leaves little reasoning.",
+    "score": 4
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice ... the color bar at the bottom” directs attention to a specific visual feature and its apparent trend, without giving a procedure or conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint specifically identifies the bottom color bar, which is present and needed for its claim about colors and values.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "“Darker colors representing higher values” misdescribes the legend: dark purple marks the lowest values, and the scale lightens before darkening in green at higher values."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The claimed darker-color/higher-value relationship contradicts the supplied reference, which assigns the darkest purple to 0–2 g/kg.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Treating the outlined area's dark purple as high humidity would likely push the student toward 9 or 10 g/kg instead of 2 g/kg.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The hint neither identifies the outlined area's humidity nor favours or excludes a specific choice.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to the specific color bar, but leaves the student to work out how to use it for the outlined area.",
+    "score": 3
+  }
+}

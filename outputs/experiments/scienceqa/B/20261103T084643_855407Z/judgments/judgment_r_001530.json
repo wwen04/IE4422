@@ -1,0 +1,9 @@
+{
+ "tier_compliance":{"reason":"‘Notice that the final temperatures ... are higher’ identifies a visible temperature trend without explaining heat transfer, as tier 1 requests.","verdict":"yes"},
+ "visual_grounding":{"reason":"The initial and final temperatures of both bottles are specific table entries needed to understand the hint.","verdict":"yes"},
+ "unsupported_visual_claims":{"unsupported_claims":[],"count":0},
+ "scientific_correctness":{"reason":"Both temperatures increase: the brown bottle from 20°C to 26°C and the clear bottle from 20°C to 23°C. This agrees with the reference.","verdict":"yes"},
+ "steers_toward_wrong_answer":{"reason":"Observing both temperature increases supports transfer from the surroundings to each bottle, consistent with the gold answer.","verdict":"no"},
+ "answer_disclosure":{"reason":"It supplies the increase in both temperatures, the specific fact that distinguishes the transfer directions, without stating the direction or correct option.","score":1},
+ "actionability":{"reason":"It directs the student to compare the initial and final temperature entries for both bottles immediately; the student still needs to connect the increase to energy transfer.","score":4}
+}

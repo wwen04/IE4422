@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "It concludes that the black bear has several predators, applying its interpretation to rule out an answer rather than leaving that decision to the student.", "verdict": "no"},
+  "visual_grounding": {"reason": "The black bear is connected to multiple other organisms identifies a visible organism and its connections, which the hint relies on.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The black bear has several predators, as indicated by its connections in the food web."], "count": 1},
+  "scientific_correctness": {"reason": "The arrows point toward the black bear from its food sources; interpreting these connections as several predators reverses the feeding relationship.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Saying the black bear has several predators directs the student away from blackbear, the correct answer.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It rules out the black bear by claiming it has predators, although that exclusion is incorrect.", "score": 1},
+  "actionability": {"reason": "It supplies a mistaken conclusion without a usable next action for the student.", "score": 1}
+}

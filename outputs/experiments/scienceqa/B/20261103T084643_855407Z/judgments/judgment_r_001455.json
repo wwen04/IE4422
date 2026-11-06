@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice that both samples have the same number of particles but different masses' invites observation of a relevant visual detail without explaining the science or reaching a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the two samples' particle counts and differing masses, supported by the particle drawings and mass labels of 36 u and 17 u.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both samples contain nine particles, and their particles have different masses; the hint makes no incorrect scientific claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing particle masses is relevant to comparing kinetic energies and does not direct the student toward an incorrect sample.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint notes a difference in mass without identifying which sample has greater mass or explaining its effect on temperature; it does not favour an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately compare the particle counts and mass labels in the two samples, though the observation alone leaves the subsequent reasoning unspecified.",
+    "score": 4
+  }
+}

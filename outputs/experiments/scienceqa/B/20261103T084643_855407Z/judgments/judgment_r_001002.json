@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint states that the brown bottle 'absorbs more thermal energy' but gives no concrete reasoning step for the student to perform.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The comparison between 'the brown bottle' and 'the clear bottle' identifies the two specific rows in the table.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Greater absorption by darker material is consistent with school-level heat-radiation ideas, and the brown bottle has the larger temperature rise.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Describing absorption points toward energy entering a bottle, consistent with the gold direction of transfer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Saying the brown bottle 'absorbs more thermal energy' favours transfer into the bottle and therefore provides a strong clue toward option A.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It directs attention to colour and absorption but provides no concrete action for interpreting the two temperature changes.",
+    "score": 2
+  }
+}

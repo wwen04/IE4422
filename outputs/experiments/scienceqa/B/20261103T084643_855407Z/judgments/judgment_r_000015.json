@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Consider how the number of purple balls relates to the volume' restates the concentration idea without naming a concrete reasoning action such as counting or comparing ratios.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Purple balls' and the solvent volume identify the pictured particles and the labeled 30 mL volumes needed for the suggested comparison.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Relating solute particle number to solvent volume agrees with the supplied definition of concentration.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Considering particle number relative to volume supports the correct comparison and does not direct the student toward another option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint does not state either solution's particle count, compare their concentrations, or favour an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to particle number and volume, but the student must determine how to compare those quantities.",
+    "score": 3
+  }
+}

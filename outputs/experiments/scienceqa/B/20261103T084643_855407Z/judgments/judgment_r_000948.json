@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "'Feeding on bear sedge' asserts a feeding relationship rather than only inviting attention to a visual detail.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the earthworm near the bottom and the named bear sedge in this food web.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The earthworm is feeding on bear sedge; the connecting arrow points from the earthworm toward bear sedge, not toward the earthworm."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "'Feeding on bear sedge' reverses the depicted matter flow: arrows point toward the organism receiving matter.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The false feeding relationship directs the student toward bear sedge as the source of matter instead of the incoming path from snowy owl.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The hint neither identifies nor rules out any answer option and does not disclose the deciding path.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "'Notice' directs attention to identifiable organisms, but provides no clear use for the observation and includes an incorrect relationship.",
+    "score": 3
+  }
+}

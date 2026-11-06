@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that the dinosaur footprint is located above the wood fossil' identifies a visual relation without explaining the science or concluding which is younger.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The dinosaur footprint and wood fossil are identifiable in the middle and bottom layers, respectively; their relative positions are essential to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The stated relative position is accurate and consistent with the reference; no scientific error is asserted.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Comparing these positions supports the gold answer, dinosaur footprint, in the undisturbed sequence.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying the footprint is 'above the wood fossil' supplies the specific relative-position fact that decides between the two choices, while leaving the age principle unstated.", "score": 1},
+  "actionability": {"reason": "The student can immediately locate and compare the two named fossils, then interpret their positions to determine age.", "score": 4}
+}

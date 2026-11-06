@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that layer B' directs attention to a specific visual detail without explaining science.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies B and its position between A and C in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The B label is described as a white square, but its white background is rectangular."], "count": 1},
+  "scientific_correctness": {"reason": "B lies between A and C; the hint makes no incorrect scientific assertion.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Focusing on the interior layer B directs the student toward a different layer from D, the layer surrounding the mantle.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It describes B's position without identifying the mantle or saying which layer surrounds it.", "score": 0},
+  "actionability": {"reason": "The student can immediately locate B and check its position against A and C, though this does not help identify the mantle's surrounding layer.", "score": 4}
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice that Earth's volume is listed as ...” points to one table entry without explaining a concept or procedure.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the Earth's volume entry, 1.08 × 10^12 km³, in the table.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The quoted Earth volume matches the table and gold reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It directs attention to a relevant value without suggesting an incorrect comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It supplies one displayed value without favouring either true or false; the comparison with ten times Mars remains.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "“Notice” the specified Earth volume gives an immediate, concrete action, though it is only a small part of the comparison.",
+    "score": 4
+  }
+}

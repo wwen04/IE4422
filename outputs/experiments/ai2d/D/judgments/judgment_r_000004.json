@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint states that Kingfisher is a predator instead of suggesting a small reasoning step for the student.", "verdict": "no"},
+  "visual_grounding": {"reason": "'Kingfisher is shown as a predator' identifies the labelled organism receiving feeding arrows from small fish and frog.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The food web supports Kingfisher feeding on other animals, consistent with the gold answer and carnivory.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs the student to Kingfisher, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'Kingfisher is shown as a predator' names the correct organism and states the feeding role that makes the answer immediate.", "score": 2},
+  "actionability": {"reason": "The hint supplies the conclusion but offers no student action or reasoning step to perform.", "score": 1}
+}

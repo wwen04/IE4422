@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint names the gland in the brain and gives its location, directly answering the question instead of connecting a visible detail to a concept without deciding the answer.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The location near the base of the brain and above the nose refers to identifiable anatomical regions in the image.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The pituitary gland lies at the base of the brain, consistent with the gold answer and the approximate anatomical location described.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint identifies the pituitary gland, matching the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The statement that the pituitary gland is located near the base of the brain directly supplies the gland asked for.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It supplies the answer as a fact without giving the student a next reasoning action.",
+    "score": 1
+  }
+}

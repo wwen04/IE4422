@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"Two other organisms: the hawk and the snake\" completes the reasoning and gives the answer rather than connecting a visible detail to a concept.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The mice, hawk and snake are identifiable in the food web, and their feeding relationships are central to the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The arrows from the mouse to the hawk and snake support these predator-prey relationships and the count of two.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The stated count of two agrees with gold option D.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "\"Two other organisms\" directly states the requested number.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The hint supplies the completed answer without a next action for the student.",
+    "score": 1
+  }
+}

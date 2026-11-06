@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"Notice ... the insect on the right side ... has wings\" directs attention to one visible detail without explaining the science or identifying its stage.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The rightmost insect and its visible wings are specific, identifiable features needed for the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The rightmost insect visibly has wings, consistent with the adult stage in the gold answer.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Attention to the winged insect supports identifying the adult stage.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint points to the winged insect but does not identify its life-cycle stage or favour a named option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately inspect the wings on the rightmost insect, then identify its stage.",
+    "score": 4
+  }
+}

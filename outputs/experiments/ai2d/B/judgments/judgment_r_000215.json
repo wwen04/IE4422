@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint only describes purported label positions; it does not connect a visible detail to a science concept as tier 2 requires.", "verdict": "no"},
+  "visual_grounding": {"reason": "References to labels E, A and G depend on specific elements in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The hint calls E the middle layer, but E labels the central region.", "The hint describes G as a surrounding layer below E, but G is on a rightward arrow to the right of E."], "count": 2},
+  "scientific_correctness": {"reason": "Concentric layers are consistent with Earth's structure; the errors concern the image's labels and positions rather than an explicitly stated science concept.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The inaccurate spatial description does not favor a particular incorrect layer identity for A.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint does not identify A's layer or favor or eliminate any option.", "score": 0},
+  "actionability": {"reason": "The named labels provide a direction for comparing positions, but the student must determine how to use that comparison to identify A.", "score": 3}
+}

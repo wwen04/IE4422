@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice” the two particle-mass labels invites attention to a relevant visual detail without explaining the science or drawing a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies Sample A’s 46 u and Sample B’s 40 u particle-mass labels, both visible below the containers.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The stated particle masses match the image and do not contradict the reference explanation.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing the displayed particle masses is relevant to the correct kinetic-energy comparison and does not direct the student to another answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint points out mass labels but does not relate mass to kinetic energy or temperature, compare speeds, or favour an answer option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "“Notice” the specific mass labels gives an immediate, concrete observation to make, while leaving the kinetic-energy reasoning to the student.",
+    "score": 4
+  }
+}

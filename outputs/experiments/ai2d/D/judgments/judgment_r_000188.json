@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The statement gives a phase-order claim rather than a concrete reasoning step for what follows 1st quarter.", "verdict": "no"},
+  "visual_grounding": {"reason": "The claimed order of waxing gibbous and waxing crescent refers to identifiable Moon shapes and the directional sequence in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The diagram shows that the waxing gibbous phase is followed by the waxing crescent phase."], "count": 1},
+  "scientific_correctness": {"reason": "Waxing gibbous is followed by full moon, not waxing crescent.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Although its phase-order claim is wrong, it does not identify or suggest a different listed phase as following 1st quarter.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It mentions waxing gibbous without identifying it as the phase after 1st quarter or favouring or eliminating a choice.", "score": 0},
+  "actionability": {"reason": "It supplies an incorrect statement about another transition and gives no usable action for finding what follows 1st quarter.", "score": 1}
+}

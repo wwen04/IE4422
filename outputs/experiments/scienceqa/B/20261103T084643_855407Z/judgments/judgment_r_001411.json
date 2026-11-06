@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint states the temperature–kinetic-energy relationship and supplies the comparison that Sample B moves faster, rather than naming a concrete next reasoning step.", "verdict": "no"},
+  "visual_grounding": {"reason": "The references to equal particle numbers, different masses, and Sample B moving faster identify features shown in the two samples and their numerical labels.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "'Since both samples contain the same number of particles but with different masses' misleadingly presents this as the reason B moves faster. Equal particle counts and unequal masses do not determine which sample has the greater average speed.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Despite its faulty explanation, it highlights B's genuinely higher average speed and the correct temperature–kinetic-energy relationship, so it does not steer toward a different option.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'The particles in Sample B will move faster on average' supplies an answer-favouring comparison, but does not explicitly conclude which sample has higher temperature.", "score": 1},
+  "actionability": {"reason": "'Consider that temperature is directly related to the average kinetic energy' gives a clear conceptual direction, but leaves the student to work out how to compare kinetic energies from mass and speed.", "score": 3}
+}

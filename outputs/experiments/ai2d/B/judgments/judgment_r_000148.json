@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint invites attention to the arrows entering and leaving the elephant seal without explaining or drawing a conclusion.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The elephant seal and its incoming and outgoing arrows are specific, visible elements needed for the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The observation is accurate and contains no incorrect scientific explanation.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Examining the connections of the elephant seal does not direct the student toward a population decrease or no change.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint identifies connections without interpreting them or favouring any population outcome.", "score": 0},
+  "actionability": {"reason": "The student can immediately locate and inspect the arrows entering and leaving the elephant seal; the population reasoning remains to be done.", "score": 4}
+}

@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint asserts that both parents are Ee; it gives no concrete reasoning action for the student, as Tier 3 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The statement about the parents' genotypes refers specifically to the allele labels on this Punnett square.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The square indicates that both parents have the same genotype, Ee."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "Ee labels the offspring boxes. The parent allele labels instead show an EE parent crossed with an ee parent, so identifying both parents as Ee is incorrect.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Using the asserted Ee × Ee cross would yield a 1/4 probability of dumbo ears, rather than the gold answer of 0/4.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The hint does not state a probability, identify an option, or explain which offspring have dumbo ears.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It provides a specific but incorrect observation and gives no explicit action; the student must decide how to use it.",
+    "score": 3
+  }
+}

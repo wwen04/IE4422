@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "It describes eggs as the first stage and often a small circle or dot, but gives no concrete reasoning action for the requested Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Each box representing a different stage' refers to the visible boxed insect life-cycle stages.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "An insect life cycle begins with an egg; the general description of egg representations introduces no scientific error.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The egg-stage and small-shape cues are consistent with the egg at B and do not favour an incorrect label.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Describing the egg as a small circle or dot supplies a distinguishing appearance cue for the lone small shape, without explicitly naming B.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The hint provides general stage and shape cues but no concrete action for the student to carry out.",
+    "score": 2
+  }
+}

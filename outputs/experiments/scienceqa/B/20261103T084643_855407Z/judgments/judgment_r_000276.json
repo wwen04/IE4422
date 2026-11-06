@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Calculate one-tenth of Earth's volume and compare it to Mercury's volume' gives a concrete next step without doing the calculation or reaching a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint uses the identifiable Mercury and Earth volume entries, 60 and 1,090 billion km³, from the table.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The quoted volumes match the table, and calculating one-tenth of Earth's volume before comparing is the correct method.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The suggested calculation and comparison lead toward the gold answer, true.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint supplies table values and a method but does not calculate the threshold, state the comparison's result, or favor an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately calculate one-tenth of 1,090 and compare it with 60; the arithmetic and final decision remain for the student.",
+    "score": 5
+  }
+}

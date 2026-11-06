@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint only points to a visual size comparison and gives no science explanation or conclusion, as requested for Tier 1.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "\"Pair 2\" and \"Pair 1\" identify the pictured groups and a specific size comparison.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "\"The magnets in Pair 2 are larger than those in Pair 1\" incorrectly implies both magnets are larger; the left magnet is the same size in both pairs, while only the right magnet is larger in Pair 2."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The hint makes a visual comparison without asserting an incorrect scientific principle.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The size comparison directs attention toward Pair 2, consistent with the gold answer despite overstating which magnets differ.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It identifies a visual size difference without saying how size affects force or favouring a force option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It clearly directs attention to magnet sizes in the two pairs, but leaves the student to determine what to do with that observation.",
+    "score": 3
+  }
+}

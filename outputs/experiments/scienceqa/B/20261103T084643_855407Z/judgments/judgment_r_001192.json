@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint explains the kinetic-energy concept and concludes that the higher-mass sample has the higher temperature, rather than suggesting a small reasoning step for tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "'Both samples have the same number of particles and the same average particle speed' identifies the two pictured samples and their matching 1,200 m/s labels; this comparison supports the hint's mass-based reasoning.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "'The average kinetic energy of a gas particle is directly proportional to its temperature' and the higher-mass comparison at equal speed agree with the reference and school-level science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The higher-mass comparison leads to sample A, whose particles are labeled 36 u versus sample B's 17 u, matching the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'The sample with the higher mass will have ... a higher temperature' supplies the deciding comparison, leaving only a trivial lookup of the mass labels without naming the answer.", "score": 1},
+  "actionability": {"reason": "The mass-based direction is clear, but the hint gives no explicit action; the student must infer that they should compare the two particle-mass labels.", "score": 3}
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice' invites attention to one purported visual detail without explaining a concept or reasoning procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to labels C and D and a purported arrow between them is specific to this image and essential to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["Option C is labeled with an arrow pointing from C to D; the image has no arrow connecting C to D."], "count": 1},
+  "scientific_correctness": {"reason": "The hint makes no scientific claim about flower classification.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It directs attention to flowers C and D instead of the requested flower A, likely leading to classification of the wrong flower.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It does not identify a flower type, endorse an answer choice, or supply a fact that distinguishes the choices.", "score": 0},
+  "actionability": {"reason": "The requested C-to-D arrow does not exist, so the student cannot carry out the proposed observation.", "score": 1}
+}

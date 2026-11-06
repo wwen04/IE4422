@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint defines the trachea but gives no concrete reasoning step for the student to perform, as tier 3 requires.", "verdict": "no"},
+  "visual_grounding": {"reason": "The general definition of the trachea does not depend on any specific feature of this image and would apply equally to other respiratory-system questions.", "verdict": "no"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The trachea begins at the larynx and divides into bronchi; describing it as the tube from the pharynx to the lungs misleadingly skips these distinctions.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Calling the trachea the tube that leads to the lungs directs the student toward the trachea instead of the bronchus, the correct answer.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint neither identifies the bronchus nor supplies the distinction that selects it among the choices.", "score": 0},
+  "actionability": {"reason": "The hint supplies a definition without a usable next action for answering the question.", "score": 1}
+}

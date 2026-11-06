@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "Counting the pink balls is a concrete first step; the student must still use the solvent volumes to compare concentrations.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies the pink balls inside the two conical flasks shown in the image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Each pink ball represents one solute particle, so counting the balls correctly determines the particle number.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Counting the particles is a relevant intermediate step and does not suggest a competing answer; both pictured solvent volumes are 45 mL.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint does not supply particle counts, compare concentrations, or favour any option.", "score": 0},
+  "actionability": {"reason": "Counting the pink balls in each flask is immediately doable and leaves the concentration comparison for the student.", "score": 5}
+}

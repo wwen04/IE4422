@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint applies the observed downward curvature to conclude that bird 'i' could have the most curved beak, rather than only connecting a visible detail to a science idea as Tier 2 requires.", "verdict": "no"},
+  "visual_grounding": {"reason": "The bird labeled I has a conspicuously long, downward-curving beak, and the hint specifically relies on that visible feature.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The description of the downward-curving beak and its relative curvature is accurate and consistent with the gold answer, iiki.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Directing attention to bird I's pronounced beak curvature supports the gold answer, iiki.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying bird 'i' could have 'the most curved beak among the species shown' supplies the requested conclusion, despite the tentative wording.", "score": 2},
+  "actionability": {"reason": "The student can immediately inspect bird I's downward-curving beak and compare it with the others, but the hint also supplies the key conclusion.", "score": 4}
+}

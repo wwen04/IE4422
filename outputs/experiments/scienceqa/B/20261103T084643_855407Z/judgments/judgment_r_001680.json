@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice' directs attention only to a size comparison, as requested for Tier 1.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies the magnets in Pair 1 and Pair 2 and compares their visible sizes.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["'The magnets in Pair 1 are larger than those in Pair 2' incorrectly generalizes to both magnets: the left magnet is the same size in both pairs; only the right magnet is larger in Pair 1."], "count": 1},
+  "scientific_correctness": {"reason": "The hint states no scientific principle that contradicts the reference; its inaccurate visual comparison is counted separately.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The size comparison directs attention toward Pair 1, which is consistent with the gold answer despite the overgeneralization.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint points to size without stating how size affects force or favoring a force-magnitude option.", "score": 0},
+  "actionability": {"reason": "The student can immediately compare the visible magnet sizes in the two named pairs, although the hint inaccurately describes the comparison.", "score": 4}
+}

@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint explains that a mosquito is an insect vector, exceeding the requested visual-noticing tier.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It identifies the mosquito and assigns it to option C, a specific reference to this image.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "Option C shows a mosquito: option C corresponds to diagram label D on the lower arrow, not the mosquito."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "Mosquitoes are insect vectors for malaria.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Directing attention to option C and the insect vector misdirects the student from the vertebrate-host region B, the gold answer.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "Calling option C an insect vector supplies an option-specific classification that can rule it out as a vertebrate host, without stating the correct answer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It gives a clear direction to notice the mosquito, but leaves the student to determine how this relates to the vertebrate host.",
+    "score": 3
+  }
+}

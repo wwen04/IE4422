@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“They will have the same average kinetic energy” applies the concept to reach a conclusion, exceeding the requested Tier 2.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "“Both samples have the same number of particles and the same average particle speed” refers to the depicted particles and the matching 1,300 m/s labels.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Equal particle counts and average speeds do not imply equal average kinetic energies: sample A particles have mass 34 u versus 16 u in sample B, so their average kinetic energy is higher.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The claim of equal average kinetic energies leads to equal temperatures, favouring “neither” instead of the gold answer, sample A.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "“They will have the same average kinetic energy” states the conclusion that immediately implies the same-temperature option, although that conclusion is incorrect.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The hint supplies an incorrect conclusion without giving the student a usable next action.",
+    "score": 1
+  }
+}

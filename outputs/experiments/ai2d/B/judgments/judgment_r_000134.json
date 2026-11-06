@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint compares a 'more rounded body shape' with an 'elongated body' but does not connect the detail to a science idea; the comparison also supplies the distinguishing fact.", "verdict": "no"},
+  "visual_grounding": {"reason": "It identifies the butterfly's central body and the dragonfly's elongated body, both visible in the image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The butterfly's relatively compact body and the dragonfly's elongated body are consistent with the image and the gold comparison.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The body-shape comparison directs attention toward the dragonfly's greater body length, consistent with option A.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Calling the dragonfly's body elongated compared with the butterfly's rounded body supplies a strong clue to the length difference without explicitly stating which body is longer.", "score": 1},
+  "actionability": {"reason": "The body-shape comparison gives a clear focus, but the student must infer the next action because none is explicitly requested.", "score": 3}
+}

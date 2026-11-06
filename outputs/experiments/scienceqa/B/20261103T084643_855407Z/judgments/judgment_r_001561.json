@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint connects the visible purple balls to the science idea of concentration without comparing the two solutions.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to purple balls in each beaker identifies the solute particles visible in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Both beakers contain 30 mL of solvent, so the number of solute particles indicates their relative concentrations here.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Comparing particle numbers at the equal solvent volumes leads toward Solution A, consistent with the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It identifies particle number as relevant but gives no counts or comparison and does not favor an option.", "score": 0},
+  "actionability": {"reason": "It directs attention to particle number, but the student must decide to count and compare the particles.", "score": 3}
+}

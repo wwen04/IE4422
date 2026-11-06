@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Each purple ball represents one particle of solute” links a visible symbol to the relevant solute concept without deciding which solution is more concentrated.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "“Each purple ball” identifies the purple particles visible inside both labeled solution containers, which are essential to the explanation.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The purple balls represent solute particles in both solutions, as stated in the supplied context and solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint correctly identifies the solute symbols and does not favor the less concentrated solution or equal concentrations.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Identifying the solute particles does not favor or rule out any answer option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The hint identifies what the balls represent but gives no concrete action for comparing the two concentrations.",
+    "score": 2
+  }
+}
