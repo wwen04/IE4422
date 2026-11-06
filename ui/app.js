@@ -17,6 +17,8 @@ const inspectionMessage = document.querySelector("#inspection-message");
 const setupMessage = document.querySelector("#setup-message");
 const demoNotice = document.querySelector("#demo-notice");
 const errorMessage = document.querySelector("#error-message");
+const comparisonMessage = document.querySelector("#comparison-message");
+const comparisonReport = document.querySelector("#comparison-report");
 const hintCard = document.querySelector("#hint-card");
 const hintText = document.querySelector("#hint-text");
 const feedbackCard = document.querySelector("#feedback-card");
@@ -216,6 +218,145 @@ function renderResult(result, jobId, outputFile) {
   resultFile.hidden = false;
 }
 
+function comparisonResultCell(prediction, correct, response) {
+  const cell = document.createElement("td");
+  const status = document.createElement("span");
+  status.className = correct ? "comparison-status correct" : "comparison-status incorrect";
+  status.textContent = correct ? "Correct" : "Incorrect";
+  if (prediction) status.textContent += ` · ${prediction}`;
+  const output = document.createElement("pre");
+  output.className = "comparison-output";
+  output.textContent = response || "(No model response)";
+  cell.append(status, output);
+  return cell;
+}
+
+function renderComparison(report) {
+  if (!report.available) return;
+  const total = Number(report.n);
+  const baseline = report.baseline;
+  const guided = report.evidence_guided;
+  const paired = report.paired;
+  const items = report.items;
+  const bySplit = report.by_split;
+  if (!Number.isInteger(total) || total < 1 || !baseline || !guided || !paired
+      || !Array.isArray(items) || items.length !== total
+      || !bySplit || typeof bySplit !== "object") {
+    throw new Error("The comparison report is missing required accuracy results.");
+  }
+  const expectedBaselineCorrect = items.filter(item => item.baseline_correct === true).length;
+  const expectedGuidedCorrect =
+    items.filter(item => item.evidence_guided_correct === true).length;
+  const expectedPaired = {
+    both_correct: items.filter(item =>
+      item.baseline_correct === true && item.evidence_guided_correct === true).length,
+    baseline_only_correct: items.filter(item =>
+      item.baseline_correct === true && item.evidence_guided_correct === false).length,
+    evidence_guided_only_correct: items.filter(item =>
+      item.baseline_correct === false && item.evidence_guided_correct === true).length,
+    both_incorrect: items.filter(item =>
+      item.baseline_correct === false && item.evidence_guided_correct === false).length,
+  };
+  if (baseline.correct !== expectedBaselineCorrect
+      || guided.correct !== expectedGuidedCorrect
+      || Object.entries(expectedPaired).some(([key, count]) => paired[key] !== count)) {
+    throw new Error("The comparison summary does not match its per-question results.");
+  }
+  const baselineAccuracy = expectedBaselineCorrect / total * 100;
+  const guidedAccuracy = expectedGuidedCorrect / total * 100;
+  if (Math.abs(Number(baseline.accuracy_percent) - baselineAccuracy) > 0.01
+      || Math.abs(Number(guided.accuracy_percent) - guidedAccuracy) > 0.01) {
+    throw new Error("The comparison accuracy does not match the per-question results.");
+  }
+  const delta = Number(report.delta_percentage_points);
+  if (!Number.isFinite(delta)
+      || Math.abs(delta - (guidedAccuracy - baselineAccuracy)) > 0.01) {
+    throw new Error("The comparison report contains an invalid accuracy difference.");
+  }
+  comparisonMessage.hidden = true;
+  comparisonReport.hidden = false;
+  const available = Number(report.available_n);
+  document.querySelector("#comparison-meta-text").textContent =
+    `${report.split} split · ${total}` +
+    `${Number.isInteger(available) && available > total ? ` of ${available}` : ""}` +
+    ` questions · ${report.model} · ${report.created_at}`;
+
+  const splitRows = document.querySelector("#comparison-split-rows");
+  splitRows.replaceChildren();
+  for (const [split, metrics] of Object.entries(bySplit)) {
+    const row = document.createElement("tr");
+    const splitCell = document.createElement("th");
+    splitCell.scope = "row";
+    splitCell.textContent = `${split} · ${metrics.n} items`;
+    const defaultCell = document.createElement("td");
+    defaultCell.textContent =
+      `${metrics.baseline.accuracy_percent.toFixed(2)}%`;
+    const guidedCell = document.createElement("td");
+    guidedCell.textContent =
+      `${metrics.evidence_guided.accuracy_percent.toFixed(2)}%`;
+    const deltaCell = document.createElement("td");
+    const splitDelta = Number(metrics.delta_percentage_points);
+    deltaCell.textContent =
+      `${splitDelta > 0 ? "+" : ""}${splitDelta.toFixed(2)} pp`;
+    row.append(splitCell, defaultCell, guidedCell, deltaCell);
+    splitRows.append(row);
+  }
+
+  for (const [prefix, metric] of [["baseline", baseline], ["guided", guided]]) {
+    const accuracy = Number(metric.accuracy_percent);
+    if (!Number.isFinite(accuracy) || accuracy < 0 || accuracy > 100) {
+      throw new Error("The comparison report contains an invalid accuracy value.");
+    }
+    document.querySelector(`#${prefix === "baseline" ? "baseline" : "guided"}-accuracy`)
+      .textContent = `${accuracy.toFixed(2)}%`;
+    document.querySelector(`#${prefix}-bar`).style.width = `${accuracy}%`;
+    document.querySelector(`#${prefix}-count`).textContent =
+      `${metric.correct} of ${total} answers correct`;
+  }
+
+  const deltaCard = document.querySelector("#comparison-delta");
+  deltaCard.classList.toggle("positive", delta > 0);
+  deltaCard.classList.toggle("negative", delta < 0);
+  document.querySelector("#delta-value").textContent =
+    `${delta > 0 ? "+" : ""}${delta.toFixed(2)} percentage points`;
+  document.querySelector("#paired-counts").textContent =
+    `${paired.evidence_guided_only_correct} improved · ` +
+    `${paired.baseline_only_correct} regressed · ${paired.both_correct} both correct`;
+
+  const rows = document.querySelector("#comparison-rows");
+  rows.replaceChildren();
+  for (const item of items) {
+    const row = document.createElement("tr");
+    const questionCell = document.createElement("th");
+    questionCell.scope = "row";
+    questionCell.textContent = item.item_id;
+    row.append(questionCell);
+    row.append(
+      comparisonResultCell(
+        item.baseline_prediction, item.baseline_correct, item.baseline_response,
+      ),
+      comparisonResultCell(
+        item.evidence_guided_prediction,
+        item.evidence_guided_correct,
+        item.evidence_guided_response,
+      ),
+    );
+    const evidenceCell = document.createElement("td");
+    evidenceCell.className = "comparison-evidence";
+    evidenceCell.textContent = item.visual_evidence || "(No evidence output)";
+    row.append(evidenceCell);
+    rows.append(row);
+  }
+}
+
+async function loadComparison() {
+  try {
+    renderComparison(await getJson("/api/comparison"));
+  } catch (error) {
+    showMessage(comparisonMessage, `Comparison report unavailable: ${error.message}`);
+  }
+}
+
 async function pollJob(jobId) {
   while (true) {
     const job = await getJson(`/api/jobs/${encodeURIComponent(jobId)}`);
@@ -329,6 +470,7 @@ async function initialize() {
     showMessage(setupMessage, error.message);
   }
   await loadQuestionList();
+  await loadComparison();
 }
 
 splitSelect.addEventListener("change", loadQuestionList);

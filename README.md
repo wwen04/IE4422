@@ -51,6 +51,38 @@ For filtering/counts and candidate manifests without image decoding or full expo
 
 Omit `--offline` to allow downloading. **A first metadata-only run can still download the entire release**, because its text and images are stored together. This mode updates candidate manifests and the metadata audit only; it does not refresh existing valid manifests or integrity reports after a filter change. Use a full run before consuming those outputs.
 
+## Automatically evaluate all questions
+
+To automatically run every finalized question across train, validation and test, generating both baseline and project-condition answers and reports, run:
+
+```powershell
+.\.venv\Scripts\python evaluate_visual_evidence.py
+```
+
+The evaluator fills in model-generated answer choices automatically; no student/demo answer is needed. It compares two answer conditions using the same frozen Qwen model: a direct-answer prompt (default baseline), versus compact, question-focused visual observations followed by an answer prompt that asks the model to verify those observations against the image before solving (project condition). Each question takes three model calls. Results are saved as `outputs/accuracy_comparison.json` (full data), `.csv` (per-question spreadsheet), and `.html` (visual report). It checkpoints each completed question and automatically resumes an interrupted run; use `--no-resume` to discard the saved checkpoint and start over.
+
+The report includes the overall accuracy difference, separate train/validation/test metrics, paired wins/losses, and raw per-question model answers and visual evidence. The UI shows the comparison and provides links to the visual report and JSON. `--split validation` evaluates only validation; `--limit 10` evaluates up to the first 10 IDs **per selected split** for a small smoke run. This all-splits run includes test data; treat it as the final evaluation and do not use those test results to tune prompts. A positive difference means higher answer-choice accuracy on these items, not improved hint quality, student learning, or statistical significance. The run requires CUDA and uses answer-key references locally only for scoring; references are never sent to the model.
+
+## Review hint quality before using hints with students
+
+Generate a small, answer-key-free validation review sheet with paired direct-visual and evidence-guided hints at three scaffold levels:
+
+```powershell
+.\.venv\Scripts\python.exe evaluate_hint_quality.py --limit 10 --seed 4422
+```
+
+The script loads only public validation questions and images. It does not send choices or answer-key/reference material to Qwen. It writes `outputs/hint_quality_validation.csv` with blinded A/B conditions and blank reviewer columns for factual accuracy, image grounding, pedagogical usefulness, answer leakage, and unsupported claims. Reviewers should inspect each linked image and question and score every hint level. Use the same 1–4 scale for the three rating columns: **1** = incorrect/unsafe or not useful; **2** = major issue; **3** = mostly sound/useful with a minor issue; **4** = accurate, well-grounded, and useful. Mark answer leakage `yes` if the hint gives away the answer, option, or final result; mark unsupported claim `yes` if it asserts a detail not supported by the question/image. Keep the matching `_key.json` private until reviews are complete; it maps A/B to generation method and stores model-extracted evidence. It contains no answer key. A repeatable sample can be generated with the same seed; use a different seed for a separate sample.
+
+After completing the rating columns, summarize the sheet without loading the model:
+
+```powershell
+.\.venv\Scripts\python.exe evaluate_hint_quality.py --summarize outputs/hint_quality_validation.csv outputs/hint_quality_validation_key.json
+```
+
+For a visual reviewer workflow integrated with the local Fieldnotes interface, start `ui_server.py` and open `http://127.0.0.1:8765/review` (or choose **Hint review studio** from the tutor page). The reviewer view presents the question, context, choices, image, and anonymized A/B hint sets side by side. Ratings and notes can be saved back into the existing CSV as you move between questions. The page/API do not expose the A/B mapping key. Keep the `_key.json` file private until all reviewers have submitted their ratings; summarize the saved CSV afterward with the command above.
+
+This reports human hint-quality ratings only. It does not establish that students answer more accurately or learn more. Any student study needs appropriate instructor/ethics approval, informed consent, randomized comparable conditions, and an unassisted follow-up if measuring learning. Do not treat unreviewed Qwen hints as verified or safe for students.
+
 ## Flow and identifiers
 
 `prepare_data.py` loads the pinned release once, audits the filter on its rows, validates candidates, then exports the usable questions and their images. Original row positions are retained before filtering or validation. IDs such as `train_000042` mean zero-based row 42 of the pinned training split; they are local project IDs, not the author's question IDs. Adding or removing other questions through filtering does not renumber retained rows. Changing the dataset revision requires regenerating and reviewing selections.
@@ -135,6 +167,7 @@ prepare_data.py                         pinned dataset preparation
 qwen_engine.py                          shared image/text model adapter
 tutor_pipeline.py                       prompt stages using a supplied tutor
 run_scienceqa_tutor.py                   prepared-question CLI and Python helper
+evaluate_visual_evidence.py              resumable all-split accuracy evaluation and reports
 run_tutor.py / inspect_diagram.py        optional custom-diagram entry points
 requirements.txt / requirements-lock.txt shared environment and constraints
 notebooks/                              Colab notebook, source ZIP and helpers

@@ -17,6 +17,7 @@
     <div class="topbar-meta">
       <span class="local-dot"></span>
       <span>Local research prototype</span>
+      <a class="reviewer-nav-link" href="/review">Hint review studio ↗</a>
     </div>
   </header>
 
@@ -200,7 +201,80 @@
         <a id="result-file" class="result-file" hidden>Open saved result</a>
       </aside>
     </div>
-    <footer class="page-footer"><span>FIELDNOTES · SCIENCE HINT STUDIO</span><span>Built for exploration, not evaluation.</span></footer>
+
+    <section class="panel comparison-panel" aria-labelledby="comparison-title">
+      <div class="panel-heading">
+        <div>
+          <div class="eyebrow">RESEARCH / PAIRED EVALUATION</div>
+          <h2 id="comparison-title">Does visual evidence improve answer accuracy?</h2>
+        </div>
+        <span class="comparison-mark" aria-hidden="true">↗</span>
+      </div>
+      <p class="comparison-intro">
+        Compare the same frozen model answering directly with answering after the
+        project's visual-evidence extraction step. Results appear here after an evaluation run.
+      </p>
+      <p id="comparison-message" class="comparison-empty" role="status">
+        No comparison report yet. Run <code>python evaluate_visual_evidence.py</code>
+        with the project environment and a CUDA GPU to generate one.
+      </p>
+      <div id="comparison-report" hidden>
+        <div class="comparison-meta">
+          <span id="comparison-meta-text"></span>
+          <div class="comparison-links">
+            <a href="/api/comparison/html" target="_blank" rel="noopener">Open visual report</a>
+            <a href="/api/comparison">View paired JSON</a>
+          </div>
+        </div>
+        <div class="split-summary-wrap">
+          <table class="split-summary-table">
+            <thead>
+              <tr><th scope="col">Split</th><th scope="col">Default accuracy</th>
+                <th scope="col">Visual-evidence accuracy</th><th scope="col">Change</th></tr>
+            </thead>
+            <tbody id="comparison-split-rows"></tbody>
+          </table>
+        </div>
+        <div class="accuracy-comparison" aria-label="Model answer accuracy comparison">
+          <div class="accuracy-card">
+            <div class="accuracy-label"><span>Default model</span><strong id="baseline-accuracy">—</strong></div>
+            <div class="accuracy-track"><span id="baseline-bar"></span></div>
+            <p id="baseline-count"></p>
+          </div>
+          <div class="accuracy-card evidence-guided-card">
+            <div class="accuracy-label"><span>Project · visual evidence</span><strong id="guided-accuracy">—</strong></div>
+            <div class="accuracy-track"><span id="guided-bar"></span></div>
+            <p id="guided-count"></p>
+          </div>
+          <div id="comparison-delta" class="comparison-delta">
+            <span>Change</span><strong id="delta-value">—</strong>
+            <p id="paired-counts"></p>
+          </div>
+        </div>
+        <details class="paired-details">
+          <summary>Inspect paired outputs for each question</summary>
+          <div class="comparison-table-wrap">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th scope="col">Question</th>
+                  <th scope="col">Default model</th>
+                  <th scope="col">Project · visual evidence</th>
+                  <th scope="col">Extracted visual evidence</th>
+                </tr>
+              </thead>
+              <tbody id="comparison-rows"></tbody>
+            </table>
+          </div>
+        </details>
+        <p class="comparison-disclaimer">
+          This measures answer-choice accuracy on the displayed split, not hint quality
+          or learning gains. A positive change is not proof of statistical significance;
+          review sample size and paired outcomes before drawing conclusions.
+        </p>
+      </div>
+    </section>
+    <footer class="page-footer"><span>FIELDNOTES · SCIENCE HINT STUDIO</span><span>Experimental accuracy comparison · not a student assessment</span></footer>
   </main>
 </body>
 </html>

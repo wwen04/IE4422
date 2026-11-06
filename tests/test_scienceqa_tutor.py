@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
+from evaluate_visual_evidence import answer_prompt
 import run_scienceqa_tutor as runner
 from tutor_pipeline import (
     assess_explanation,
@@ -69,10 +70,31 @@ class TutorIntegrationTests(unittest.TestCase):
 
         tutor = FakeTutor()
         evidence = extract_evidence(tutor, item["image_path"], prompt)
+        evidence_prompt = calls[0]
+        self.assertIn("minimum information", evidence_prompt)
+        self.assertIn("exact labels, values, units", evidence_prompt)
+        self.assertIn('"observations" and "uncertainties"', evidence_prompt)
         diagnosis = diagnose(tutor, item["image_path"], prompt, "A", "My reasoning", evidence)
         generate_hint(tutor, item["image_path"], prompt, evidence, diagnosis)
         self.assertEqual(len(calls), 3)
         self.assertNotIn("SECRET", "\n".join(calls))
+
+    def test_evidence_guided_answer_checks_visual_observations_before_solving(self):
+        item = {
+            "question": "Which solution is more concentrated?",
+            "context": "Count the particles and compare the volumes.",
+            "choices": [{"id": "A", "text": "Solution A"},
+                        {"id": "B", "text": "Solution B"}],
+        }
+
+        baseline = answer_prompt(item)
+        guided = answer_prompt(item, '{"observations": ["A: 5 particles"]}')
+
+        self.assertNotIn("Proposed visual observations", baseline)
+        self.assertIn("Inspect the image yourself", guided)
+        self.assertIn("correct or discard", guided)
+        self.assertIn("before matching the result to an option", guided)
+        self.assertTrue(guided.endswith("Output exactly one option ID and no explanation."))
 
     def test_missing_data_item_and_image_fail_before_inference(self):
         with self.assertRaisesRegex(FileNotFoundError, "Run prepare_data.py"):

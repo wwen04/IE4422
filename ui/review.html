@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f3">
+  <title>Fieldnotes | Hint review studio</title>
+  <link rel="stylesheet" href="/assets/app.css">
+  <link rel="stylesheet" href="/assets/review.css">
+  <script src="/assets/review.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Fieldnotes home">
+      <span class="brand-mark" aria-hidden="true">F</span>
+      <span>fieldnotes<span class="brand-period">.</span></span>
+    </a>
+    <div class="topbar-meta">
+      <span class="local-dot"></span>
+      <span>Local research prototype</span>
+      <a class="reviewer-nav-link" href="/">Tutor workspace ↗</a>
+    </div>
+  </header>
+
+  <main class="review-shell">
+    <section class="review-intro">
+      <div class="eyebrow"><span class="eyebrow-line"></span> HINT QUALITY REVIEW</div>
+      <h1>Review the hint,<br><em>not the answer.</em></h1>
+      <p>Compare the two anonymized hint approaches. Check each hint against the question and diagram, then save your ratings. The method key stays hidden on this page.</p>
+    </section>
+
+    <section class="review-toolbar panel" aria-label="Review progress and navigation">
+      <div class="review-progress-copy">
+        <div class="eyebrow">YOUR REVIEW PROGRESS</div>
+        <strong id="review-progress-label">Loading review set…</strong>
+        <div class="review-progress-track" role="progressbar" aria-label="Questions fully reviewed">
+          <span id="review-progress-bar"></span>
+        </div>
+      </div>
+      <label class="field reviewer-name-field">
+        <span>Reviewer name / initials</span>
+        <input id="reviewer-name" maxlength="100" autocomplete="name" placeholder="Optional">
+      </label>
+      <div class="review-navigation">
+        <button id="previous-button" class="secondary-button" type="button" disabled>← Previous</button>
+        <button id="save-button" class="primary-button" type="button" disabled>Save ratings</button>
+        <button id="next-button" class="secondary-button" type="button" disabled>Next →</button>
+      </div>
+    </section>
+
+    <div id="review-message" class="notice review-message" role="status" hidden></div>
+    <div id="review-error" class="notice review-error" role="alert" hidden></div>
+
+    <section id="review-workspace" class="review-workspace" hidden>
+      <article class="panel question-review-card">
+        <div class="eyebrow">QUESTION <span id="question-position"></span></div>
+        <h2 id="review-question"></h2>
+        <p id="review-context" class="context-text"></p>
+        <div id="review-choices" class="choices-list"></div>
+        <a id="image-link" class="review-image-link" target="_blank" rel="noopener noreferrer">
+          <img id="review-image" alt="Science question diagram">
+        </a>
+        <p class="review-image-caption">Select the image to open it at full size.</p>
+        <label class="field reviewer-comments-field">
+          <span>Notes for this question <span class="optional-label">· optional</span></span>
+          <textarea id="review-comments" rows="3" maxlength="2000" placeholder="Add a note about the hints or scoring rationale…"></textarea>
+        </label>
+      </article>
+
+      <section class="condition-review-area" aria-label="Anonymized hint conditions">
+        <div class="review-instructions panel">
+          <strong>How to rate</strong>
+          <p>For accuracy, grounding, and usefulness: 1 = serious issue, 2 = major issue, 3 = mostly sound, 4 = strong. Mark leakage “Yes” if the hint gives away the answer, option, or final result. Mark unsupported claim “Yes” for an assertion not supported by the question or image.</p>
+          <p>Rate each level separately. A hint may be useful while still containing a factual error.</p>
+        </div>
+        <div id="condition-cards" class="condition-cards"></div>
+      </section>
+    </section>
+
+    <footer class="page-footer">
+      <span>FIELDNOTES · HINT REVIEW STUDIO</span>
+      <span>Human review supports quality assessment; it does not establish student learning gains.</span>
+    </footer>
+  </main>
+</body>
+</html>

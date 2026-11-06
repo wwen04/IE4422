@@ -1,3 +1,4 @@
+import csv
 import json
 from pathlib import Path
 import subprocess
@@ -11,8 +12,11 @@ from urllib.request import Request, urlopen
 
 from http.server import ThreadingHTTPServer
 
+from evaluate_hint_quality import CSV_FIELDS, RATING_FIELDS
 import run_scienceqa_tutor as runner
 from ui_server import TutorWebApp, ensure_data_prepared, ensure_data_ready, main
+
+RATING_VALUE_FIELDS = RATING_FIELDS[:-2]
 
 
 class TutorWebAppTests(unittest.TestCase):
@@ -182,6 +186,8 @@ class TutorWebAppTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn(b"science hint studio", page.lower())
         self.assertIn(b"Show inspection report", page)
+        self.assertIn(b"Does visual evidence improve answer accuracy?", page)
+        self.assertIn(b"/review", page)
 
         _, _, response = self.request("/api/questions?split=validation")
         self.assertNotIn(b"SECRET", response)
@@ -201,6 +207,128 @@ class TutorWebAppTests(unittest.TestCase):
         _, headers, image = self.request(question["image_url"])
         self.assertEqual(headers.get_content_type(), "image/png")
         self.assertEqual(image, b"test-image")
+
+    def test_blinded_hint_review_ui_loads_and_saves_ratings_without_key(self):
+        output = self.root / "outputs/hint_quality_validation.csv"
+        output.parent.mkdir(parents=True)
+        row = {
+            "item_id": "validation_000001",
+            "image_path": str(self.root / "data/final/scienceqa/images/example.png"),
+            "question": "What does this diagram show?",
+            "context": "Use the labels.",
+            "choices": "A. A sample choice",
+            "condition_code": "A",
+            "hint_level_1": "Look at the diagram.",
+            "hint_level_2": "Notice a relevant label.",
+            "hint_level_3": "Compare the evidence.",
+            **{field: "" for field in RATING_FIELDS},
+        }
+        with output.open("w", encoding="utf-8-sig", newline="") as stream:
+            writer = csv.DictWriter(stream, fieldnames=CSV_FIELDS)
+            writer.writeheader()
+            writer.writerow(row)
+
+        status, _, page = self.request("/review")
+        self.assertEqual(status, 200)
+        self.assertIn(b"Review the hint", page)
+
+        status, _, body = self.request("/api/hint-reviews")
+        self.assertEqual(status, 200)
+        result = json.loads(body)
+        self.assertNotIn("SECRET", body.decode("utf-8"))
+        self.assertNotIn("evidence_guided", body.decode("utf-8"))
+        self.assertEqual(result["items"][0]["conditions"][0]["condition_code"], "A")
+
+        ratings = {field: "" for field in RATING_VALUE_FIELDS}
+        ratings["level_1_factual_accuracy_1_to_4"] = "4"
+        payload = {
+            "item_id": "validation_000001",
+            "condition_code": "A",
+            "ratings": ratings,
+            "reviewer": "QA reviewer",
+            "comments": "Looks grounded.",
+        }
+        status, _, body = self.request(
+            "/api/hint-reviews", method="POST", payload=payload
+        )
+        self.assertEqual(status, 200)
+        self.assertTrue(json.loads(body)["saved"])
+        saved = output.read_text(encoding="utf-8-sig")
+        self.assertIn("QA reviewer", saved)
+        self.assertIn("Looks grounded.", saved)
+        self.assertIn(",4,", saved)
+
+    def test_hint_review_save_rejects_invalid_ratings(self):
+        output = self.root / "outputs/hint_quality_validation.csv"
+        output.parent.mkdir(parents=True)
+        row = {
+            "item_id": "validation_000001",
+            "image_path": "data/final/scienceqa/images/example.png",
+            "question": "Question",
+            "context": "",
+            "choices": "A. Choice",
+            "condition_code": "A",
+            "hint_level_1": "Hint 1",
+            "hint_level_2": "Hint 2",
+            "hint_level_3": "Hint 3",
+            **{field: "" for field in RATING_FIELDS},
+        }
+        with output.open("w", encoding="utf-8-sig", newline="") as stream:
+            writer = csv.DictWriter(stream, fieldnames=CSV_FIELDS)
+            writer.writeheader()
+            writer.writerow(row)
+        payload = {
+            "item_id": "validation_000001",
+            "condition_code": "A",
+            "ratings": {field: "" for field in RATING_VALUE_FIELDS},
+            "reviewer": "",
+            "comments": "",
+        }
+        payload["ratings"]["level_1_factual_accuracy_1_to_4"] = "5"
+        request = Request(
+            self.base_url + "/api/hint-reviews",
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with self.assertRaises(HTTPError) as raised:
+            urlopen(request, timeout=5)
+        self.assertEqual(raised.exception.code, 400)
+        self.assertIn(b"rating from 1 to 4", raised.exception.read())
+
+    def test_comparison_route_reports_missing_file_then_serves_generated_metrics(self):
+        _, _, body = self.request("/api/comparison")
+        self.assertEqual(json.loads(body), {"available": False})
+
+        report_path = self.root / "outputs/accuracy_comparison.json"
+        report_path.parent.mkdir(parents=True)
+        report = {
+            "schema_version": 1,
+            "n": 2,
+            "baseline": {"correct": 1, "accuracy_percent": 50},
+            "evidence_guided": {"correct": 2, "accuracy_percent": 100},
+            "delta_percentage_points": 50,
+            "paired": {
+                "both_correct": 1,
+                "baseline_only_correct": 0,
+                "evidence_guided_only_correct": 1,
+                "both_incorrect": 0,
+            },
+            "items": [],
+        }
+        report_path.write_text(json.dumps(report), encoding="utf-8")
+        _, _, body = self.request("/api/comparison")
+        result = json.loads(body)
+        self.assertTrue(result["available"])
+        self.assertEqual(result["delta_percentage_points"], 50)
+
+        html_path = self.root / "outputs/accuracy_comparison.html"
+        html_path.write_text("<!doctype html><title>Report</title>", encoding="utf-8")
+        status, headers, body = self.request("/api/comparison/html")
+        self.assertEqual(status, 200)
+        self.assertEqual(headers.get_content_type(), "text/html")
+        self.assertIn("style-src 'unsafe-inline'", headers.get("Content-Security-Policy"))
+        self.assertIn(b"Report", body)
 
     def test_inspection_runs_when_question_is_selected_and_display_is_optional(self):
         with patch("ui_server.subprocess.run", wraps=subprocess.run) as run:

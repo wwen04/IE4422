@@ -14,9 +14,12 @@ MISCONCEPTIONS = {
 
 def extract_evidence(tutor, image, question):
     return tutor.ask(image, f"""Science question: {question}
-Describe only visible diagram evidence relevant to this question.
-Return a JSON object with keys: entities, labels, arrows, relationships, uncertainties.
-Do not guess missing or unreadable details. Return JSON only.""", max_new_tokens=320)
+Identify the minimum information that must be read from the image to answer this question.
+Report only directly visible, question-relevant observations. Preserve exact labels, values, units,
+positions, and comparisons when they matter; distinguish observations from any interpretation.
+Do not solve the question or guess details that are missing, ambiguous, or unreadable.
+Return a compact JSON object with keys "observations" and "uncertainties". Return JSON only.""",
+                     max_new_tokens=320)
 
 
 def diagnose(tutor, image, question, student_answer, explanation, evidence):
@@ -45,21 +48,30 @@ Only reference diagram details you can verify visually. Do not state the answer,
 Output only the hint.""", max_new_tokens=160)
 
 
-def generate_initial_hint(tutor, image, question, evidence, level=1):
-    hints = {
-        1: "Invite the student to notice one relevant visual detail",
-        2: "Connect a visible detail to a useful science idea",
-        3: "Suggest a small reasoning step without solving the question",
+def generate_hint_candidate(tutor, image, question, level, evidence=None):
+    hint_steps = {
+        1: "Ask the student to inspect one relevant visual feature without saying what it shows.",
+        2: "Cue a relevant science idea without applying it to the specific values or giving a result.",
+        3: "Ask the student to carry out one reasoning step using the evidence, without stating the result.",
     }
-    if level not in hints:
+    if level not in hint_steps:
         raise ValueError("level must be 1, 2, or 3")
+    evidence_section = (
+        f"Proposed visual evidence (unverified; may be incomplete or wrong): {evidence}\n"
+        if evidence is not None else
+        "Inspect the image directly; do not assume any visual detail that is unclear.\n"
+    )
     return tutor.ask(image, f"""Science question: {question}
-Visual evidence (unverified): {evidence}
-The student has not answered yet and may not know where to begin.
-Give ONE supportive, answer-independent hint at level {level}: {hints[level]}.
-Do not assume the student has made a mistake. Do not ask them to provide an answer before helping.
-Only reference diagram details you can verify visually. Do not state the answer, option letter, or reveal the solution.
-Output only the hint.""", max_new_tokens=160)
+{evidence_section}The student has not answered yet and may not know where to begin.
+Give ONE supportive, concise hint at level {level}: {hint_steps[level]}
+Do not assume the student has made a mistake. Help them take the next step themselves.
+If the needed evidence is unclear, ask them to inspect it rather than asserting what it shows.
+Do not state or imply the answer, an option letter, an option text, a final value, or the completed solution.
+Use one sentence and output only the hint.""", max_new_tokens=120)
+
+
+def generate_initial_hint(tutor, image, question, evidence, level=1):
+    return generate_hint_candidate(tutor, image, question, level, evidence)
 
 
 def assess_explanation(tutor, image, question, answer_text, explanation,

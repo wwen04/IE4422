@@ -1,6 +1,7 @@
 """Serve a local browser interface for the ScienceQA tutor."""
 
 import argparse
+import csv
 import html
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
@@ -92,6 +93,7 @@ class TutorWebApp:
         self.model_lock = threading.Lock()
         self.tutor = None
         self.inspection_lock = threading.Lock()
+        self.review_lock = threading.Lock()
 
     def generate_inspection(self, split, item_id):
         runner.load_question(self.root, split, item_id, data_source="final")
@@ -286,6 +288,152 @@ class TutorWebApp:
                 counts[split] = 0
         return {"prepared": any(counts.values()), "counts": counts}
 
+    def comparison(self):
+        report_path = self.root / "outputs/accuracy_comparison.json"
+        if not report_path.is_file():
+            return {"available": False}
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        if (not isinstance(report, dict)
+                or report.get("schema_version") != 1
+                or not isinstance(report.get("items"), list)):
+            raise ValueError(f"Invalid comparison report: {report_path}")
+        return {**report, "available": True}
+
+    def hint_review_path(self):
+        return self.root / "outputs/hint_quality_validation.csv"
+
+    @staticmethod
+    def hint_review_rating_fields():
+        return tuple(
+            f"level_{level}_{dimension}"
+            for level in (1, 2, 3)
+            for dimension in (
+                "factual_accuracy_1_to_4",
+                "image_groundedness_1_to_4",
+                "pedagogical_usefulness_1_to_4",
+                "answer_leakage_yes_no_unclear",
+                "unsupported_claim_yes_no",
+            )
+        )
+
+    def read_hint_reviews(self):
+        import evaluate_hint_quality as review_tools
+
+        review_path = self.hint_review_path()
+        if not review_path.is_file():
+            raise FileNotFoundError(
+                f"Hint review sheet not found: {review_path}. "
+                "Generate it with evaluate_hint_quality.py first."
+            )
+        with review_path.open(encoding="utf-8-sig", newline="") as stream:
+            reader = csv.DictReader(stream)
+            required_fields = set(review_tools.CSV_FIELDS)
+            if reader.fieldnames is None or not required_fields.issubset(reader.fieldnames):
+                raise ValueError(f"Hint review sheet has an invalid header: {review_path}")
+            rows = list(reader)
+
+        grouped = {}
+        for row in rows:
+            item_id = row["item_id"]
+            if not re.fullmatch(r"validation_\d{6}", item_id):
+                raise ValueError(f"Invalid validation item ID in hint review sheet: {item_id}")
+            runner.load_question(self.root, "validation", item_id, data_source="final")
+            item = grouped.setdefault(item_id, {
+                "item_id": item_id,
+                "image_url": (
+                    "/api/image?" + urlencode({
+                        "split": "validation",
+                        "item_id": item_id,
+                    })
+                ),
+                "question": row["question"],
+                "context": row["context"],
+                "choices": row["choices"],
+                "conditions": [],
+            })
+            item["conditions"].append({
+                "condition_code": row["condition_code"],
+                "hints": [row[f"hint_level_{level}"] for level in (1, 2, 3)],
+                "ratings": {
+                    field: row.get(field, "")
+                    for field in self.hint_review_rating_fields()
+                },
+                "reviewer": row.get("reviewer", ""),
+                "comments": row.get("comments", ""),
+            })
+        return {"items": list(grouped.values())}
+
+    def save_hint_review(self, payload):
+        review_path = self.hint_review_path()
+        item_id = payload.get("item_id")
+        code = payload.get("condition_code")
+        ratings = payload.get("ratings")
+        reviewer = payload.get("reviewer", "")
+        comments = payload.get("comments", "")
+        if not isinstance(item_id, str) or not re.fullmatch(
+                r"validation_\d{6}", item_id):
+            raise ValueError("Choose a valid validation review item.")
+        if code not in ("A", "B"):
+            raise ValueError("Review condition must be A or B.")
+        if not isinstance(ratings, dict):
+            raise ValueError("Ratings must be provided as an object.")
+        if not isinstance(reviewer, str) or len(reviewer) > 100:
+            raise ValueError("Reviewer name must be 100 characters or fewer.")
+        if not isinstance(comments, str) or len(comments) > 2000:
+            raise ValueError("Comments must be 2000 characters or fewer.")
+
+        valid_fields = set(self.hint_review_rating_fields())
+        if set(ratings) != valid_fields:
+            raise ValueError("Rating fields do not match the hint review form.")
+        validated = {}
+        for field, value in ratings.items():
+            if not isinstance(value, str):
+                raise ValueError(f"{field} must be submitted as text.")
+            if field.endswith("_1_to_4") and value not in ("", "1", "2", "3", "4"):
+                raise ValueError(f"{field} must be blank or a rating from 1 to 4.")
+            if field.endswith("_answer_leakage_yes_no_unclear") and value not in (
+                    "", "yes", "no", "unclear"):
+                raise ValueError(f"{field} must be blank, yes, no, or unclear.")
+            if field.endswith("_unsupported_claim_yes_no") and value not in (
+                    "", "yes", "no"):
+                raise ValueError(f"{field} must be blank, yes, or no.")
+            validated[field] = value
+
+        if not review_path.is_file():
+            raise FileNotFoundError(
+                f"Hint review sheet not found: {review_path}. "
+                "Generate it with evaluate_hint_quality.py first."
+            )
+        with self.review_lock:
+            with review_path.open(encoding="utf-8-sig", newline="") as stream:
+                reader = csv.DictReader(stream)
+                fieldnames = reader.fieldnames
+                if fieldnames is None or not set(self.hint_review_rating_fields()).issubset(
+                        fieldnames):
+                    raise ValueError(f"Hint review sheet has an invalid header: {review_path}")
+                rows = list(reader)
+            matched = [
+                row for row in rows
+                if row.get("item_id") == item_id
+                and row.get("condition_code") == code
+            ]
+            if len(matched) != 1:
+                raise ValueError(
+                    f"Expected exactly one review row for {item_id} condition {code}."
+                )
+            matched[0].update(validated)
+            matched[0]["reviewer"] = reviewer
+            matched[0]["comments"] = comments
+            temporary = review_path.with_name(review_path.name + ".tmp")
+            with temporary.open("w", encoding="utf-8-sig", newline="") as stream:
+                writer = csv.DictWriter(stream, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(rows)
+            os.replace(temporary, review_path)
+
+        complete = all(value != "" for value in validated.values())
+        return {"saved": True, "complete": complete}
+
     def handler(self):
         app = self
 
@@ -329,12 +477,36 @@ class TutorWebApp:
                 try:
                     if parsed.path == "/":
                         self.send_static("index.html")
+                    elif parsed.path == "/review":
+                        self.send_static("review.html")
                     elif parsed.path == "/assets/app.css":
                         self.send_static("app.css")
                     elif parsed.path == "/assets/app.js":
                         self.send_static("app.js")
+                    elif parsed.path == "/assets/review.css":
+                        self.send_static("review.css")
+                    elif parsed.path == "/assets/review.js":
+                        self.send_static("review.js")
                     elif parsed.path == "/api/status":
                         self.send_json(200, app.status())
+                    elif parsed.path == "/api/comparison":
+                        self.send_json(200, app.comparison())
+                    elif parsed.path == "/api/hint-reviews":
+                        self.send_json(200, app.read_hint_reviews())
+                    elif parsed.path == "/api/comparison/html":
+                        report_path = app.root / "outputs/accuracy_comparison.html"
+                        if not report_path.is_file():
+                            self.send_json(404, {"error": "HTML comparison report not found."})
+                        else:
+                            self.send_bytes(
+                                200,
+                                report_path.read_bytes(),
+                                "text/html; charset=utf-8",
+                                content_security_policy=(
+                                    "default-src 'none'; style-src 'unsafe-inline'; "
+                                    "object-src 'none'; base-uri 'none'; frame-ancestors 'self'"
+                                ),
+                            )
                     elif parsed.path == "/api/questions":
                         split = params.get("split", ["validation"])[0]
                         self.send_json(200, {
@@ -458,7 +630,7 @@ class TutorWebApp:
 
             def do_POST(self):
                 request_path = urlparse(self.path).path
-                if request_path != "/api/jobs":
+                if request_path not in ("/api/jobs", "/api/hint-reviews"):
                     self.send_json(404, {"error": "Not found."})
                     return
                 try:
@@ -476,8 +648,11 @@ class TutorWebApp:
                     payload = json.loads(self.rfile.read(length))
                     if not isinstance(payload, dict):
                         raise ValueError("Request body must be a JSON object.")
-                    job_id = app.start_job(payload)
-                    self.send_json(202, {"job_id": job_id})
+                    if request_path == "/api/jobs":
+                        job_id = app.start_job(payload)
+                        self.send_json(202, {"job_id": job_id})
+                    else:
+                        self.send_json(200, app.save_hint_review(payload))
                 except (ValueError, KeyError, json.JSONDecodeError) as error:
                     self.send_json(400, {"error": str(error)})
                 except FileNotFoundError as error:
