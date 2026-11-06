@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice that the final temperatures ... are higher' points to a visible trend without explaining thermal energy transfer.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint specifically compares the table's initial and final temperatures for both bottles.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both temperatures rise, from 18°C to 26°C and from 18°C to 22°C, consistent with the reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The observed temperature increases support transfer from the surroundings into each bottle.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It supplies the temperature-increase fact that decides the transfer direction, while leaving the science connection unstated.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It directs immediate attention to a specific comparison in the table, leaving the student to connect warming with energy transfer.",
+    "score": 4
+  }
+}

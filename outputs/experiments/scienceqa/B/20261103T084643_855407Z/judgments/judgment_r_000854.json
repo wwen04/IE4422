@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Solution A contains more purple balls' supplies an observation rather than suggesting a concrete reasoning step for the student, so it does not meet Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The comparison of purple balls in Solution A and Solution B refers to identifiable particles in the two labeled flasks.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Solution A visibly contains more solute particles; this is consistent with the reference and makes no incorrect concentration claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The stated particle comparison supports the gold answer, Solution A, because both flasks have 50 mL of solvent.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Naming Solution A as having more particles supplies the decisive comparison when both solvent volumes are visibly equal, without explicitly stating the concentration answer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The specific particle comparison gives a clear focus, but the student must determine how to use it with the solvent volumes to compare concentration.",
+    "score": 3
+  }
+}

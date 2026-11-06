@@ -4,7 +4,7 @@ __pycache__/
 .pytest_cache/
 .ipynb_checkpoints/
 data/
-outputs/
+outputs/inspection
 .env
 .env.*
 !.env.example

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice that there are more purple balls in Solution A' points out one relevant visual detail without explaining concentration or giving a procedure.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint specifically compares the purple balls in the labeled Solution A and Solution B containers.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Solution A visibly has three purple particles and Solution B has two; the hint makes no incorrect scientific claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The comparison directs attention toward Solution A, consistent with the gold answer and equal solvent volumes.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'More purple balls in Solution A' supplies the deciding particle-count comparison for the two equal-volume solutions, strongly favoring A without explicitly stating its concentration is higher.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The student can immediately inspect and compare the purple balls in the two named containers, although the hint supplies the result of that comparison.",
+    "score": 4
+  }
+}

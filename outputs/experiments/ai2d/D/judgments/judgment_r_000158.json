@@ -1,0 +1,33 @@
+{
+  "tier_compliance": {
+    "verdict": "no",
+    "reason": "The hint explains the predicted food-web consequences of removing whales rather than suggesting a small reasoning step for the student."
+  },
+  "visual_grounding": {
+    "verdict": "yes",
+    "reason": "It identifies elephant seals, other seals, whales and krill and relies on their feeding relationships in this food web."
+  },
+  "unsupported_visual_claims": {
+    "count": 2,
+    "unsupported_claims": [
+      "The diagram shows that the elephant seal feeds on other seals.",
+      "The hint includes the elephant seal among predators for which krill would be directly available as food, although the diagram shows fish feeding the elephant seal."
+    ]
+  },
+  "scientific_correctness": {
+    "verdict": "no",
+    "reason": "The claim that elephant seals feed on other seals and the implication that they consume krill misrepresent the feeding relationships shown; their depicted prey is fish."
+  },
+  "steers_toward_wrong_answer": {
+    "verdict": "no",
+    "reason": "Despite the incorrect feeding links, the suggested increase in food availability points toward an increase, consistent with the gold answer."
+  },
+  "answer_disclosure": {
+    "score": 1,
+    "reason": "Predicting increased krill and more food for the elephant seal strongly favours Increase without explicitly stating the population conclusion."
+  },
+  "actionability": {
+    "score": 2,
+    "reason": "It directs attention toward food availability after whale removal but provides no concrete action for the student to perform."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "‘Each cell represents the genotype’ links the visible Punnett-square cells to offspring outcomes without deciding which are heterozygous.", "verdict": "yes"},
+  "visual_grounding": {"reason": "‘Four possible outcomes’ and ‘each cell’ refer to the four identifiable cells containing BB, BB, Bb and Bb.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The parents have different genotypes, BB and Bb, and each square represents a possible offspring genotype from their cross.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Interpreting the cells as possible offspring genotypes supports the correct calculation and does not suggest a competing answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It does not identify or count heterozygous outcomes, favour an option, or state the probability.", "score": 0},
+  "actionability": {"reason": "It clearly directs attention to the cells as offspring outcomes, but leaves the student to determine how to identify and count heterozygotes.", "score": 3}
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint explains that the higher-mass sample has higher kinetic energy and temperature, carrying out the deciding reasoning instead of suggesting a small next step.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It refers to both samples having the same particle count and average speed, identifiable features of these samples.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "At equal average particle speeds, greater particle mass gives greater average kinetic energy and hence higher temperature, consistent with the reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Applying its higher-mass rule to the displayed 32 u and 34 u labels leads to sample B, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The statement that the higher-mass sample has the higher temperature supplies the deciding fact and leaves only a trivial mass-label lookup.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It gives a clear direction to compare mass, but the student must infer the lookup action rather than receiving a concrete next-step instruction.",
+    "score": 3
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice' directs attention to one purported temperature detail without explaining a concept or procedure, as Tier 1 requires.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The refrigerator and counter vial rows and their initial temperatures are specific identifiable elements of the table.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The refrigerator vial starts at a lower temperature than the counter vial; both initial temperatures are 2.2 °C."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The hint contains no scientific explanation that contradicts the reference; its incorrect temperature comparison is a visual error.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The irrelevant initial-temperature comparison does not establish either direction of thermal energy transfer or specifically favour the wrong option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It neither identifies a transfer direction nor favours or eliminates either option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It clearly directs attention to the two initial temperatures, but leaves the student to determine how that comparison could help answer the question.",
+    "score": 3
+  }
+}

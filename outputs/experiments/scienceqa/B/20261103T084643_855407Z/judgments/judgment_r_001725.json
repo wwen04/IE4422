@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "Notice the color bar at the bottom directs attention to a visible legend and its color trend without explaining a science concept or solving the question.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The bottom color bar and its green higher-value sections are specific, identifiable elements of this image.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The legend measures specific humidity, and its green sections represent higher values than its purple sections.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Examining the humidity legend supports interpreting the outlined green area and does not direct the student toward a wrong option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint identifies a broad color trend without giving values for the outlined area or favouring or excluding a particular option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "Looking at the bottom color bar is a clear direction, but the student must determine how to connect it to the outlined area.",
+    "score": 3
+  }
+}

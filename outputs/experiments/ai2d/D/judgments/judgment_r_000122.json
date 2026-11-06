@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "verdict": "no",
+    "reason": "\"Provides shelter\" does not connect a visible detail to a useful science idea about predation."
+  },
+  "visual_grounding": {
+    "verdict": "yes",
+    "reason": "Names the visible black spruce and black bear, making the claim specific to this image."
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The black spruce provides shelter for the black bear in the food web."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "verdict": "no",
+    "reason": "A food web represents feeding relationships; interpreting it as showing shelter provision is misleading."
+  },
+  "steers_toward_wrong_answer": {
+    "verdict": "no",
+    "reason": "The irrelevant shelter claim does not direct the student toward a different answer."
+  },
+  "answer_disclosure": {
+    "score": 0,
+    "reason": "Names the black bear but gives no information about its predators or which option is correct."
+  },
+  "actionability": {
+    "score": 1,
+    "reason": "States a shelter claim without providing a usable next step for identifying an organism with no predator."
+  }
+}

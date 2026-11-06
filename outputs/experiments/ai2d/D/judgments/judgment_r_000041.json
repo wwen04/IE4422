@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "“Notice how” only directs attention to visible variation; it does not connect a visible detail to a useful science idea, as Tier 2 requires.", "verdict": "no"},
+  "visual_grounding": {"reason": "“The pointed ends” identifies specific visible features whose shapes the student is asked to examine.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The illustrated objects are leaves."], "count": 1},
+  "scientific_correctness": {"reason": "Apart from the unsupported identification of the pictured objects, the hint makes no scientific claim that contradicts the supplied answer or school-level science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Examining pointed shapes does not suggest a particular incorrect count or option.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint does not state a count, distinguish the two kinds, or favour an option.", "score": 0},
+  "actionability": {"reason": "It gives a clear direction to examine pointed ends for shape and size, but leaves the student to decide how to classify or count kinds.", "score": 3}
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The purple shades indicating specific humidity values connect a visible detail to the quantity represented without deciding the answer, as Tier 2 requires.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The outlined area shaded in shades of purple identifies the white-outlined region and its visible colors.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The map uses purple shades to represent different specific humidity values, consistent with the legend and reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Focusing on the colors within the outlined area supports using the legend to find the correct humidity level.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint identifies the relevant colors but supplies no numerical range, option elimination, or answer.", "score": 0},
+  "actionability": {"reason": "The outlined purple area provides a clear focus, but the student must work out how to use its colors with the legend.", "score": 3}
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Compare the volumes directly' restates the comparison task without giving a concrete next step for testing the ten-times claim.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "Earth's and Mars's volumes refer to the two identifiable volume entries in the table needed for the comparison.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Comparing the volumes is relevant and no incorrect scientific or numerical claim is made.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint does not favour true or false; its vague instruction does not explicitly misdirect the ten-times comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It provides no values, deciding comparison, or conclusion and does not rule out either option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "'Compare the volumes directly' gives a clear direction, but the student must determine how to account for the factor of ten.",
+    "score": 3
+  }
+}

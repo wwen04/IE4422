@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that letter E shows' directs attention to a single visual detail without explaining a concept or giving a reasoning procedure, as requested for Tier 1.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint specifically identifies the moon labelled E and its illuminated and dark portions.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["'Letter E shows a crescent moon' is false: E shows a half-lit moon.", "'A small portion of the dark side visible' is false: approximately half of E's disc is dark."], "count": 2},
+  "scientific_correctness": {"reason": "Calling the half-lit phase at E a crescent misidentifies its phase; describing a crescent as having only a small dark portion also misstates the crescent's illumination.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The false crescent identification and small-dark-portion description direct the student away from the last-quarter phase shown at E.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "Calling E a crescent rules out the listed quarter and gibbous phases, although it does not state the correct answer.", "score": 1},
+  "actionability": {"reason": "'Notice' gives a clear direction to inspect E's visible portions, but the student must decide how to use that observation to choose a phase.", "score": 3}
+}

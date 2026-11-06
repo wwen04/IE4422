@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint says the brown bottle 'absorbed more thermal energy from its surroundings,' applying the concept to infer transfer direction instead of only connecting a visible detail to a concept.", "verdict": "no"},
+  "visual_grounding": {"reason": "The claim that the brown bottle 'had a higher final temperature than the clear bottle' refers specifically to the visible final temperatures, 26°C and 22°C.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Both bottles start at 18°C; the brown bottle's greater temperature increase supports a greater net thermal energy gain for otherwise identical bottles. Transfer from the surroundings is consistent with the reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Describing absorption 'from its surroundings' supports the gold transfer direction, although the comparison between bottles is unnecessary.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying the brown bottle absorbed energy 'from its surroundings' rules out transfer from each bottle to the surroundings, leaving only the gold option, without explicitly stating the conclusion for both bottles.", "score": 1},
+  "actionability": {"reason": "The comparison of the bottles' final temperatures gives a clear focus, but the student must work out the next step of checking each bottle's change from its initial temperature.", "score": 3}
+}

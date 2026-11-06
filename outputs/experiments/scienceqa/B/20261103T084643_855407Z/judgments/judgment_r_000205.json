@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Jupiter's volume is significantly larger' restates a qualitative comparison of the table entries without connecting them to a useful idea for comparing a 1,000-fold difference.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It identifies the Jupiter and Earth volume entries, 1.43 × 10^15 and 1.08 × 10^12 km³, which are visible in the table.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both volumes are correct, and Jupiter's volume is significantly larger than Earth's.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint focuses on the correct planets and quantities without suggesting a wrong comparison or conclusion.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It supplies the relevant table values but does not establish whether the ratio exceeds 1,000 or favour either true/false option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The two relevant entries are clearly identified, but the student must work out how to compare them against the 1,000-times threshold.",
+    "score": 3
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'The fourth stage is the adult stage' completes the reasoning and gives the answer instead of suggesting a small next step.", "verdict": "no"},
+  "visual_grounding": {"reason": "'The fourth illustration ... with wings visible' identifies the winged insect at the right of this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Identifying the winged fourth stage as the adult agrees with the image and the gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint leads to the adult stage, which is the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'The fourth stage is the adult stage' directly identifies the stage with wings and supplies the correct option text.", "score": 2},
+  "actionability": {"reason": "The hint describes the illustrations and supplies the conclusion without giving the student a usable next action.", "score": 1}
+}

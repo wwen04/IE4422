@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that Jupiter's volume is listed as' points to one relevant table entry without explaining a concept or procedure, as requested for tier 1.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies Jupiter's volume entry, 1.43 × 10^15 km³, which is visible in the table.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The quoted Jupiter volume agrees with both the table and the gold reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Directing attention to Jupiter's actual volume supports the required comparison and does not suggest the false option.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint supplies one visible volume but does not compare it with Earth's volume or favour either true or false.", "score": 0},
+  "actionability": {"reason": "The student can immediately locate and read Jupiter's specific volume entry, though this is a small observation and leaves the comparison to be worked out.", "score": 4}
+}

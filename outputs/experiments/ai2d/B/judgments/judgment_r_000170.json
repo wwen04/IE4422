@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "“The egg is typically represented by the smallest box” supplies a selection rule that would decide the answer, rather than connecting a visible detail to a concept without deciding.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint refers to the stage boxes and their relative sizes, identifiable elements needed for its proposed selection rule.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The egg is represented by the smallest box in the sequence: the egg is in B, whose box is not the smallest."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "“The egg is typically represented by the smallest box” is a misleading identification rule; enclosing box size does not determine an insect life-cycle stage.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Choosing the smallest enclosing box points toward C, while the egg phase is labelled B.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "“The smallest box” supplies an intended deciding criterion and reduces selection to a size comparison, although the criterion is wrong.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The size criterion gives a clear direction, but the student must infer the action of comparing box sizes.",
+    "score": 3
+  }
+}

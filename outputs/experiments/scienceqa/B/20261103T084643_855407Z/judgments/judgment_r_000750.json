@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "Links the visible persimmon tree-to-black bear arrow to matter moving between organisms without deciding either answer choice.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "\"Arrows pointing towards the black bear from the persimmon tree\" identifies a specific visible connection.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "\"The arrows ... show how matter moves between organisms\" agrees with the reference and the arrow direction shown.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The black bear connection is a detour, but it does not favour the beaver over the swallowtail caterpillar.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Neither answer choice is favoured or excluded; the hint identifies a connection to a different organism.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "\"Look for arrows\" from the persimmon tree towards the black bear is an immediate, specific action, though further direction is needed to connect it to the choices.",
+    "score": 4
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint applies equal speeds and different masses to conclude which sample will have the higher temperature, exceeding the requested concept connection.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "Both samples having the same number of particles and average particle speed are specific, verifiable details used in the reasoning.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The relationship between particle mass, kinetic energy and temperature agrees with the supplied school-level solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Following the higher-mass comparison points to sample A, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The statement that the higher-mass sample has the higher temperature supplies the deciding fact and leaves only a lookup of the displayed masses.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The higher-mass direction is clear, but the student must infer the action of comparing the mass labels; the hint supplies the key reasoning.",
+    "score": 3
+  }
+}

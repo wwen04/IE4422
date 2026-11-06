@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that the distance ... in Pair 1 is longer' invites attention to one visible comparison without explaining the science.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The named Pair 1 and Pair 2 gaps are visibly labeled 2.75 in and 1.5 in, respectively.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The distance comparison is accurate and contradicts neither the supplied solution nor school-level science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Comparing the gaps directs attention to the relevant difference supporting the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint identifies the greater gap without stating its effect on force or favouring an answer option.", "score": 0},
+  "actionability": {"reason": "'Notice' the distance difference gives an immediate, specific visual comparison while leaving the force reasoning to the student.", "score": 4}
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice how each ... is distinct' states an observation rather than naming a concrete reasoning step for the student to perform.", "verdict": "no"},
+  "visual_grounding": {"reason": "'The pointed shapes in the image' identifies the visibly pointed tail shapes whose outlines matter to this question.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The pointed tail outlines are distinguishable, and the hint makes no claim contradicting the answer key or school science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Attending to the distinct pointed shapes is consistent with identifying the two pointed kinds.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint gives no count, identifies no option, and does not eliminate an option.", "score": 0},
+  "actionability": {"reason": "It directs attention to differences among the pointed outlines, but leaves the student to decide how to compare or count the kinds.", "score": 3}
+}

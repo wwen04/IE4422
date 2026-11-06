@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that the Punnett square shows four possible outcomes' invites attention to a visible detail without explaining a concept or giving a procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "'The Punnett square shows four possible outcomes' refers specifically to its four offspring boxes.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["'Two rainbow trout with different body colors are crossed' misdescribes the shown BB by Bb cross: both parents have a greenish-brown body."], "count": 1},
+  "scientific_correctness": {"reason": "'Different body colors' is incorrect: both BB and Bb express the dominant greenish-brown body color.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The mistaken parental-color description does not favor a different probability; directing attention to four outcomes remains compatible with the correct answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Identifying four possible outcomes does not identify any homozygous-recessive outcomes or favor an option, since every choice has denominator four.", "score": 0},
+  "actionability": {"reason": "'Notice ... four possible outcomes' gives a clear focus, but the student must determine how to use those boxes to answer the question.", "score": 3}
+}

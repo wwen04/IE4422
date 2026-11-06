@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Related to option C in some way' does not connect the visible arrow to a useful science concept, as tier 2 requires.", "verdict": "no"},
+  "visual_grounding": {"reason": "The reference to an arrow from C toward A identifies a visible connection between these two labeled inflorescences.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The vague suggestion that the two depicted forms are related contains no scientific assertion that contradicts school-level science or the gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint does not identify a flower type or supply a reason to choose an incorrect answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It mentions the visible relationship of A and C without identifying the type of A or favoring a particular answer choice.", "score": 0},
+  "actionability": {"reason": "'Related ... in some way' offers only a vague direction, with no concrete comparison or reasoning action for the student.", "score": 2}
+}

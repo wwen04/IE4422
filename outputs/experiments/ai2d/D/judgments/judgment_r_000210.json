@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint states the comparison, 'rounded and compact' versus 'elongated,' instead of suggesting a small reasoning step for Tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "It identifies the butterfly's body and the dragonfly's elongated body, both visible in the image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The butterfly's body is comparatively compact and the dragonfly's body is elongated, consistent with the image and gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The comparison supports the gold answer that the dragonfly has the longer body.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Describing the butterfly as compact compared with the dragonfly's elongated body states the decisive comparison and makes option A immediate.", "score": 2},
+  "actionability": {"reason": "It supplies the body-shape comparison without giving the student an action or reasoning step to perform.", "score": 1}
+}

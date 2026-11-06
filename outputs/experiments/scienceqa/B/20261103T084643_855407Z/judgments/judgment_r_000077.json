@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Consider the possible combinations of alleles' gives a general direction, without naming a concrete reasoning step tailored to this cross.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint mentions the Punnett square but identifies no particular allele, genotype, row, or box in this image.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Considering allele combinations in a Punnett square is relevant to determining offspring genotype probabilities and introduces no scientific error.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint directs attention to relevant allele combinations without suggesting an incorrect genotype or probability.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It supplies no deciding genotype count or probability and neither favours nor excludes any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "'Consider the possible combinations' is vague: it does not tell the student which combinations to identify or what to do with them.",
+    "score": 2
+  }
+}

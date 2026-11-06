@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice that the Punnett square shows four possible outcomes' directs attention to the four boxes without explaining inheritance or solving the question.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The reference to four outcomes identifies the four visible boxes in this Punnett square.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The square has four equally likely outcomes, and the parents shown supply E and e alleles respectively.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Noticing the four outcomes does not direct the student toward an incorrect probability.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint does not identify which outcomes produce dumbo ears or favor any option; every option uses a denominator of four.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It clearly directs attention to the four outcomes, but leaves the student to determine how to use them to find the requested probability.",
+    "score": 3
+  }
+}

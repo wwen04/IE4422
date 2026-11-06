@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint says B is 'part of the head', giving the answer instead of connecting a detail to a concept without deciding it.", "verdict": "no"},
+  "visual_grounding": {"reason": "It identifies B and its position near the visible anterior mouthparts.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Associating the anterior mouthparts with the head region agrees with the school-level answer key.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The stated head identification leads to the gold answer, Head.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'The structure labeled B is part of the head' makes the correct option Head immediate.", "score": 2},
+  "actionability": {"reason": "It supplies a conclusion without a usable next action for the student.", "score": 1}
+}

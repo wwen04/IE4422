@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“The size of the magnets affects the strength” states a concept without naming a concrete next action, so it does not meet Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint names no specific magnet, pair, label or size comparison in the image and could apply to any question about magnet size.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "“The size of the magnets affects the strength” agrees with the supplied lecture and solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint points to the relevant factor, magnet size, and does not direct the student toward a different answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It identifies a relevant concept without specifying how size changes force or favouring any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It gives a vague conceptual direction about size but no concrete action or comparison to perform.",
+    "score": 2
+  }
+}

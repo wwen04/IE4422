@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint states a body-shape comparison instead of naming a concrete next action for the student, so it does not meet Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It specifically compares the visible bodies of the butterfly and dragonfly.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The butterfly body is relatively broader and the dragonfly body is elongated, consistent with the image and the gold comparison.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The elongated dragonfly body guides the student toward the gold length comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Contrasting the rounded butterfly body with the elongated dragonfly body supplies a strong clue to the deciding length difference without explicitly stating which is longer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It directs attention to a specific body-shape comparison, but the student must work out how to use it to compare the options.",
+    "score": 3
+  }
+}

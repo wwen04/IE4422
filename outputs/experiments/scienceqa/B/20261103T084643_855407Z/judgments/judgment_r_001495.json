@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint explains that colors represent humidity but gives no concrete next reasoning action, as requested for Tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "The reference to the outlined area's shading identifies the white-outlined region over Australia and is necessary to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The map uses colors to represent specific humidity; this agrees with the reference and contains no scientific error.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Using the outlined area's colors is relevant to finding the gold answer and does not favor a wrong option.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint gives no humidity value and neither favors nor excludes any choice.", "score": 0},
+  "actionability": {"reason": "The color-to-humidity relationship provides a clear direction, but the student must work out how to compare the area's colors with the legend.", "score": 3}
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... pointed tips' invites observation of a relevant visual detail without explaining or solving.", "verdict": "yes"},
+  "visual_grounding": {"reason": "'Some of the shapes' identifies no particular shape, label or region; the advice could apply equally to other shape images.", "verdict": "no"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The distinction between pointed and non-pointed tips is consistent with the visible shapes and contains no scientific error.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Looking at pointed tips is relevant to counting pointed kinds and does not direct the student toward an incorrect count.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint neither gives a count nor favours or excludes any option.", "score": 0},
+  "actionability": {"reason": "It directs attention to tip shape, but the student must determine which shapes and kinds to compare and count.", "score": 3}
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Absorbs more thermal energy ... due to its color” states an explanation rather than a concrete next reasoning step for Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The comparison between the “brown bottle” and “clear bottle” identifies the table's two rows and is central to the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Greater absorption by darker glass is consistent with school-level science and the brown bottle's larger temperature rise; the hint does not contradict the reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Although it distracts toward the difference between bottles, describing absorption points toward energy entering the bottles, consistent with option B.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "“Absorbs more thermal energy” favors transfer into the bottles, providing a strong clue to the direction without explicitly stating the complete answer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The hint supplies an explanation but gives no usable next action for determining the transfer direction from the temperature changes.",
+    "score": 1
+  }
+}

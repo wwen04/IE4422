@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'The sample with the higher mass will have a higher average kinetic energy and thus a higher temperature' carries out the deciding reasoning rather than suggesting a small next step.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Both samples have the same number of particles and the same average particle speed' identifies relevant features of these two samples and motivates comparing particle masses.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Average kinetic energy is proportional to absolute temperature; at the displayed equal speeds, greater particle mass gives greater kinetic energy, consistent with the solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing the displayed masses using the hint leads to sample A, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'The sample with the higher mass' supplies the deciding fact and leaves only looking up which sample has the larger displayed mass.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It clearly directs attention to comparing particle masses, but states the reasoning rather than giving a concrete student action.",
+    "score": 3
+  }
+}

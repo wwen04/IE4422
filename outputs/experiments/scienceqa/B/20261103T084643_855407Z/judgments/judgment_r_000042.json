@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice' directs attention to the two visible particle-mass labels without explaining a concept or drawing a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The specific mass labels, 26 u for Sample A and 16 u for Sample B, are visible beneath the containers.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The stated particle masses match the image and do not contradict the reference science.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Attending to the correct mass labels does not direct the student toward an incorrect temperature comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint identifies the mass values but does not connect them to kinetic energy or temperature, select an option, or settle the comparison involving speed.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately locate and compare the specified particle-mass labels; the hint leaves their scientific significance and the speed comparison to the student.",
+    "score": 4
+  }
+}

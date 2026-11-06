@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice' directs attention to a purported arrow connection without explaining science or giving a reasoning procedure, matching Tier 1.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to labels E and C and their purported arrow connection is specific to this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["'Option E is connected by an arrow to another stage labeled C': C labels the upper arrow toward the liver, rather than a separate stage at an arrow endpoint."], "count": 1},
+  "scientific_correctness": {"reason": "The hint states no scientific concept that contradicts school-level science; its misdescription of C is a visual error.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Focusing on E on the mosquito side and the supposed stage C directs attention away from B, the vertebrate-host region identified by the key.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint neither identifies the vertebrate host nor states a deciding fact or rules any option in or out.", "score": 0},
+  "actionability": {"reason": "It gives a clear direction to inspect E and an arrow, but the nonexistent stage C leaves the student to resolve the misidentified connection.", "score": 3}
+}

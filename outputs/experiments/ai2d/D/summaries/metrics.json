@@ -1,0 +1,116 @@
+{
+  "dataset_name": "ai2d",
+  "experiment": "D",
+  "run_id": "20261106T063649_417099Z",
+  "planned_questions": 30,
+  "planned_hints": 90,
+  "generation_counts": {
+    "ok": 90
+  },
+  "valid_judgments": 90,
+  "pending_judgments": [],
+  "metric_denominator": "Valid judgments only; coverage and generation failures are reported separately",
+  "overall": {
+    "judged_hints": 90,
+    "good_hint_rate": 0.03333333333333333,
+    "tier_compliance_yes_rate": 0.2777777777777778,
+    "visual_grounding_yes_rate": 0.9555555555555556,
+    "scientific_correctness_yes_rate": 0.6,
+    "steers_toward_wrong_answer_yes_rate": 0.4222222222222222,
+    "mean_unsupported_visual_claims": 0.7111111111111111,
+    "disclosure_distribution": {
+      "0": 0.3,
+      "1": 0.37777777777777777,
+      "2": 0.32222222222222224
+    },
+    "mean_actionability": 2.3333333333333335
+  },
+  "by_tier": {
+    "1": {
+      "judged_hints": 30,
+      "good_hint_rate": 0.1,
+      "tier_compliance_yes_rate": 0.6333333333333333,
+      "visual_grounding_yes_rate": 0.9333333333333333,
+      "scientific_correctness_yes_rate": 0.7666666666666667,
+      "steers_toward_wrong_answer_yes_rate": 0.4666666666666667,
+      "mean_unsupported_visual_claims": 0.7666666666666667,
+      "disclosure_distribution": {
+        "0": 0.43333333333333335,
+        "1": 0.36666666666666664,
+        "2": 0.2
+      },
+      "mean_actionability": 3.3
+    },
+    "2": {
+      "judged_hints": 30,
+      "good_hint_rate": 0.0,
+      "tier_compliance_yes_rate": 0.2,
+      "visual_grounding_yes_rate": 1.0,
+      "scientific_correctness_yes_rate": 0.5,
+      "steers_toward_wrong_answer_yes_rate": 0.36666666666666664,
+      "mean_unsupported_visual_claims": 0.6666666666666666,
+      "disclosure_distribution": {
+        "0": 0.2,
+        "1": 0.3333333333333333,
+        "2": 0.4666666666666667
+      },
+      "mean_actionability": 2.066666666666667
+    },
+    "3": {
+      "judged_hints": 30,
+      "good_hint_rate": 0.0,
+      "tier_compliance_yes_rate": 0.0,
+      "visual_grounding_yes_rate": 0.9333333333333333,
+      "scientific_correctness_yes_rate": 0.5333333333333333,
+      "steers_toward_wrong_answer_yes_rate": 0.43333333333333335,
+      "mean_unsupported_visual_claims": 0.7,
+      "disclosure_distribution": {
+        "0": 0.26666666666666666,
+        "1": 0.43333333333333335,
+        "2": 0.3
+      },
+      "mean_actionability": 1.6333333333333333
+    }
+  },
+  "good_hint_rate_planned": 0.03333333333333333,
+  "good_hint_rate_planned_definition": "Good judged hints / all planned hints, including failed/empty generation; unavailable while judgments are pending",
+  "judging_selection_sha256": "369afc3829aeb20752aa4a04a35de693ee73558525b77c951db053288dca7f1c",
+  "source_hints_sha256": "cdbf1af3a9f97c54ee7e9cdcbadc7921dfd1dc1637f6173f3a79689df5a178e0",
+  "notes": [
+    "Metrics describe this dataset and condition only; no pooled ScienceQA/AI2D score is produced.",
+    "No confidence intervals or claims of independent hints: tiers share questions and may share diagrams."
+  ],
+  "by_experiment_a_correctness": {
+    "correct": {
+      "judged_hints": 63,
+      "good_hint_rate": 0.031746031746031744,
+      "tier_compliance_yes_rate": 0.23809523809523808,
+      "visual_grounding_yes_rate": 0.9523809523809523,
+      "scientific_correctness_yes_rate": 0.6031746031746031,
+      "steers_toward_wrong_answer_yes_rate": 0.3333333333333333,
+      "mean_unsupported_visual_claims": 0.6507936507936508,
+      "disclosure_distribution": {
+        "0": 0.2698412698412698,
+        "1": 0.2857142857142857,
+        "2": 0.4444444444444444
+      },
+      "mean_actionability": 2.1746031746031744
+    },
+    "incorrect_or_failed": {
+      "judged_hints": 27,
+      "good_hint_rate": 0.037037037037037035,
+      "tier_compliance_yes_rate": 0.37037037037037035,
+      "visual_grounding_yes_rate": 0.9629629629629629,
+      "scientific_correctness_yes_rate": 0.5925925925925926,
+      "steers_toward_wrong_answer_yes_rate": 0.6296296296296297,
+      "mean_unsupported_visual_claims": 0.8518518518518519,
+      "disclosure_distribution": {
+        "0": 0.37037037037037035,
+        "1": 0.5925925925925926,
+        "2": 0.037037037037037035
+      },
+      "mean_actionability": 2.7037037037037037
+    }
+  },
+  "experiment_a_result_sha256": "ace08e2b8d254e0984885cf6daa97ded47f961481b170fa23538b07b21a49da7"
+}

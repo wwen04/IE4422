@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'The sample with the higher mass will have a higher average kinetic energy' supplies the deciding reasoning and leaves only a mass-label lookup, rather than a small reasoning step.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Both samples have the same number of particles and the same average particle speed' refers to the two pictured samples and their matching speed labels.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The relationship between particle mass, kinetic energy and temperature at equal speed agrees with the supplied solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Following the higher-mass comparison leads to sample B, consistent with the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'The sample with the higher mass' gives the deciding fact and reduces the remaining work to reading the mass labels, without naming sample B.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The higher-mass rule gives a clear direction, but the student must infer the action of comparing the two mass labels; it also supplies the key reasoning.",
+    "score": 3
+  }
+}

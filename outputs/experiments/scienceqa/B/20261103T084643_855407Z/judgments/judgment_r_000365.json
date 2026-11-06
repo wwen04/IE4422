@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "Connects the two tabulated volumes to the idea that Jupiter is much larger, without determining whether it exceeds 1,000 Earth volumes.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "Cites the specific Jupiter and Earth volume entries, which are needed for its comparison.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Jupiter's stated volume is significantly larger than Earth's, and both quoted values match the table and reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The comparison is consistent with the gold answer and does not suggest an incorrect calculation or conclusion.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Identifies the relevant data and general size difference but does not establish the decisive factor of more than 1,000 or favour either option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "Directs attention to the two relevant volumes, but leaves the student to work out how to test the 1,000-times claim.",
+    "score": 3
+  }
+}

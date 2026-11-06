@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "Connects 'green balls in each flask' to particles per unit volume without comparing the solutions or deciding the answer, as requested for Tier 2.", "verdict": "yes"},
+  "visual_grounding": {"reason": "'Green balls in each flask' identifies the solute particles visible in both containers and is necessary to the explanation.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "'The number of green balls ... indicates the number of particles per unit volume' conflates total particle count with concentration; a per-unit-volume value requires dividing by the solvent volume.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Both flasks contain 30 mL, so comparing their particle counts still leads toward Solution B, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Names a relevant concentration concept but neither compares the counts nor favours or rules out an option.", "score": 0},
+  "actionability": {"reason": "Directs attention to the green-ball counts and concentration, but leaves the student to determine the comparison or calculation to perform.", "score": 3}
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "‘Notice’ invites inspection of a specific positional detail without explaining science or solving the question, matching Tier 1.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to the visible labels C, E and F is specific and essential to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["‘Point C is positioned between points E and F’: C is above F at the lower central Earth, while E is at the left Earth; C is not a separate orbital point between E and F."], "count": 1},
+  "scientific_correctness": {"reason": "The hint makes no scientific assertion about seasons or orbital stages that contradicts school science or the supplied answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The inaccurate positional observation does not favour a particular alternative orbital stage.", "verdict": "no"},
+  "answer_disclosure": {"reason": "No orbital stage is named, favoured or eliminated.", "score": 0},
+  "actionability": {"reason": "It gives a clear direction to inspect C relative to E and F, but leaves the student to determine how this helps identify the stage at F.", "score": 3}
+}

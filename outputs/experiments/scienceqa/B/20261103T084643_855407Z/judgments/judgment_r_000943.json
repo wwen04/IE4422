@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"Notice that Sample A has particles moving faster\" directs attention to a visible speed difference without explaining temperature or kinetic energy.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The comparison specifically identifies Sample A and Sample B and their displayed particle speeds.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Sample A's displayed average speed is 1,700 m/s, compared with 1,500 m/s for Sample B, consistent with the reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The speed comparison supports the gold answer, sample A.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Identifying Sample A as faster supplies the decisive speed comparison for these equal-mass particles, strongly favouring sample A without stating its temperature is higher.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The hint gives a clear, specific feature to notice, but the student must determine how to use that comparison.",
+    "score": 3
+  }
+}

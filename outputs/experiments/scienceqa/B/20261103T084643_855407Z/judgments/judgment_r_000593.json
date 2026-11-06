@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint points only to a visible size comparison, without explaining a concept or giving a procedure.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "'Pair 1' and 'Pair 2' identify the pictured magnets whose sizes are being compared.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "'The magnets in Pair 1 are larger than those in Pair 2' overgeneralizes: the rectangular magnets are the same size; only the diamond-shaped magnet is larger in Pair 1."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The hint makes no scientific claim beyond its visual size comparison and states no incorrect magnetic-force principle.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing magnet sizes directs attention toward the smaller magnet in Pair 2 and does not favor a wrong force comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint identifies a size difference but does not state how size affects force or favor an answer option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "Comparing the sizes in the two named pairs gives a clear focus, but the student must determine what to do with that observation.",
+    "score": 3
+  }
+}

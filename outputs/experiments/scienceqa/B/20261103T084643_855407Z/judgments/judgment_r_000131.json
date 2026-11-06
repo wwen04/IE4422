@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Solution B contains more green particles' supplies an observation rather than a concrete reasoning step for the student to perform.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It specifically compares the green particles in the labeled Solutions A and B.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Solution B does contain more green solute particles than Solution A; this observation agrees with the image and reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The stated particle-count difference supports the gold answer because both containers have 40 mL of solvent.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It supplies the deciding particle-count comparison; with equal solvent volumes shown, the remaining concentration comparison is trivial, although the answer is not explicitly stated.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It clearly identifies the relevant particle-count difference, but the student must work out how to use it to compare concentrations.",
+    "score": 3
+  }
+}

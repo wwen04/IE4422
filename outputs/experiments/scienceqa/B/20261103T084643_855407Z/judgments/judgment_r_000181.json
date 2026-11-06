@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint only reports Mercury's and Mars's table values; it does not connect them to a science idea as Tier 2 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "\"Mercury's volume is 60 billion km³\" and \"Mars's volume is 160 billion km³\" identify the two relevant entries in the volume column.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both stated volumes match the table and the gold solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The accurate volumes support the required comparison and do not direct the student toward true.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It supplies the two table values without calculating three times Mercury's volume or favouring either answer.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It identifies the exact values to use, but the student must work out how to compare them with the three-times claim.",
+    "score": 3
+  }
+}

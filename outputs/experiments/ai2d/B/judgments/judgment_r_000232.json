@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint states the gland and its location instead of suggesting a reasoning step for Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The general location statement does not refer to a specific label or identifiable feature of this image.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The pituitary gland lies at the base of the brain, consistent with the gold answer and school-level anatomy.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The named gland matches the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The pituitary gland is located near the base of the brain directly supplies the correct gland.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The hint supplies the answer and offers no usable reasoning step for the student.",
+    "score": 1
+  }
+}

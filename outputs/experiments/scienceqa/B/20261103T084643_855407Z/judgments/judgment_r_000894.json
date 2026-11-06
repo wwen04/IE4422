@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Compare their volumes directly' restates the required comparison without specifying a concrete small reasoning step, such as forming a ratio or scaling Saturn's volume.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Their volumes' identifies the volume entries for the named Jupiter and Saturn rows in the table.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Comparing Jupiter's and Saturn's volumes is relevant and contains no scientific error, although the comparison method is unspecified.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint directs attention to the relevant volumes without suggesting an incorrect relationship or answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It neither gives the volume relationship nor favors true or false.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "'Compare their volumes directly' gives a clear focus, but the student must decide how to test the ten-times relationship.",
+    "score": 3
+  }
+}

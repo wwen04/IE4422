@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice' the final temperatures, 18°C and 19°C, invites observation of a specific table detail without explaining the science or reaching a conclusion.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies the solar-panel and no-solar-panel rows and their final-temperature entries, 18°C and 19°C.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The stated final temperatures and their comparison are correct, and the hint makes no conflicting scientific claim.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Comparing the final temperatures is less useful than examining each temperature change, but it does not suggest that either greenhouse lost thermal energy.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint neither identifies the direction of thermal-energy transfer nor favours either option.", "score": 0},
+  "actionability": {"reason": "It clearly directs attention to specific final-temperature entries, but the student must work out how to use the table to determine the transfer direction.", "score": 3}
+}

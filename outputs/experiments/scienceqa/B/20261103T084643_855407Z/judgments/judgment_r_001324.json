@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'The dinosaur footprint is closer to the surface' states a visual comparison instead of suggesting a concrete next reasoning step for tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "The comparison identifies the dinosaur footprint and wood and their relative depths in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The footprint is shallower than the wood, consistent with the image and the reference explanation of relative fossil ages.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The stated depth comparison supports the gold answer, dinosaur footprint.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint supplies the relative-depth fact that decides between the two options, without explicitly stating which fossil is younger.", "score": 1},
+  "actionability": {"reason": "It directs attention to the fossils' relative depths, but leaves the student to determine how to use that comparison to infer age.", "score": 3}
+}

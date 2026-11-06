@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint points to the fourth insect and its visible features without explaining a science concept or procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The fourth insect identifies the rightmost mosquito, and the hint describes its legs, wings and body.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The fourth insect has blue wings; the pictured wings are pale and translucent with dark veins.", "The fourth insect has a white body; its body is predominantly dark with reddish-brown markings."], "count": 2},
+  "scientific_correctness": {"reason": "Identifying the winged insect as a mosquito is consistent with the life cycle and gold answer; the inaccurate colors are visual errors rather than scientific concept errors.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs attention to the winged adult mosquito, which is consistent with the gold answer despite the incorrect colors.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying the fourth insect has wings supplies the visual fact asked about and leaves the student to identify its stage, without naming the adult stage.", "score": 1},
+  "actionability": {"reason": "The description directs attention to the fourth insect, but the student must decide how to connect it to a named life-cycle stage.", "score": 3}
+}

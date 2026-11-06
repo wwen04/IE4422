@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "verdict": "yes",
+    "reason": "'Notice that Solution B contains more green balls' points to one relevant visual detail without explaining concentration."
+  },
+  "visual_grounding": {
+    "verdict": "yes",
+    "reason": "The hint specifically compares the green balls in the labeled Solution A and Solution B containers."
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "verdict": "yes",
+    "reason": "Solution B visibly has five green particles and Solution A has two; the hint makes no incorrect claim about concentration."
+  },
+  "steers_toward_wrong_answer": {
+    "verdict": "no",
+    "reason": "The particle comparison supports the gold answer, Solution B, because both containers show 25 mL of solvent."
+  },
+  "answer_disclosure": {
+    "score": 1,
+    "reason": "'Solution B contains more green balls' supplies the decisive particle comparison when the displayed solvent volumes are equal, without stating which concentration is higher."
+  },
+  "actionability": {
+    "score": 4,
+    "reason": "The student can immediately inspect the green balls in the two labeled containers, but the hint already supplies their comparison."
+  }
+}

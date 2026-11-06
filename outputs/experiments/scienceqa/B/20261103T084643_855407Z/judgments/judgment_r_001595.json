@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'They will have the same average kinetic energy' applies the concept to reach a deciding conclusion, exceeding Tier 2.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Both samples ... have the same average particle speed' refers to the matching 1,900 m/s labels and is needed for its reasoning.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "'Same average particle speed' does not imply equal kinetic energy when the particle masses differ: sample A is 28 u and sample B is 26 u.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Its equal-kinetic-energy conclusion leads to equal temperatures, whereas the gold answer is sample A.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "'They will have the same average kinetic energy' states the deciding conclusion that immediately implies the equal-temperature option, although that conclusion is wrong.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It supplies a conclusion without giving the student a usable next action.",
+    "score": 1
+  }
+}

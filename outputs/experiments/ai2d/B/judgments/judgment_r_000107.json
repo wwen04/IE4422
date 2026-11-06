@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice ... phases labeled from A to H” invites attention to a visual detail without explaining a concept or solving the question.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the letter labels around the lunar-cycle diagram, although it misstates their range.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The phases are labeled from A to H; the image also contains I, J and K, and H labels an arrow."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "Identifying the diagram as a lunar cycle introduces no scientific error.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint does not suggest an incorrect phase after first quarter or favour a wrong option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint names no answer and neither favours nor eliminates any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to the phase labels but leaves the student to determine how to use them.",
+    "score": 3
+  }
+}

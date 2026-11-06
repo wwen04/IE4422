@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "\"Notice that C\" asks the student to observe a single visual detail without explaining a concept or solving the question.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint specifically refers to label C and its claimed position relative to the equator.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "C is located on the equator of the Earth."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The error is a visual location claim; the hint states no incorrect scientific concept.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Directing attention to the equator instead of the incoming yellow rays would likely lead away from solar radiation and toward the subsolar-point distractor.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The claimed location does not name the answer or supply a fact that identifies or eliminates an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately look for C and compare its position with the equator, although the asserted position is wrong.",
+    "score": 4
+  }
+}

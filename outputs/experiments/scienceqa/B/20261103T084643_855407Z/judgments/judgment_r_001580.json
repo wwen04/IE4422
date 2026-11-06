@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Compare Jupiter's volume to Earth's volume' suggests a reasoning action but does not connect a visible detail to a science idea as Tier 2 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Jupiter's volume' and 'Earth's volume' identify the corresponding entries in the table's Volume column.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Comparing the tabulated volumes is relevant and scientifically sound; the hint makes no erroneous scientific claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint directs attention to the relevant volume data and does not favor the false option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It gives neither the comparison result nor the factor needed to decide the statement and does not favor either option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "'Compare' gives a clear direction using specific entries, but the student must determine how to test the 1,000-times claim.",
+    "score": 3
+  }
+}

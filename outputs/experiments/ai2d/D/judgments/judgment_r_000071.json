@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Option A ... could potentially be a bud' favours an answer instead of inviting notice of a visual detail.", "verdict": "no"},
+  "visual_grounding": {"reason": "'Option A is labeled with G' refers to the answer choice, without identifying a visible feature of the plant.", "verdict": "no"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The suggestion that G represents a bud agrees with the gold answer and the pictured terminal bud.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It favours A (G), which is the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'Option A ... could potentially be a bud' singles out the correct option as the candidate answer without asserting it as correct.", "score": 1},
+  "actionability": {"reason": "'Based on common plant anatomy' gives no concrete feature to inspect or comparison to make.", "score": 2}
+}

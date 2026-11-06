@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint defines decomposers and describes the sea cucumber's incoming arrow, but gives no concrete reasoning step for the student to perform, as Tier 3 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to an arrow pointing towards the sea cucumber identifies a visible organism and arrow in this food web.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Decomposers break down dead organisms and waste, and incoming arrows represent matter consumed by the receiving organism; describing the sea cucumber as a consumer does not exclude its decomposer role.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint focuses on the correct organism and does not exclude it or favor a different choice.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It points to the sea cucumber and its incoming arrow without identifying it as the decomposer or giving the distinguishing absence of outgoing arrows.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It supplies a definition and an observation but leaves the student without a concrete action for deciding which organism is the decomposer.",
+    "score": 2
+  }
+}

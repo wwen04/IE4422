@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"They will have different kinetic energies\" applies the concept to the samples and rules out equal temperature, exceeding Tier 2.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "\"Same average particle speed but different masses\" refers to the visible 1,100 m/s speed labels and 46 u versus 44 u mass labels.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Kinetic energy depends on particle mass and speed; different masses at the same speed give different kinetic energies.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The stated equal speeds and unequal masses support the correct comparison and do not direct the student toward a wrong sample.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "\"They will have different kinetic energies\" rules out the option that the samples have the same temperature without stating which sample is hotter.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It identifies the relevant speed and mass comparison but gives no concrete next action for deciding which sample has higher kinetic energy.",
+    "score": 3
+  }
+}

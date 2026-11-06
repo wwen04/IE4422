@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "Identified by its distinct color restates the question without suggesting a concrete reasoning step.", "verdict": "no"},
+  "visual_grounding": {"reason": "The pink stone merely repeats the question and identifies no specific image label, position, or other visual detail.", "verdict": "no"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Using the stone's colour to identify it introduces no scientific error.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The vague colour advice does not direct the student toward a particular incorrect option.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint names no stone and neither favours nor rules out any option beyond the question's stated colour.", "score": 0},
+  "actionability": {"reason": "The hint restates identifying the pink stone without giving a usable next move.", "score": 1}
+}

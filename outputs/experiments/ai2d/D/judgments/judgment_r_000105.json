@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint describes an alleged label and correspondence but gives no concrete reasoning action for the requested tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "It specifically refers to label A and the larger structure in the center of the image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The diagram labels option A as Body; the image contains A but no Body label or option text.", "Label A corresponds to the larger central structure; its leader points to a leg instead."], "count": 2},
+  "scientific_correctness": {"reason": "Calling the larger central structure the body is anatomically sound; the errors concern the image labels rather than the science concept.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs attention to option A, Body, although the question asks about B, which marks the head (option D).", "verdict": "yes"},
+  "answer_disclosure": {"reason": "By presenting option A, Body, as the relevant correspondence, the hint favors an option without explicitly stating the answer to B.", "score": 1},
+  "actionability": {"reason": "The hint is a descriptive assertion and offers no usable next action for identifying B.", "score": 1}
+}

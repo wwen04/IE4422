@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The statement about what the king cobra consumes gives no concrete reasoning step for the student, as Tier 3 requires.", "verdict": "no"},
+  "visual_grounding": {"reason": "The hint specifically identifies the King cobra label and its supposed feeding relationships in this food web.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The king cobra is depicted consuming multiple organisms; the image shows only the snake-to-king-cobra link.", "The king cobra is depicted consuming mice; the mouse arrows lead to the snake and hawk."], "count": 2},
+  "scientific_correctness": {"reason": "A king cobra consuming other organisms, potentially including mice, is biologically plausible; the errors concern the claimed contents of this image.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Identifying the king cobra as a mouse consumer directs the student toward an unsupported consumer instead of counting the two shown mouse consumers.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "Saying the king cobra consumes mice supplies a purported member of the requested count, favouring a specific answer-relevant relationship without stating a total.", "score": 1},
+  "actionability": {"reason": "The hint draws attention to the king cobra but gives no concrete action for identifying or counting the organisms that consume mice.", "score": 2}
+}

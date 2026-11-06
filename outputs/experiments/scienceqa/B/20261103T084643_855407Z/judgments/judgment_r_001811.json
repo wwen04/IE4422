@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint restates the temperature–average-kinetic-energy concept without naming a concrete next reasoning step for Tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "The equal particle numbers are incidental; the hint gives generic temperature–kinetic-energy advice without using the displayed masses or speeds.", "verdict": "no"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The sample with higher average kinetic energy having a higher temperature agrees with the reference science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The stated relationship does not favour an incorrect sample.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint neither identifies the higher-energy sample nor favours or eliminates an option.", "score": 0},
+  "actionability": {"reason": "Considering the relationship gives a vague direction without specifying how to compare the samples using their masses and speeds.", "score": 2}
+}

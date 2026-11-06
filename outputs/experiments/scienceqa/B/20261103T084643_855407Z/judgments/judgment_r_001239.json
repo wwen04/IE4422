@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint only states what a Punnett square represents; it gives no concrete reasoning step for the requested Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'The Punnett square' does not identify a particular allele label or cell; the statement applies to any Punnett square.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The square correctly represents the possible allele combinations from the parents.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The general description does not direct the student toward an incorrect probability.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It neither identifies round-producing genotypes nor favours or excludes any probability option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It states a background fact without giving the student a usable next action.",
+    "score": 1
+  }
+}

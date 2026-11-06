@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“The distance ... in Pair 2 is longer” identifies a visual comparison but does not connect it to a science idea, so it does not meet Tier 2.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The comparison of the gaps in Pair 1 and Pair 2 refers to identifiable features of this image.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Pair 2 has a 17.4 mm gap versus 7.8 mm in Pair 1; the hint makes no incorrect scientific claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It draws attention to the relevant distance difference without suggesting an incorrect force comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It compares visible distances but does not state the distance–force relationship or favour a force option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to the relevant gap comparison, but the student must determine how that comparison affects magnetic force.",
+    "score": 3
+  }
+}

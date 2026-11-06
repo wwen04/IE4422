@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint uses the samples' equal speeds and different masses to draw a comparative energy conclusion, rather than only connecting a visible detail to a science idea as tier 2 requires.", "verdict": "no"},
+  "visual_grounding": {"reason": "'Both samples have the same average particle speed but different masses' refers to the displayed 1,000 m/s speeds and 46 u versus 26 u particle masses.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "'The particles with the lower mass will have a higher kinetic energy per unit mass' is false: kinetic energy per unit mass is one-half speed squared, so equal speeds give equal kinetic energy per unit mass.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "By attributing higher energy per unit mass to the lighter particles, the hint likely directs the student toward sample B, whereas sample A has the higher average kinetic energy and temperature.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The claim favoring the lower-mass particles provides a strong clue toward sample B, although it does not explicitly name a temperature answer.", "score": 1},
+  "actionability": {"reason": "It directs attention to the displayed speed and mass comparison, but supplies no concrete action and leaves the student to determine how to use that comparison.", "score": 3}
+}

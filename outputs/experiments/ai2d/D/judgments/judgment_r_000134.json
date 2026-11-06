@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint states a comparative body-shape conclusion instead of connecting a visible detail to a science idea without deciding the answer.", "verdict": "no"},
+  "visual_grounding": {"reason": "The comparison of the butterfly's body with the dragonfly's body refers to specific identifiable objects in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The butterfly has a more slender and elongated body compared to the dragonfly; the image shows the dragonfly with the longer, more slender body."], "count": 1},
+  "scientific_correctness": {"reason": "The asserted anatomical comparison reverses the visible relationship and contradicts the gold answer that the dragonfly has a longer body.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Describing the butterfly as more elongated directs the student toward option B, whereas the gold answer is A.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint states the comparative conclusion that makes option B immediate, although that answer is incorrect.", "score": 2},
+  "actionability": {"reason": "It supplies an incorrect conclusion and gives the student no usable next action.", "score": 1}
+}

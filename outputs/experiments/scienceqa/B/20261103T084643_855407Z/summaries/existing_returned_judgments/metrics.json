@@ -1,0 +1,83 @@
+{
+  "dataset_name": "scienceqa",
+  "experiment": "B",
+  "run_id": "20261103T084643_855407Z",
+  "planned_questions": 100,
+  "planned_hints": 300,
+  "generation_counts": {
+    "ok": 300
+  },
+  "valid_judgments": 300,
+  "pending_judgments": [],
+  "metric_denominator": "Valid judgments only; coverage and generation failures are reported separately",
+  "overall": {
+    "judged_hints": 300,
+    "good_hint_rate": 0.24,
+    "tier_compliance_yes_rate": 0.44333333333333336,
+    "visual_grounding_yes_rate": 0.8833333333333333,
+    "scientific_correctness_yes_rate": 0.78,
+    "steers_toward_wrong_answer_yes_rate": 0.22666666666666666,
+    "mean_unsupported_visual_claims": 0.33666666666666667,
+    "disclosure_distribution": {
+      "0": 0.6033333333333334,
+      "1": 0.2966666666666667,
+      "2": 0.1
+    },
+    "mean_actionability": 2.796666666666667
+  },
+  "by_tier": {
+    "1": {
+      "judged_hints": 100,
+      "good_hint_rate": 0.44,
+      "tier_compliance_yes_rate": 0.88,
+      "visual_grounding_yes_rate": 0.98,
+      "scientific_correctness_yes_rate": 0.89,
+      "steers_toward_wrong_answer_yes_rate": 0.2,
+      "mean_unsupported_visual_claims": 0.41,
+      "disclosure_distribution": {
+        "0": 0.78,
+        "1": 0.21,
+        "2": 0.01
+      },
+      "mean_actionability": 3.54
+    },
+    "2": {
+      "judged_hints": 100,
+      "good_hint_rate": 0.15,
+      "tier_compliance_yes_rate": 0.31,
+      "visual_grounding_yes_rate": 0.86,
+      "scientific_correctness_yes_rate": 0.69,
+      "steers_toward_wrong_answer_yes_rate": 0.27,
+      "mean_unsupported_visual_claims": 0.26,
+      "disclosure_distribution": {
+        "0": 0.52,
+        "1": 0.28,
+        "2": 0.2
+      },
+      "mean_actionability": 2.4
+    },
+    "3": {
+      "judged_hints": 100,
+      "good_hint_rate": 0.13,
+      "tier_compliance_yes_rate": 0.14,
+      "visual_grounding_yes_rate": 0.81,
+      "scientific_correctness_yes_rate": 0.76,
+      "steers_toward_wrong_answer_yes_rate": 0.21,
+      "mean_unsupported_visual_claims": 0.34,
+      "disclosure_distribution": {
+        "0": 0.51,
+        "1": 0.4,
+        "2": 0.09
+      },
+      "mean_actionability": 2.45
+    }
+  },
+  "good_hint_rate_planned": 0.24,
+  "good_hint_rate_planned_definition": "Good judged hints / all planned hints, including failed/empty generation; unavailable while judgments are pending",
+  "judging_selection_sha256": "07d5d71a2f65a7a5dac127846ee9533d5e27777cac4de768bf2ca2948bbe48f0",
+  "source_hints_sha256": "437c8492b124bde96e1d68427ef33a07a4f27fe21397cd45069f6de87397f921",
+  "notes": [
+    "Metrics describe this dataset and condition only; no pooled ScienceQA/AI2D score is produced.",
+    "No confidence intervals or claims of independent hints: tiers share questions and may share diagrams."
+  ]
+}

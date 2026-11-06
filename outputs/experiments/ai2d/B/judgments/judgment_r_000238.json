@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint explains how the mantle is typically depicted and directs attention to an answer choice, rather than inviting notice of one image detail.", "verdict": "no"},
+  "visual_grounding": {"reason": "Option B identifies a choice, while typically depicted refers to diagrams generally; no specific element of this image is identified.", "verdict": "no"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The mantle is a layer surrounding the core, so the general science statement is correct.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Singling out option B and explaining the mantle likely steers the student toward mantle, whereas A represents the outer core.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint favours option B by naming it and supplying supporting information, without explicitly stating an answer.", "score": 1},
+  "actionability": {"reason": "It clearly directs attention to option B and the mantle concept, but leaves the student to determine how that relates to label A.", "score": 3}
+}

@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint links allele symbols to straight and curled ear phenotypes, going beyond noticing a visual detail into a Tier 2 connection.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to the 'e' allele identifies labels and symbols visible in this Punnett square.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The description implies that 'E' for curled ears is represented in the Punnett square, but only e and ee appear."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The mappings of e to straight ears and E to curled ears agree with the supplied context.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "It gives no incorrect inheritance rule or instruction that would lead to a different ratio.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It does not identify offspring phenotypes, count boxes, or favour a ratio.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to allele symbols, but leaves the student to decide what to inspect or do with them.",
+    "score": 3
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice” directs attention to the displayed particle masses without explaining a concept or drawing a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies Sample A's 28 u and Sample B's 17 u particle-mass labels.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The stated particle masses match the image and do not contradict the reference science.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing these masses is relevant and does not direct the student toward an incorrect option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It points to mass labels without explaining their effect on kinetic energy or favouring an answer.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately locate and compare the two specified mass labels.",
+    "score": 4
+  }
+}

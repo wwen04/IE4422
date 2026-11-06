@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Sample A will move faster on average” applies a comparison to the samples instead of only connecting a visible detail to a science idea.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to different particle masses and the speed comparison between Samples A and B identifies the two labeled samples and their displayed measurements.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "“Since both samples have the same number of particles but different masses” does not establish which sample moves faster. Particle number and mass alone do not determine speed; kinetic energy depends on both mass and speed squared.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The stated speed comparison agrees with the image and points toward Sample A, the gold answer, despite the faulty explanation for that comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "“Sample A will move faster on average” supplies an answer-relevant comparison that favors A, without stating which sample has higher temperature.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It directs attention to the samples’ relative speeds, but the student must work out how to use both mass and speed to compare kinetic energies.",
+    "score": 3
+  }
+}

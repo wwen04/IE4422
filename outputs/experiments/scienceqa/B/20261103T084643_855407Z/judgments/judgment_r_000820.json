@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice ... one pair of alleles being Mm and the other pair being mm” points to the parental allele labels without explaining inheritance or calculating a ratio.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The image has M and m along the left and m and m across the top, supporting the identified Mm and mm parental pairs.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The stated Mm × mm cross matches the square and introduces no incorrect science.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The parental genotypes are correct and do not direct the student toward an incorrect offspring ratio.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Identifying the parental alleles does not state the offspring phenotypes, their counts, or the answer ratio.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The hint clearly directs attention to the specific parental alleles, but the student must determine what to do with that observation.",
+    "score": 3
+  }
+}

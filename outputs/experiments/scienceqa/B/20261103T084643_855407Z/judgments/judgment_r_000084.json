@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "Links the visible blue balls in each beaker to solute concentration without comparing the solutions or deciding the answer.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The reference to 'blue balls (particles) in each beaker' identifies the solute particles shown in both containers.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both beakers show 40 mL of solvent, so the number of solute particles indicates relative concentration for these equal volumes.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing blue-ball counts at the equal displayed solvent volumes supports Solution B, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Gives the relevant relationship without comparing counts, favoring an option, or stating which solution is more concentrated.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "Directs attention to the number of blue balls, but leaves the student to infer that they should count and compare the two beakers.",
+    "score": 3
+  }
+}

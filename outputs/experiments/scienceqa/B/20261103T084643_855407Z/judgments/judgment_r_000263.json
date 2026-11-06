@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Wood is typically found in deeper layers” supplies the comparison that decides this question, rather than linking a visible detail to the idea that deeper layers are older.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The comparison between the wood fossil and mammal tooth identifies their visible positions in the rock sequence.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "“Typically found in deeper layers ... compared to ... a mammal tooth” misleadingly generalizes the relative positions of fossil types; their order must be determined from the particular rock sequence.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The stated depth comparison points toward wood, which is the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It supplies the deciding fact that wood is deeper than the mammal tooth, leaving only the depth-to-age connection.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It identifies a useful depth comparison, but gives no explicit action or instruction for connecting it to fossil age.",
+    "score": 3
+  }
+}

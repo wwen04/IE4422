@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint states that the covering is labeled 'H', completing the answer rather than making a Tier 2 concept connection without deciding it.", "verdict": "no"},
+  "visual_grounding": {"reason": "The specific label 'H' identifies the outer boundary of the seed in the image and is essential to the hint's conclusion.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Calling a seed's protective covering 'seed coat or pericarp' incorrectly treats the pericarp, which is the fruit wall, as a synonym for the seed coat.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The hint explicitly selects H, which matches the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The statement 'this structure is labeled as H' directly supplies the correct answer.", "score": 2},
+  "actionability": {"reason": "The hint supplies the answer and offers no usable next reasoning action for the student.", "score": 1}
+}

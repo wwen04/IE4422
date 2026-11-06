@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "\"Earthworms eat mushrooms\" supplies a conclusion instead of suggesting a small reasoning step.", "verdict": "no"},
+  "visual_grounding": {"reason": "The hint identifies the earthworm and mushroom and asserts a feeding relationship between these specific organisms.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The food web shows that earthworms eat mushrooms."], "count": 1},
+  "scientific_correctness": {"reason": "The claimed feeding relationship contradicts the supplied solution: no arrows leave the mushroom, so its matter does not move to the earthworm in this web.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Following the claimed mushroom-to-earthworm transfer leads to mushroom (A), whereas the correct answer is snowy owl (C).", "verdict": "yes"},
+  "answer_disclosure": {"reason": "Saying earthworms eat mushrooms directly supplies mushroom as the answer to which organism's matter moves to the earthworm, although that answer is wrong.", "score": 2},
+  "actionability": {"reason": "The hint gives an unsupported conclusion and provides no usable next action for tracing matter through the web.", "score": 1}
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint explains an arrow and supplies a conclusion about the host being the final stage; it gives no small reasoning action for the student.", "verdict": "no"},
+  "visual_grounding": {"reason": "It refers specifically to label E, the mosquito, and an arrow toward the vertebrate-host side.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The arrow is labeled E; C is placed beside the upper arrow, while E is above the mosquito region.", "The vertebrate host is the final stage depicted; the arrows form a continuing cycle with no final stage."], "count": 2},
+  "scientific_correctness": {"reason": "Calling the vertebrate host the final stage misrepresents a life cycle, which continues between the vertebrate host and mosquito.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The hint singles out E and connects it to the requested host, likely encouraging selection of E instead of the gold stage B.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It links the offered label E to the vertebrate host and describes the host as the endpoint of the mosquito-to-host arrow, strongly favouring a choice without explicitly naming the correct stage B.", "score": 1},
+  "actionability": {"reason": "It directs attention to a specific arrow and its endpoint, but leaves the student to determine how to use that description and gives no explicit next action.", "score": 3}
+}

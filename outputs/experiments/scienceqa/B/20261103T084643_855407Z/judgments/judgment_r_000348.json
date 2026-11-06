@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice that Solution B contains more blue balls' points out one relevant visual detail without explaining concentration.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The comparison of blue balls in the labeled Solution B and Solution A is specific to this image.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Solution B visibly has six blue particles and Solution A has four; the hint makes no incorrect concentration claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The particle comparison supports the gold answer, Solution B, given the equal solvent volumes shown.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'Solution B contains more blue balls' supplies the decisive particle-count comparison when both shown solvent volumes are 40 mL, strongly favoring Solution B without stating its concentration is higher.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "'Notice' directs the student immediately to compare the blue particles in the two named containers, though it already supplies that comparison.",
+    "score": 4
+  }
+}

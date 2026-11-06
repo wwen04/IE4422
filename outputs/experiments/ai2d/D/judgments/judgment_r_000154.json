@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... arrows pointing towards it' invites attention to one visual detail without explaining the science.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The Kingfisher and the arrows pointing toward it are specific, identifiable parts of the image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The hint accurately identifies incoming arrows and contains no incorrect scientific explanation.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Attention to the Kingfisher's incoming arrows supports identifying the gold-answer organism.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint points to the Kingfisher and its arrows without explaining their meaning or identifying it as a carnivore.", "score": 0},
+  "actionability": {"reason": "The student can immediately inspect the arrows pointing toward the labeled Kingfisher.", "score": 4}
+}

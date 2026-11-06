@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint asserts a conclusion about predators instead of suggesting a concrete reasoning step for Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to the black bear and its connections identifies specific elements of this food web.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "count": 1,
+    "unsupported_claims": [
+      "The black bear has several predators, as indicated by its connections."
+    ]
+  },
+  "scientific_correctness": {
+    "reason": "Connections alone do not indicate predators; the arrows toward the black bear indicate its food sources, not organisms preying on it.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Saying the black bear has several predators would lead the student to reject the gold answer, blackbear.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "score": 1,
+    "reason": "The claim that the black bear has predators rules out option A, although incorrectly."
+  },
+  "actionability": {
+    "score": 2,
+    "reason": "It draws attention to the black bear connections but gives no concrete action for checking arrow directions."
+  }
+}

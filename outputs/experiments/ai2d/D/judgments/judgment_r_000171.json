@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that B is located...' asks the student to notice one spatial detail, as requested for Tier 1.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to label B and its position relative to the nose and chin is specific to the pictured face.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["B is located below the nose: B's leader lines identify the ears, which are beside the upper face rather than below the nose."], "count": 1},
+  "scientific_correctness": {"reason": "The hint makes no scientific claim beyond the image-specific location error assessed under unsupported visual claims.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Looking below the nose and above the chin directs the student toward the mouth, whereas B identifies the ears.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The stated location strongly favours the mouth option without naming it, even though that is the wrong answer.", "score": 1},
+  "actionability": {"reason": "The student can immediately inspect the specified area between the nose and chin, though the incorrect location misdirects the action.", "score": 4}
+}

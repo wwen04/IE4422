@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint supplies the consequence ('more food available') and an explanation rather than a small reasoning step for the student.", "verdict": "no"},
+  "visual_grounding": {"reason": "It specifically refers to the whales, elephant seals, krill and other zooplankton shown in the food web.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The hint claims elephant seals prey on krill, but the diagram shows fish feeding elephant seals and no krill-to-elephant-seal arrow.", "The hint claims elephant seals prey on other zooplankton, but the diagram shows no zooplankton-to-elephant-seal feeding arrow."], "count": 2},
+  "scientific_correctness": {"reason": "Saying prey are 'less abundant due to the absence of whale predation' reverses the expected effect of removing a predator and contradicts the claim that more food is available.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "Despite its faulty explanation, 'more food available' points toward an increase in elephant seals, matching the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The stated consequence that elephant seals would have more food makes the population-increase answer immediate.", "score": 2},
+  "actionability": {"reason": "It gives an explanatory assertion without a usable next action for the student.", "score": 1}
+}

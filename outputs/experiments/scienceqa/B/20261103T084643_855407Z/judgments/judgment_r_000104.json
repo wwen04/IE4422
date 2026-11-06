@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "'Identify which outcomes ... correspond to this genotype' gives a concrete next step without calculating the probability.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The reference to outcomes with genotype 'HH' identifies a specific label in the Punnett square and directs the student's search.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The cross is described as involving 'two pea plants with different genotypes', but both parents shown contribute H and h and therefore have genotype Hh."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "'Two pea plants with different genotypes' misidentifies this Hh × Hh cross; both parents have the same genotype.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Searching for HH outcomes still directs the student toward the correct probability despite the incorrect description of the parents.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It identifies the target genotype HH but gives no number of matching outcomes or probability and rules out no option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately locate HH outcomes in this square, then independently count them and form the probability.",
+    "score": 5
+  }
+}

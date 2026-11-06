@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice' directs attention to one temperature comparison without explaining a concept or procedure, matching Tier 1.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The comparison identifies the solar-panel and no-solar-panel rows and their final temperatures.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The greenhouse with solar panels had a higher final temperature than the greenhouse without solar panels; the table shows 20°C versus 21°C."], "count": 1},
+  "scientific_correctness": {"reason": "The hint makes no scientific claim about thermal-energy transfer; its incorrect table comparison is assessed as an unsupported visual claim.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The incorrect comparison distracts from the temperature increases, but it does not imply transfer out of either greenhouse or favour option B.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The comparison neither states the transfer direction nor favours or rules out either option.", "score": 0},
+  "actionability": {"reason": "It clearly directs the student to compare the two final temperatures, but leaves them to determine how that comparison relates to the question.", "score": 3}
+}

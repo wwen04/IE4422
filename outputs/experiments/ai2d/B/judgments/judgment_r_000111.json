@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice ... arrows pointing towards the mouse” directs attention to one specific visual detail without explaining a concept or procedure, as requested for Tier 1.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The mouse and the arrows connected to it are specific, identifiable elements needed to understand the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The diagram shows three different arrows pointing towards the mouse from other organisms. Only the grass-to-mouse arrow points towards it; the other two point from the mouse to the snake and hawk."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The hint states no scientific principle or interpretation beyond its erroneous visual description, assessed under unsupported visual claims.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Directing the student to three incoming arrows encourages counting the wrong direction and selecting 3 instead of the gold answer, 2.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "Providing the count “three” strongly favours the option 3, although it does not explicitly identify the number of mouse consumers or declare an option correct.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The student can immediately inspect arrows at the mouse, a concrete action specific to this image, although the stated direction and count are wrong.",
+    "score": 4
+  }
+}

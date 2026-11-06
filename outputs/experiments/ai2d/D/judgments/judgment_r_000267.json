@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The statement describes what the diagram shows but gives no concrete reasoning step for the student, so it does not meet Tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "\"The Moon's position relative to Earth\" identifies the visible Moon images arranged around Earth along an orbit.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The Moon occupies different positions relative to Earth as it orbits; this agrees with the depicted arrangement and the gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Identifying the Moon and its orbit directs the student toward moon phases, the gold option.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Naming the Moon at different orbital positions makes moon phases the only matching choice, leaving a trivial option lookup without explicitly naming phases.", "score": 1},
+  "actionability": {"reason": "The hint only supplies a description; it gives the student no concrete next action to perform.", "score": 1}
+}

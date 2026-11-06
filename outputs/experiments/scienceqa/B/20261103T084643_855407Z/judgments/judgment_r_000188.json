@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "Each cell represents a possible genotype connects the visible cells to allele inheritance without deciding the probability.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The four possible outcomes and each cell identify the four offspring cells shown in the square.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The claim that two rainbow trout with different body colors are crossed conflicts with the shown BB and Bb parents, which both have greenish-brown bodies."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "Different body colors is incorrect for these BB and Bb parents because B is dominant and both parents have greenish-brown bodies.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Despite the incorrect parental color description, interpreting the displayed offspring genotypes does not favor a probability different from the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint explains what cells represent without identifying recessive offspring, excluding options, or stating the probability.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "Each cell represents a possible genotype gives a clear way to interpret the square, but the student must determine how to identify and count homozygous recessive outcomes.",
+    "score": 3
+  }
+}

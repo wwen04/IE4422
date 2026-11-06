@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint identifies different shapes of the moon as it moves around Earth, effectively giving the depicted phenomenon rather than inviting attention to one visual detail.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The moon at positions around Earth is a specific, identifiable feature needed for the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The diagram shows different shapes of the moon; the pictured moons instead have essentially the same half-lit appearance at each orbital position."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The Moon presents different apparent shapes as it orbits Earth, consistent with moon phases.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint points to moon phases, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Different shapes of the moon as it moves around Earth states the phenomenon of moon phases, making option C immediate.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "Notice the moon shapes gives a concrete inspection action using this diagram, but identifies the phenomenon and leaves no key reasoning.",
+    "score": 4
+  }
+}

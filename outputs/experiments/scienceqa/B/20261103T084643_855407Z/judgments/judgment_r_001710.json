@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"Notice\" directs attention to particle counts and mass labels without explaining a concept or reaching a conclusion, as requested for Tier 1.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "\"Same number of particles but different masses\" identifies the two visible sets of eight particles and their 28 u and 26 u mass labels.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "count": 0,
+    "unsupported_claims": []
+  },
+  "scientific_correctness": {
+    "reason": "Both samples have eight particles, and their labeled particle masses differ; nothing contradicts the reference or school science.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing particle masses is relevant to kinetic energy and does not direct the student toward an incorrect sample.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint identifies a relevant visual difference without saying which mass is greater, comparing kinetic energies, or favoring an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately compare the particle counts and mass labels, but must decide how these observations relate to temperature.",
+    "score": 4
+  }
+}

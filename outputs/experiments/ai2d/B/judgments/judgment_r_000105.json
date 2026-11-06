@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Located on the head” supplies a location fact rather than a concrete reasoning step for Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint specifically refers to the structure marked B in the image.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The indicated anterior region is consistent with the head identified by the gold answer.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Directing attention to the head supports the gold answer, Head.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "“On the head” strongly favours Head among the choices, although it does not explicitly equate B with the head.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The location gives a clear focus for inspecting B, but does not specify an action or reasoning step.",
+    "score": 3
+  }
+}

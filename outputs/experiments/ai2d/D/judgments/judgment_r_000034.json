@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'F ... corresponds to the waxing gibbous phase' connects an image label to a phase idea without explaining which phase follows first quarter.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to the visible label F identifies a specific part of this image and is essential to the phase-identification claim.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The image has panels labeled from A to O; it instead shows a lunar-orbit diagram and does not show that complete label range.", "'The first panel labeled is F' asserts a first panel and ordering that the image does not establish."], "count": 2},
+  "scientific_correctness": {"reason": "Waxing gibbous is consistent with the upper-left orbital location beside F; the hint makes no incorrect scientific claim about the phase sequence.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It highlights waxing gibbous, which agrees with the gold answer, and does not direct the student to a different option.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Naming waxing gibbous as the only identified phase strongly favors that option, although the hint does not explicitly say it follows first quarter.", "score": 1},
+  "actionability": {"reason": "It identifies F and a phase name but gives no concrete action for locating first quarter or determining the next phase.", "score": 2}
+}

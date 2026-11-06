@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint supplies a purported identifying criterion for active flexures and asks the student to select its match, rather than leaving the key reasoning for a small intermediate step.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "\"One side appears to be sliding over the other\" identifies a specific relation between the rock blocks shown in the figures and is central to the proposed search.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "count": 0,
+    "unsupported_claims": []
+  },
+  "scientific_correctness": {
+    "reason": "\"Clear separation\" and sliding along a boundary describe fault displacement, not the bending of continuous rock layers shown by the flexure in B.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Searching for separated, sliding rock blocks directs the student toward a fault figure such as D or G instead of the gold figure B.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The purported defining feature supplies a deciding criterion that favours fault figures and rules against the continuous flexure, without explicitly naming an option.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "\"Look for a figure where one side appears to be sliding over the other\" gives an immediately usable visual search, although its scientific criterion is wrong.",
+    "score": 4
+  }
+}

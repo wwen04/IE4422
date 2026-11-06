@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice ... the same number of particles but different masses” invites observation without explaining or applying the science, as Tier 1 requests.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the particles in the two samples and their differing mass labels (46 u and 26 u).",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both samples contain ten particles, and the labeled masses per particle differ; the hint makes no incorrect scientific claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Noticing the particle masses is relevant to comparing kinetic energies and does not direct the student toward an incorrect choice.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It does not identify which sample has greater particle mass or temperature, or rule out any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately compare the particle counts and labeled particle masses, while retaining the kinetic-energy and temperature reasoning.",
+    "score": 4
+  }
+}

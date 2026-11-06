@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint links the square's four outcomes to possible offspring from a cross without calculating the requested probability, meeting Tier 2's conceptual role.", "verdict": "yes"},
+  "visual_grounding": {"reason": "'The Punnett square shows four possible outcomes' identifies the four visible offspring cells and uses their meaning in the cross.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The parents have 'different genotypes'; the H and h labels on both axes show that both parents are Hh."], "count": 1},
+  "scientific_correctness": {"reason": "'Two pea plants with different genotypes' misidentifies this Hh by Hh cross: the parents have the same genotype.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The incorrect description of the parents does not direct the student to a particular incorrect probability; the four offspring outcomes remain available to inspect.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It gives no count or identity of homozygous dominant offspring and does not favour or eliminate any answer option.", "score": 0},
+  "actionability": {"reason": "The statement directs attention generally to possible outcomes but gives no concrete action for identifying homozygous dominant offspring.", "score": 2}
+}

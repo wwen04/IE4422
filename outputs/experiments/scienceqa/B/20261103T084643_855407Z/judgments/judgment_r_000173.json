@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint states concepts and a speed-based decision rule rather than naming a small reasoning step that leaves the key reasoning to the student.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Both samples have the same number of particles but different masses' refers to the visible particles and the distinct per-particle mass labels.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "'Since both samples have the same number of particles but different masses, they will have different average speeds' is not a valid inference. Also, higher speed alone does not guarantee higher kinetic energy when particle masses differ; both mass and speed matter.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The faster particles are in sample A, so the hint's speed-based rule still leads to the gold answer in this case.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'The sample with the higher average speed' identifies the deciding quantity and reduces choosing the answer to reading the two speed labels.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The speed-based rule gives a clear direction, but the student must infer the action of comparing the displayed average speeds.",
+    "score": 3
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice how the beak in panel D' directs attention to one claimed visual detail without explaining science or giving a procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The beak in the specifically labelled panel D is identifiable and essential to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The beak in panel D extends further back than any other beak in the image."], "count": 1},
+  "scientific_correctness": {"reason": "The hint makes an inaccurate visual comparison but states no scientific concept that contradicts school-level science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It singles out D using an unsupported superlative instead of directing attention toward the conspicuously curved beak in panel I, associated with the gold answer iiki.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The comparative claim implicitly favours the bird in D as the candidate, without explicitly stating an answer.", "score": 1},
+  "actionability": {"reason": "It gives an immediate, specific visual comparison to perform on D and the other beaks, although the comparison is misleading.", "score": 4}
+}

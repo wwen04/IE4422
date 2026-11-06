@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice ... the same number of particles but different masses' points out visible details without explaining a concept or drawing a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The equal particle counts and different particle masses are identifiable in the two samples and their mass labels.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both samples contain six particles, and their particle masses differ: 30 u in A and 17 u in B.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Observing the differing masses does not direct the student toward an incorrect temperature comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint neither identifies the higher-temperature sample nor explains how the mass difference affects kinetic energy.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately compare the particle counts and mass labels, but must determine how to use those observations.",
+    "score": 4
+  }
+}

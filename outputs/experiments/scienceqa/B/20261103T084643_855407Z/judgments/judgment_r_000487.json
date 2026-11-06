@@ -1,0 +1,33 @@
+{
+  "tier_compliance": {
+    "reason": "The hint points only to magnet shapes, without explaining a concept or giving a reasoning procedure, as requested for Tier 1.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "It specifically identifies the magnets in Pair 1 and Pair 2 and their supposed shapes.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The magnets in Pair 1 are rectangular: Pair 1 contains one rectangular magnet and one circular magnet.",
+      "Those in Pair 2 are circular: Pair 2 contains one rectangular magnet and one circular magnet."
+    ],
+    "count": 2
+  },
+  "scientific_correctness": {
+    "reason": "The hint makes no scientific claim about magnetic force; its errors concern the image's contents.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The invented shape difference between the pairs encourages treating them as unequal, whereas both pairs have the same force magnitude.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "It does not state the force comparison or identify or eliminate any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to the shapes in the two named pairs, but leaves the student to determine how to use that comparison.",
+    "score": 3
+  }
+}

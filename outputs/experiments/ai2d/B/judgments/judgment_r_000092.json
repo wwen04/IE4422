@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that the topmost layer ... is labeled E' invites observation of one layer without explaining bedrock or giving a procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies the topmost layer labeled E and the visible plant roots in this soil profile.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The surface soil and visible plant roots are consistent with a soil profile; the hint makes no incorrect claim about bedrock.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint does not identify any offered label as bedrock or give a rule that would select an incorrect option.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It points to a surface layer without identifying bedrock or favoring or eliminating any offered option.", "score": 0},
+  "actionability": {"reason": "It clearly directs attention to E and the plant roots, but leaves the student to work out how this helps locate bedrock.", "score": 3}
+}

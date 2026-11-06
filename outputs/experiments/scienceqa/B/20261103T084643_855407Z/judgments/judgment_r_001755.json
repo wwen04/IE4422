@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that Sample B contains particles with a greater mass' directs attention to one visible comparison without explaining the science or concluding which is hotter.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The mass comparison is identifiable in the image's labels: 34 u per particle in Sample B and 20 u in Sample A.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Sample B's particles do have greater mass, consistent with both the image and the reference solution.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The mass comparison is relevant to the correct kinetic-energy comparison and does not point toward an incorrect answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint identifies a relevant mass difference but does not compare the speeds, explain its effect on kinetic energy, or state which sample is hotter.", "score": 0},
+  "actionability": {"reason": "'Notice' the greater mass gives the student an immediate, specific comparison to check in the two mass labels, while leaving the temperature reasoning to them.", "score": 4}
+}

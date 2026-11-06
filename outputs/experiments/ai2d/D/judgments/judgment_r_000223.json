@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'G is labeled as a bud' states the answer instead of connecting a visible detail to a science idea without deciding the answer.", "verdict": "no"},
+  "visual_grounding": {"reason": "The hint specifically identifies G, which is visible beside the upper bud on the twig.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["'G is labeled as a bud in the diagram': the image shows the letter G, but does not label it with the word 'bud'."], "count": 1},
+  "scientific_correctness": {"reason": "Identifying G as a bud agrees with the gold answer and the depicted twig.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint identifies G, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'G is labeled as a bud' directly gives G as the answer.", "score": 2},
+  "actionability": {"reason": "The hint supplies the answer without giving the student a usable reasoning action.", "score": 1}
+}

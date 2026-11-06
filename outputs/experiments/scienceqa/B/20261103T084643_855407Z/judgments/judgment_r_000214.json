@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice' directs attention to the relevant volume entries without explaining a concept, calculation, or conclusion, as requested for Tier 1.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the Mercury and Mars volume cells, which visibly contain 60 and 160 billion km³.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both quoted volumes match the table and the supplied solution; no scientific error is stated.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint highlights the correct quantities needed to assess the statement without suggesting an incorrect comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It supplies only the visible input values and leaves the three-times comparison and true-or-false decision to the student.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately locate and read the two specific volume entries, though noticing these inputs is a small step.",
+    "score": 4
+  }
+}

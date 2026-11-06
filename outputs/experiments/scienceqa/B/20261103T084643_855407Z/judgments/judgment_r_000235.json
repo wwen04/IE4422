@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint explains the speed–kinetic-energy–temperature relationship but gives no concrete next action; this does not meet Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Both samples have the same number of particles but different average speeds' identifies the two samples and their visible numerical comparison.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "For the equal particle masses shown, the stated relationship between higher average speed, higher average kinetic energy and higher temperature agrees with the supplied solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Following the higher-average-speed criterion leads to sample B, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'The sample with the higher average speed ... [has] a higher temperature' supplies the deciding fact, leaving only a lookup of the two printed speeds.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The higher-speed criterion gives a clear direction, but the student must infer the action of comparing the printed speeds; no concrete reasoning step is requested.",
+    "score": 3
+  }
+}

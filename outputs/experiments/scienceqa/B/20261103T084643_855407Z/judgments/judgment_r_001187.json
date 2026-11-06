@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Each pink ball represents one particle of solute' connects the visible balls to the solute concept without concluding which concentration is higher.", "verdict": "yes"},
+  "visual_grounding": {"reason": "'The same number of pink balls in both beakers' identifies and compares specific visible particles.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The pink balls represent solute particles, and both containers show equal particle counts; neither statement contradicts the reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Comparing equal solute counts is consistent with the equal concentrations shown for the two equal solvent volumes.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Stating that both containers have the same particle count supplies a strong clue; the remaining comparison is the visibly identical 45 mL volumes.", "score": 1},
+  "actionability": {"reason": "The hint directs attention to equal solute counts, but leaves the student to determine how to use the solvent volumes to compare concentration.", "score": 3}
+}

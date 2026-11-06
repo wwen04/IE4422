@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... the lines ... curved compared to the other figures' directs attention to a visual shape without explaining a mechanism or identifying a figure as the answer.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to comparatively bent lines is identifiable in the layer boundaries of figure B, unlike the straight boundaries and fault traces elsewhere.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Associating flexures with bent layer boundaries is consistent with school-level geology and the keyed figure B.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Looking for bent rather than straight layer boundaries directs attention to the keyed figure B.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying that the lines indicating flexures are the curved ones supplies the distinguishing feature for selecting B, without naming that figure as correct.", "score": 1},
+  "actionability": {"reason": "The student can look for curvature, but must determine which lines and figure the hint means because neither is explicitly identified.", "score": 3}
+}

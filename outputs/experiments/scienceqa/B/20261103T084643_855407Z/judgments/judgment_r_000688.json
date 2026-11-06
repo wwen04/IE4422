@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Each purple ball represents one particle of solute' connects a visible object to the solute concept without deciding the answer.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The purple balls in both solutions are specific, visible objects essential to the stated correspondence.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The identification of purple balls as solute particles agrees with the supplied model and reference.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Identifying the solute particles does not favor an incorrect concentration comparison.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint identifies what the balls represent without comparing particle counts or concentrations or favoring an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It identifies the objects to consider as solute, but the student must work out how to use them to compare concentrations.",
+    "score": 3
+  }
+}

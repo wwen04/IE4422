@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "'Option C (H)' identifies the answer instead of only inviting attention to a visual detail.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The reference to the specific label H is needed to understand the hint and is identifiable in the image.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "H is labeled as 'outer protective covering' in the diagram; the image contains the letter H but no such wording."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "H points to the seed's outer covering, consistent with the gold answer and its protective role.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint directs the student to C (H), which is the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'Option C (H)' is explicitly identified as the requested outer protective covering.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It supplies the answer and asks the student to notice wording absent from the image, providing no usable next reasoning move.",
+    "score": 1
+  }
+}

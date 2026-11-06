@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"Bedrock is typically found at the bottom\" supplies the deciding conclusion rather than a small reasoning step for Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "\"The deepest layer in the diagram\" identifies the visible bottom region of this soil profile.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Bedrock lies beneath the soil profile; the deepest depicted layer is labeled B, consistent with the gold answer.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Following the hint points to the deepest layer, labeled B, which is the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Identifying bedrock as the deepest depicted layer states the conclusion that makes label B immediate.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The deepest layer gives a clear place to look, but the hint does not name a reasoning action for the student.",
+    "score": 3
+  }
+}

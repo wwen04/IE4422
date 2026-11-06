@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint directly identifies Z as heart-shaped, giving the answer instead of connecting a visible detail to a useful concept.", "verdict": "no"},
+  "visual_grounding": {"reason": "The reference to the leaf labeled 'Z' identifies a specific leaf visible in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The leaf labeled Z has the heart-shaped outline identified by the gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "It points directly to Z, which is the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'The leaf labeled with the letter Z ... appears to be heart-shaped' states the answer directly.", "score": 2},
+  "actionability": {"reason": "It supplies the answer without offering the student a usable reasoning step.", "score": 1}
+}

@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "\"Notice that the wood fossil is located above...\" invites attention to one spatial detail without explaining age or selecting an answer.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the wood and mammal tooth fossils and their relative positions in this image.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "\"The wood fossil is located above the mammal tooth fossil\": the wood is in the middle gray layer, below the tooth in the top brown layer."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The hint states no scientific principle about fossil ages; its incorrect visual relation is counted under unsupported visual claims.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Placing the wood above the tooth would lead a student using deeper-is-older to select mammal tooth, contrary to the gold answer wood.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The hint supplies a claimed spatial relation but does not state which fossil is older or connect position to either answer.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs the student to inspect the relative positions of two specific fossils immediately, although the supplied relation is incorrect.",
+    "score": 4
+  }
+}

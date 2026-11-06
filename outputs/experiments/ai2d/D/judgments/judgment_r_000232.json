@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "verdict": "no",
+    "reason": "The hint states where the pituitary gland is located instead of suggesting a small reasoning step for the student."
+  },
+  "visual_grounding": {
+    "verdict": "yes",
+    "reason": "The connection between the pituitary gland and hypothalamus refers to the visible stalk joining the small gland to the brain region above it."
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "verdict": "yes",
+    "reason": "The pituitary gland is located near the hypothalamus and is connected to it."
+  },
+  "steers_toward_wrong_answer": {
+    "verdict": "no",
+    "reason": "The hint directs attention to the pituitary gland, which matches the gold answer."
+  },
+  "answer_disclosure": {
+    "score": 2,
+    "reason": "Naming the pituitary gland as the structure near the hypothalamus makes the answer to which gland is found in the brain immediate."
+  },
+  "actionability": {
+    "score": 2,
+    "reason": "The location and connection provide a direction for attention, but the hint gives no concrete action for the student to perform."
+  }
+}

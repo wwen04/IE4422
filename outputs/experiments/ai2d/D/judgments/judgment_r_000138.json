@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'The leaf labeled Z appears to be heart-shaped' supplies the conclusion instead of suggesting a small reasoning step for tier 3.", "verdict": "no"},
+  "visual_grounding": {"reason": "The hint identifies the leaf labeled Z and refers to its visible shape.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The pictured leaf Z is heart-shaped, consistent with the gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint identifies Z, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'The leaf labeled Z appears to be heart-shaped' directly states the answer to the question.", "score": 2},
+  "actionability": {"reason": "The hint gives the answer without a usable next reasoning action for the student.", "score": 1}
+}

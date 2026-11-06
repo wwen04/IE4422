@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"HH, which represents a homozygous dominant genotype\" explains the science concept, exceeding the requested Tier 1 visual observation.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "\"The top left cell ... contains the genotype HH\" identifies a specific, visible cell needed for the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "HH has two dominant H alleles and is correctly described as homozygous dominant.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Identifying HH directs the student toward the correct event and does not suggest an incorrect probability.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Calling HH homozygous dominant supplies the deciding genotype, leaving a trivial count of matching cells and total cells without stating the probability.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "\"Notice ... the top left cell\" gives an immediate, specific observation to make, but supplies the genotype interpretation and leaves the counting step unstated.",
+    "score": 4
+  }
+}

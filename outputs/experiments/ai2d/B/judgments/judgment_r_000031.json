@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "The hint connects the claimed curved surface in figure G to stress or strain, matching a Tier 2 visual-to-concept link.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The reference to the rock surface in figure G identifies a specific figure and is needed for the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The surface of the rock in figure G appears slightly curved or undulating. Figure G instead shows straight surfaces and an inclined break."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The suggested connection between rock deformation and stress or strain is scientifically reasonable; the inaccurate appearance claim is assessed under visual claims.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Attributing curvature to figure G directs attention toward option D (G), whereas the gold answer is option B (B).",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "Calling figure G curved or undulating favors G as the flexure choice without explicitly stating an answer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "Notice the surface in figure G gives a clear viewing direction, but the student must determine how to use the stress-or-strain idea.",
+    "score": 3
+  }
+}

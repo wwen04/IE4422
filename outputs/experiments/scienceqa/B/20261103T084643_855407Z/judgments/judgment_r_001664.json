@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Compare Jupiter's volume ... to Earth's volume' gives a question-specific next step while leaving the factor-of-1,000 reasoning to the student.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies the Jupiter and Earth volume entries, 1.43 x 10^15 km³ and 1.08 x 10^12 km³, which are visible in the table and necessary for its comparison.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The stated volumes match the table and reference; comparing these quantities is relevant to checking the proposed volume ratio.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs attention to the correct two volumes and does not suggest an incorrect relationship or answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It supplies the two table values but does not evaluate their ratio, state the deciding comparison with 1,000 Earth volumes, or favor either option.", "score": 0},
+  "actionability": {"reason": "'Compare' gives a clear direction using specific values, but the student must determine how to test the factor of 1,000.", "score": 3}
+}

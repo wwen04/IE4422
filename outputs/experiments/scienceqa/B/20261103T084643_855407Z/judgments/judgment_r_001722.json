@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"The size of the magnets affects\" states a general science idea without linking it to a specific visible detail, as Tier 2 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies no particular magnet, pair, size difference, label, or other specific image element; it could apply to any magnet-size question.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "\"The size of the magnets affects the strength\" agrees with the supplied lecture and solution.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Focusing on magnet size is relevant to the gold comparison and does not direct the student toward another answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint names a relevant factor but gives neither the size-strength relationship nor a comparison between the pairs, so it does not favour or eliminate an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The hint directs attention broadly to size but gives no concrete action, such as comparing the two B magnets.",
+    "score": 2
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Compare Jupiter's volume ... to Earth's volume' gives a question-specific next step while leaving the thousandfold comparison for the student.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies Jupiter's and Earth's volume entries and quotes the values shown in the table.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The quoted volumes are correct, and comparing these volumes is relevant to checking the stated size ratio.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Comparing the correct Jupiter and Earth volumes supports evaluating the statement and does not suggest a false conclusion.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint supplies the two table values without evaluating their ratio, favouring an option, or stating whether the claim is true.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately compare the two specified volume entries, although the hint leaves them to choose how to test the factor of 1,000.",
+    "score": 4
+  }
+}

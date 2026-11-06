@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Therefore, both samples will have the same temperature' completes the reasoning and gives a conclusion instead of a Tier 2 concept connection.", "verdict": "no"},
+  "visual_grounding": {"reason": "'Both samples have the same number of particles and the same average particle speed' identifies the pictured particles and the matching 1,200 m/s labels, which support its argument.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "'The same average particle speed' does not establish equal kinetic energy when particle masses differ: sample A is 36 u per particle and sample B is 17 u. The claimed equal kinetic energies and temperatures contradict the reference.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "'Both samples will have the same temperature' directs the student to option C, whereas sample A is the gold answer.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "'Both samples will have the same temperature' directly states the conclusion corresponding to option C, even though that conclusion is incorrect.", "score": 2},
+  "actionability": {"reason": "The hint supplies a completed, incorrect argument and conclusion without a usable next action for the student.", "score": 1}
+}

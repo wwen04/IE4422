@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The claim that the brown bottle 'absorbed more thermal energy from its surroundings' applies the concept to infer energy transfer, beyond the requested Tier 2 connection.", "verdict": "no"},
+  "visual_grounding": {"reason": "The comparison that the brown bottle had a higher final temperature is grounded in the table's final temperatures of 25°C and 22°C.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Both bottles begin at 19°C, and the otherwise identical brown bottle warms more; inferring greater net thermal energy absorption is consistent with the reference and school-level science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Energy absorption 'from its surroundings' points toward the gold transfer direction, from the surroundings to the bottles.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying the bottle 'absorbed ... thermal energy from its surroundings' directly supplies the transfer direction that makes option A immediate.", "score": 2},
+  "actionability": {"reason": "The temperature comparison gives a clear direction toward interpreting energy gain, but the student must work out how to use it for both bottles; no concrete next action is specified.", "score": 3}
+}

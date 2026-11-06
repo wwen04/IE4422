@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "“Which means they will pass on the dominant allele M” asserts an inheritance conclusion instead of suggesting a small reasoning step.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint specifically refers to the parents’ M alleles in the Punnett square.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "“Both parents have the dominant allele M” is false: the top parent has m and m, while the left parent has M and m."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "Having a dominant allele does not mean a parent always passes it on. Here the Mm parent can transmit M or m, and the mm parent can transmit only m.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Claiming the parents will pass M to their offspring suggests all offspring have the dominant disease phenotype, leading toward 4:0 instead of 2:2.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "“They will pass on the dominant allele M to their offspring” supplies the erroneous conclusion that all offspring receive M, making the all-affected answer immediate.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The hint gives an erroneous conclusion without a concrete action the student can perform next.",
+    "score": 1
+  }
+}

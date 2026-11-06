@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The instruction to identify organisms with incoming arrows is not tailored to tracing food links from mice and adds an incorrect explanation of arrow meaning.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "\"Arrows pointing towards them from other organisms\" does not identify a particular organism, label, or arrow with specific endpoints.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "\"They are being consumed by those organisms\" reverses the food-web convention: arrows point from food to its consumer.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The reversed arrow interpretation directs the student toward what mice eat instead of the snake and hawk that consume mice.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The hint neither identifies the mouse consumers nor gives their number or rules out an option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "Identifying organisms with incoming arrows is a clear direction, but the student must determine how to apply it to mice.",
+    "score": 3
+  }
+}

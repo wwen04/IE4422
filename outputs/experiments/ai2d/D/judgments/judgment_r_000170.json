@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint applies the claimed egg-shape concept to label B, effectively identifying the answer rather than merely connecting a visible detail to a concept.", "verdict": "no"},
+  "visual_grounding": {"reason": "It specifically refers to the shape shown at label B.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["Label B shows a circular shape."], "count": 1},
+  "scientific_correctness": {"reason": "Calling a circular shape characteristic of an egg is misleading here: the grasshopper egg depicted is elongated, not circular.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "It directs the student to B, the gold answer, despite its inaccurate shape description.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying that label B has the characteristic shape of an egg makes B the immediate answer to which label marks the egg phase.", "score": 2},
+  "actionability": {"reason": "It gives a clear focus on B's shape, but provides no concrete reasoning action and supplies the key identification itself.", "score": 3}
+}

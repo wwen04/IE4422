@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint only identifies Uranus's table value; it does not connect that detail to a useful science idea as Tier 2 requires.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Uranus's volume ... 68,330 billion km³' identifies the Uranus row and its volume entry in the table.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "count": 0,
+    "unsupported_claims": []
+  },
+  "scientific_correctness": {
+    "reason": "The stated volume of 68,330 billion km³ matches the table and contains no scientific error.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint supplies the correct Uranus volume and does not suggest an incorrect comparison or answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "It identifies one supplied value without comparing it with one-tenth of Saturn's volume or favouring either option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It clearly directs attention to Uranus's volume, but the student must work out how to use that value in the comparison.",
+    "score": 3
+  }
+}

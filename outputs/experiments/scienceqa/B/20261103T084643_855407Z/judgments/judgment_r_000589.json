@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Therefore, both samples will have the same temperature” gives a final answer instead of connecting a visible detail to a concept without deciding the answer.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "“Both samples have the same number of particles and the same average particle speed” refers to the matching particle counts and the visible 1,400 m/s labels, which underpin the hint's reasoning.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "“Same average particle speed” does not establish equal kinetic energy when particle masses differ: sample A is 46 u and sample B is 40 u. The claim of equal kinetic energy and temperature is incorrect.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The hint concludes that the temperatures are equal, leading to option A instead of the gold answer, sample A (option C).",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "“Both samples will have the same temperature” directly states the conclusion corresponding to an answer option, although that answer is incorrect.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The hint supplies its own reasoning and final conclusion without giving the student a usable next action.",
+    "score": 1
+  }
+}

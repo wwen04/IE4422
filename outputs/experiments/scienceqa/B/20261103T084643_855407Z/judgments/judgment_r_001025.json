@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "'The orca is depicted' only describes an organism; it gives no concrete reasoning step required for Tier 3.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the pictured, labeled orca and refers to its size and supposed prey placement.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The orca has 'multiple prey items listed above it'; the image shows only one incoming feeding arrow, from the sea otter."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The claim of multiple prey in this food web contradicts the supplied solution, which identifies only the sea otter as the orca's food.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Focusing on the orca's supposed multiple prey would likely direct the student toward orca, whereas the correct option is kelp bass.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "It neither identifies an omnivore nor supplies the producer-and-consumer diet fact that decides the answer; naming the orca alone does not disclose the answer.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The description gives no action for checking diets or determining which organism is an omnivore.",
+    "score": 1
+  }
+}

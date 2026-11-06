@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice that the arrow ... points to the bolete fungus' directs attention to one specific visual detail without explaining the science concept.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies an arrow by its claimed endpoints, silver maple and bolete fungus; that specific visual relation is essential to the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The arrow leading from the silver maple points to the bolete fungus. In the image it points to the beaver."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The hint makes an incorrect visual claim, recorded above, but states no erroneous science concept; matter from the silver maple can reach the bolete fungus through the food web.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Despite the incorrect direct-arrow claim, the hint points the student to bolete fungus, which is the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Saying the arrow from the silver maple points to bolete fungus makes the correct option immediate because the supplied context says arrows show matter movement.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The instruction to notice a particular arrow is concrete, but the claimed arrow does not exist and the stated destination supplies the answer rather than leaving useful reasoning.",
+    "score": 3
+  }
+}

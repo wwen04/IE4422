@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice ... four possible outcomes' directs attention to a visible feature without explaining a concept or solving the question.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The four outcomes correspond to the four visible offspring boxes in this Punnett square.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The square has four outcomes and depicts parents with different genotypes, BB and Bb.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Noticing the total number of outcomes does not direct the student toward an incorrect probability.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint gives no heterozygous count and does not favor or eliminate any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to the four outcomes, but the student must work out how to use them to identify heterozygous offspring.",
+    "score": 3
+  }
+}

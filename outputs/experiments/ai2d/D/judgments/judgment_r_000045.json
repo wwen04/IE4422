@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "Links the visible green vegetation at the top to the idea of a surface layer, without identifying bedrock.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The topmost layer and green vegetation are specific, visible features of this soil profile.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Describing the vegetation-bearing top of the profile as the surface layer is scientifically sound.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Directing attention to the vegetation-bearing top would lead the student away from bedrock at the bottom, labelled B.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It neither identifies bedrock nor rules in or out an answer option.", "score": 0},
+  "actionability": {"reason": "It directs attention to the top and vegetation, but leaves the student to work out how that helps identify bedrock.", "score": 3}
+}

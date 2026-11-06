@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice” directs attention to one visible branching detail without explaining a concept or identifying the flower type.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The reference to label A and branches extending from a central point identifies the pictured lower-middle structure.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The description accurately reflects the radiating branches of the compound umbel and introduces no scientific error.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The central-point branching directs attention toward the gold compound umbel rather than another listed type.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Branches radiating from one central point give the distinguishing umbel feature among the choices, without naming the answer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "The student can immediately inspect where the branches of A originate, then classify the structure.",
+    "score": 4
+  }
+}

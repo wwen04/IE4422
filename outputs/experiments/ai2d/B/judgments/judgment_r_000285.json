@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint directs attention to one visible detail without explaining science or identifying the stone by name.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint identifies the pink stone in the bottom left corner, a specific visible object and location.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The bottom-left stone is visibly pink; the hint makes no incorrect scientific claim.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs attention to the pictured rose quartz, consistent with the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It points to the relevant stone and its location without naming rose quartz or selecting an answer option.", "score": 0},
+  "actionability": {"reason": "The student can immediately inspect the bottom-left stone, then determine its identity.", "score": 4}
+}

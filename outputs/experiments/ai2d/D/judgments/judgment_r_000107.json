@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "Notice directs attention to the arrangement and the moon labeled F, without explaining a science concept or giving a reasoning procedure.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to the moon labeled F identifies a specific visible element.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The diagram shows the progression of phases from left to right.", "The progression starts with the waxing gibbous phase labeled F."], "count": 2},
+  "scientific_correctness": {"reason": "F depicts a waxing gibbous moon; apart from the unsupported description of the diagram ordering, no separate scientific claim contradicts the reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Reading left to right from the first-quarter moon at the top would lead toward the crescent at the upper right, away from the waxing gibbous moon at F.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "Naming the phase at F does not say that it follows first quarter or establish which option is correct.", "score": 0},
+  "actionability": {"reason": "It clearly directs attention to F and an alleged ordering, but leaves the student to determine how to use them to locate the phase after first quarter.", "score": 3}
+}

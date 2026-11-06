@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice' directs attention to the map's color shading without explaining a science concept or drawing a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "'Color shades on the map' does not identify a particular shade, outlined region, or legend element; the advice could apply to any humidity color map.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The visible color scale confirms that colors indicate specific humidity values.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Attending to the color encoding does not direct the student toward an incorrect humidity level.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint names no value and neither favors nor rules out any option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to color shading, but the student must determine which region to inspect and how to use the legend.",
+    "score": 3
+  }
+}

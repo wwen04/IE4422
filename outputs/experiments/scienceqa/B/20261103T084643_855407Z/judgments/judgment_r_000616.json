@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "verdict": "yes",
+    "reason": "The hint directs attention to one table entry without explaining or calculating."
+  },
+  "visual_grounding": {
+    "verdict": "yes",
+    "reason": "Names the specific volume entry for Jupiter in the table."
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "verdict": "yes",
+    "reason": "The stated volume, 1.43 x 10^15 cubic kilometres, matches the table and reference."
+  },
+  "steers_toward_wrong_answer": {
+    "verdict": "no",
+    "reason": "Accurately identifies a relevant value without misleading the comparison."
+  },
+  "answer_disclosure": {
+    "score": 0,
+    "reason": "Gives one visible value but neither compares it with Earth nor favors true or false."
+  },
+  "actionability": {
+    "score": 4,
+    "reason": "The student can immediately locate the volume of Jupiter, but must determine how to use it in the comparison."
+  }
+}

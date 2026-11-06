@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Correspond to different phases of the Moon' supplies the identifying conclusion instead of only pointing to a visual detail, exceeding Tier 1.", "verdict": "no"},
+  "visual_grounding": {"reason": "The hint identifies the visible labels 'A' and 'B' at two positions on the Moon's orbit.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The opposite lunar positions labeled A and B correspond to different phases, consistent with the gold answer and school-level science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs the student toward moon phases, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'Different phases of the Moon' states the identifying conclusion and makes the 'moon phases' option immediate.", "score": 2},
+  "actionability": {"reason": "The hint directs attention to specific labels A and B, but supplies their interpretation without asking the student to perform a further concrete reasoning step.", "score": 3}
+}

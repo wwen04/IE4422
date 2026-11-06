@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Sample A must have a higher temperature' completes the reasoning and gives the answer instead of suggesting a small next step.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'Sample A has particles moving faster' refers to the displayed average speeds of 930 m/s for A and 730 m/s for B.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Average kinetic energy is proportional to absolute temperature, and the conclusion agrees with the reference; the omitted mass comparison does not contradict it.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The stated conclusion selects sample A, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "'Sample A must have a higher temperature' directly states the answer.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "The hint supplies the conclusion without giving the student a usable next action.",
+    "score": 1
+  }
+}

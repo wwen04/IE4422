@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Compare the volumes of Mars and Mercury' gives a small, question-specific reasoning step without calculating the comparison or deciding the answer.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The volumes of Mars and Mercury identify two specific entries in the visible planet table that the student needs to compare.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Comparing the planets' volumes is relevant and scientifically sound; the hint makes no incorrect claim, although it omits the factor of three.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs attention to the relevant quantities and does not assert a comparison or conclusion contrary to the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint supplies neither a volume, a deciding comparison, nor a true-or-false conclusion, and does not favour either option.", "score": 0},
+  "actionability": {"reason": "Comparing the two named volume entries is an immediate concrete action, but the student must still determine how to account for 'three times'.", "score": 4}
+}

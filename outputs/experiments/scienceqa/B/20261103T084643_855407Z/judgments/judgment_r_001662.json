@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint asks the student to compare the numbers of purple particles, a concrete intermediate step, without stating which solution is more concentrated.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The reference to the purple particles in each solution identifies the visible solute particles in the two containers.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Comparing particle numbers is useful here because both containers have 50 mL of solvent; the hint makes no incorrect scientific claim.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Solution A visibly contains more purple particles at the same solvent volume, so the suggested comparison supports the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It requests a comparison without giving its result, favoring an option, or stating the concentration conclusion.", "score": 0},
+  "actionability": {"reason": "The student can immediately count and compare the visible purple particles, while still deciding what the comparison implies for concentration.", "score": 5}
+}

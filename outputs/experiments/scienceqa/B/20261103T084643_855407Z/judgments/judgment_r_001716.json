@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "\"Each cell represents a possible combination of alleles from both parents\" connects visible cells to the genetics concept without calculating the probability.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The reference to four outcomes and \"each cell\" identifies the four visible Punnett-square cells and explains their role.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The claim that the parents have \"different body colors\" conflicts with the b and b labels for both parents; both are bb."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "\"Two guppies with different body colors\" is incorrect for this bb × bb cross: both parents have the recessive golden body color.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Describing different-colored parents suggests a dominant B allele in one parent, which would lead away from the correct all-bb probability of 4/4.",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "The claim of different-colored parents implicitly rules out an all-recessive cross, excluding the correct 4/4 option without stating an answer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "Explaining that each cell combines parental alleles provides a clear focus, but the student must work out how to identify and count homozygous-recessive outcomes.",
+    "score": 3
+  }
+}

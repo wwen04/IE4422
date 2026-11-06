@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint states what the trachea does but gives no concrete reasoning step for the student.", "verdict": "no"},
+  "visual_grounding": {"reason": "The named trachea, pharynx and lungs are identifiable labeled structures in this image and anchor the anatomical claim.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The trachea starts at the larynx and divides into bronchi; describing it as leading from the pharynx into the lungs misleadingly bypasses these connections.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "It presents the trachea as the structure leading into the lungs, steering toward an unlisted structure instead of the bronchus.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It does not identify the bronchus or favour or eliminate any listed option.", "score": 0},
+  "actionability": {"reason": "It supplies an anatomical assertion without a usable next action.", "score": 1}
+}

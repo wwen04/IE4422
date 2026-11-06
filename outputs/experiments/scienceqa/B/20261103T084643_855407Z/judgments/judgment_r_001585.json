@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint supplies the complete atom counts rather than suggesting a small reasoning step for the student.", "verdict": "no"},
+  "visual_grounding": {"reason": "The statement 'one carbon atom and four hydrogen atoms' refers specifically to the atoms shown in this model and its C/H legend.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The model and legend confirm one carbon atom bonded to four hydrogen atoms, consistent with the gold solution.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The supplied atom counts point to the gold formula CH4.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Giving one carbon atom and four hydrogen atoms states the complete composition, making CH4 immediate among the choices.", "score": 2},
+  "actionability": {"reason": "The atom counts give a clear direction for choosing a formula, but the student must infer the action of translating them into symbols and subscripts.", "score": 3}
+}

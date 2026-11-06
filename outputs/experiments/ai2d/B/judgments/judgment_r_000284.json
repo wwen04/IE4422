@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint only points out labels and a claimed position for D; it does not connect a visible detail to a science idea as Tier 2 requires.", "verdict": "no"},
+  "visual_grounding": {"reason": "It specifically refers to the layers labeled A, B, C and D and their position in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["Layer D extends beyond the outermost boundary of the image; its label points to the brown outer rim, which is entirely within the image."], "count": 1},
+  "scientific_correctness": {"reason": "The hint gives no scientific explanation that contradicts school-level science; its inaccurate image description is assessed under visual claims.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Drawing attention to D as outside the other layers does not steer away from the gold answer D.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Describing D as beyond the outermost boundary strongly singles it out as the surrounding layer, without explicitly identifying the layer surrounding the mantle.", "score": 1},
+  "actionability": {"reason": "It directs attention to specific labeled layers, but leaves the student to work out how to use those observations to identify the mantle and its surrounding layer.", "score": 3}
+}

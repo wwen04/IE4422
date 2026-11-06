@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "“Earthworms eat mushrooms” supplies a feeding conclusion that makes an option immediate, rather than connecting a visible detail to a concept without deciding the answer.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The claim specifically identifies the earthworm and mushroom shown in this food web.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "“The food web shows that earthworms eat mushrooms.” No arrow runs from the mushroom to the earthworm."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The claimed mushroom-to-earthworm feeding relationship contradicts the reference: no arrows leave the mushroom in this food web.",
+    "verdict": "no"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The stated feeding relationship leads directly to mushroom (A), whereas the gold answer is snowy owl (C).",
+    "verdict": "yes"
+  },
+  "answer_disclosure": {
+    "reason": "It states the feeding conclusion that makes mushroom the immediate answer, although that answer is wrong.",
+    "score": 2
+  },
+  "actionability": {
+    "reason": "It supplies an incorrect conclusion and gives no usable next reasoning move.",
+    "score": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... the same volume of solvent (50 mL)' directs attention to one visible detail without explaining concentration.", "verdict": "yes"},
+  "visual_grounding": {"reason": "Both flasks have the identifiable label 'Solvent volume: 50 mL', which is the detail the hint asks the student to notice.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The equal 50 mL solvent volumes agree with the image and the reference's use of solute particles per solvent volume.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Noticing equal solvent volumes is relevant and does not suggest an incorrect concentration comparison.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Equal solvent volumes alone neither select nor eliminate an option; the student still needs to compare the purple particles.", "score": 0},
+  "actionability": {"reason": "The student can immediately check the two 50 mL labels, a concrete observation specific to this question.", "score": 4}
+}

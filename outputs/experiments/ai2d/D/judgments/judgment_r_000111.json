@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that the king cobra is connected to multiple arrows' asks the student to notice a specific visual detail without giving a reasoning procedure or answer.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint specifically identifies the king cobra and its connected arrows, so it depends on identifiable elements of this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The king cobra is connected to multiple arrows pointing towards different prey; the food-web arrows point from food toward consumers, and the snake does not have multiple outgoing arrows toward different prey."], "count": 1},
+  "scientific_correctness": {"reason": "'Arrows pointing towards different prey' misinterprets food-web arrows, which point from the food organism to its consumer.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs attention to the king cobra's connections and reverses the predator-prey direction instead of guiding the student to organisms receiving arrows from mice; following it would likely produce the wrong count.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It neither supplies the number of mouse consumers nor rules in or out any answer choice.", "score": 0},
+  "actionability": {"reason": "It clearly directs attention to the king cobra's arrows, but the student must determine how this observation could help count organisms that consume mice.", "score": 3}
+}

@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "\"indicating it is an adult stage\" explains the biological meaning of wings, exceeding the requested Tier 1 observation.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the insect labeled A and its visible wings.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The winged grasshopper at A represents the adult stage, consistent with school-level insect development.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Identifying A as adult does not direct the student away from the egg phase at B.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Calling A an adult rules out the option A as the egg phase, without identifying B as the answer.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "\"Notice that the insect labeled A is shown with wings\" gives an immediate, specific visual inspection to perform.",
+    "score": 4
+  }
+}

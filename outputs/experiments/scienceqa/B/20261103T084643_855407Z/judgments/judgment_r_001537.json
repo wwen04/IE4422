@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint connects the samples' equal particle masses and different average speeds to kinetic energy without identifying which sample has the higher temperature, as requested for Tier 2.", "verdict": "yes"},
+  "visual_grounding": {"reason": "'Both samples have the same mass per particle but different average speeds' refers to the visible mass and average-speed labels under the two containers.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "For equal particle masses, higher average particle speed indicates higher average kinetic energy in the supplied school-level comparison, consistent with the reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Using the displayed average speeds with this relationship supports sample B, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "'The sample with the higher average speed will have a higher average kinetic energy' supplies the deciding comparison, leaving a trivial lookup of the displayed speeds, without naming the answer.", "score": 1},
+  "actionability": {"reason": "The speed-to-kinetic-energy relationship gives a clear direction, but the student must work out the comparison and connect it to temperature.", "score": 3}
+}

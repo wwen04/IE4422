@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'A large predator with a wide range of prey in its diet' supplies a feeding interpretation rather than only inviting attention to a visible detail, exceeding Tier 1.", "verdict": "no"},
+  "visual_grounding": {"reason": "The hint identifies the labeled orca, a specific organism visible in this food web.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The orca is depicted with a wide range of prey in its diet; the image shows only one incoming arrow to the orca, from the sea otter."], "count": 1},
+  "scientific_correctness": {"reason": "Orcas are large predators that can eat varied prey; the hint states no incorrect scientific definition, although its claim about what this food web depicts is unsupported.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Focusing on the orca's purported varied diet would likely draw the student toward orca, whereas the correct option is kelp bass.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "The hint favors the orca option through its diet claim without explicitly naming an answer as correct.", "score": 1},
+  "actionability": {"reason": "'Notice that the orca' gives a clear focus, but supplies an interpretation and leaves the student to determine what visual evidence or comparison to examine.", "score": 3}
+}

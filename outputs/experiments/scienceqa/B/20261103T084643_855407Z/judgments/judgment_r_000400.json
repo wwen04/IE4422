@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice ... the same volume of solvent (25 mL)' directs attention to one visible detail without explaining concentration.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies the two matching 'Solvent volume: 25 mL' labels beneath the containers.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both solvent volumes are 25 mL; noticing this is consistent with comparing particles per solvent volume.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Equal solvent volumes are relevant to the comparison, and the hint does not claim equal concentrations.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The equal-volume observation neither selects nor eliminates an option and leaves the particle comparison to the student.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately compare the two 25 mL labels, but must determine how to use that observation.",
+    "score": 4
+  }
+}

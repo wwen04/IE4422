@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "Calling Kingfisher a predator that preys on smaller organisms supplies the conclusion identifying the carnivore, exceeding Tier 2.", "verdict": "no"},
+  "visual_grounding": {"reason": "The hint specifically identifies Kingfisher and its feeding relation in the food web, supported by arrows from small fish and frog.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Kingfisher eats other animals, so describing it as a predator agrees with school-level science and the gold answer.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint directs the student to Kingfisher, the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "Saying Kingfisher is a predator that preys on other organisms directly supplies the conclusion needed to identify it as the carnivore.", "score": 2},
+  "actionability": {"reason": "The hint provides the deciding conclusion without giving the student a usable next reasoning action.", "score": 1}
+}

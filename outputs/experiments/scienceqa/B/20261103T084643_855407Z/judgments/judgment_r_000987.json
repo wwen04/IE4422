@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "“Notice” the persimmon tree's outgoing arrows directs attention to a relevant visual detail without explaining the concept or giving a conclusion.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The named persimmon tree and arrows pointing from it are specific, identifiable elements needed for the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "The persimmon tree does have arrows pointing to other organisms; the hint makes no incorrect scientific claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Inspecting arrows from the persimmon tree is relevant to tracing its matter and does not misdirect toward the beaver.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint identifies the tree's outgoing arrows without naming recipients, interpreting matter transfer, or favoring either option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "The student can immediately inspect the arrows pointing from the labeled persimmon tree.",
+    "score": 4
+  }
+}

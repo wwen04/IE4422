@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice that Jupiter's volume is listed as 1.43 × 10^15 km^3' points to one relevant table entry without explaining or calculating.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The hint specifically identifies Jupiter's volume entry in the table.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The stated Jupiter volume matches both the table and the supplied reference.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Looking at Jupiter's volume supports the required comparison and does not suggest a false conclusion.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint gives only Jupiter's listed volume; it does not compare it with 1,000 times Earth's volume or favour true or false.", "score": 0},
+  "actionability": {"reason": "The student can immediately locate the specified Jupiter volume entry, though the comparison step remains unspecified.", "score": 4}
+}

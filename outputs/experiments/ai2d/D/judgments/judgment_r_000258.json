@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Which corresponds to the mouth' applies a visible detail to a listed answer rather than connecting B to a useful concept without deciding an answer.", "verdict": "no"},
+  "visual_grounding": {"reason": "'A smiling face with a wide smile' identifies the visible smile, which is necessary to the hint's association with the mouth.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "A smile is formed by the mouth; the hint does not explicitly claim that B labels it.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "'Corresponds to the mouth' favors the mouth option, whereas B's lines point to the ears and the gold answer is ears.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "Naming 'the mouth' favors a listed option, without explicitly identifying what B labels.", "score": 1},
+  "actionability": {"reason": "The hint supplies a mouth association but gives no concrete action for tracing B or identifying its target.", "score": 2}
+}

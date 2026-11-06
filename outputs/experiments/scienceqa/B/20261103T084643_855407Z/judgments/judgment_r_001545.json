@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Compare the volumes of Uranus and Saturn' suggests a small, question-specific reasoning step while leaving the one-tenth comparison to the student.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The volumes of Uranus and Saturn identify two specific entries in the table that the proposed comparison requires.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "Comparing the two planets' volumes is relevant and introduces no scientific error, although the hint omits the one-tenth scaling.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "The hint does not suggest a false relationship or an answer contrary to the gold answer.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It names the quantities to compare without stating their relationship or favouring either true or false.", "score": 0},
+  "actionability": {"reason": "'Compare the volumes' gives a clear direction, but the student must determine how to account for one-tenth of Saturn's volume.", "score": 3}
+}

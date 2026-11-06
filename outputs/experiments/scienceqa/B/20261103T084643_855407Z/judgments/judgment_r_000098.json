@@ -1,0 +1,32 @@
+{
+  "tier_compliance": {
+    "reason": "'Notice that' directs attention to one visual temperature comparison without explaining a concept or giving a procedure.",
+    "verdict": "yes"
+  },
+  "visual_grounding": {
+    "reason": "The comparison identifies the counter and refrigerator rows and their initial temperatures.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [
+      "The vial on the counter started at a lower temperature than the vial in the refrigerator; both initial temperatures are 2.3°C."
+    ],
+    "count": 1
+  },
+  "scientific_correctness": {
+    "reason": "The hint states no scientific principle that contradicts thermal-energy transfer; its incorrect table comparison is assessed as a visual claim.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The erroneous comparison distracts from the temperature increases but does not imply that energy flowed from each vial to its surroundings.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint neither names the transfer direction nor favours or rules out either option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It directs attention to specific initial-temperature entries, but leaves the student to determine how to use them.",
+    "score": 3
+  }
+}

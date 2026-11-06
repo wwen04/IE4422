@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint reads out the two volumes and says Mercury is 'significantly less'; it does not connect those values to the relevant idea of one-tenth.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The specific Mercury and Earth volumes, 60 and 1,090 billion km³, are identifiable entries in the table and central to the hint.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both quoted volumes match the table, and Mercury's volume is substantially smaller than Earth's.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The comparison is consistent with the gold answer and does not direct the student toward false, although it leaves the one-tenth comparison unstated.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Being significantly smaller than Earth does not establish being less than one-tenth; the hint neither states the answer nor supplies the deciding threshold.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It identifies the two relevant values for comparison, but the student must work out that Earth's volume should be divided by ten and then compared with Mercury's.",
+    "score": 3
+  }
+}

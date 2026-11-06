@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint describes the topmost layer but gives no concrete reasoning step toward identifying bedrock.", "verdict": "no"},
+  "visual_grounding": {"reason": "The 'topmost layer' identifies the visible surface layer of the soil profile.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "'Organic matter like soil or topsoil' misleadingly treats soil as organic matter; topsoil contains both mineral particles and organic matter.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "It does not claim that the surface layer is bedrock or direct the student to choose a different label.", "verdict": "no"},
+  "answer_disclosure": {"reason": "It neither identifies bedrock nor favours or eliminates an answer option.", "score": 0},
+  "actionability": {"reason": "A description of the surface layer supplies no usable next step for finding bedrock.", "score": 1}
+}

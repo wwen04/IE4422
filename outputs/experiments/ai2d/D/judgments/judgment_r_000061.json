@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The hint states a purported answer, 'The trachea ... leading directly to both ... lungs,' rather than connecting a visible detail to a concept without deciding the answer.", "verdict": "no"},
+  "visual_grounding": {"reason": "The reference to the labeled trachea and the right and left lungs identifies specific structures essential to the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The trachea is shown as leading directly to both lungs; the diagram instead shows it dividing into bronchi before entering the lungs."], "count": 1},
+  "scientific_correctness": {"reason": "Saying the trachea leads directly to both lungs misidentifies the bronchi's role; the gold answer is bronchus.", "verdict": "no"},
+  "steers_toward_wrong_answer": {"reason": "The hint explicitly directs the student to trachea instead of the correct choice, bronchus.", "verdict": "yes"},
+  "answer_disclosure": {"reason": "It directly supplies trachea as the answer to what leads directly to both lungs, although that answer is incorrect.", "score": 2},
+  "actionability": {"reason": "It offers a clear direction toward the labeled trachea, but gives a conclusion rather than a concrete reasoning action.", "score": 3}
+}

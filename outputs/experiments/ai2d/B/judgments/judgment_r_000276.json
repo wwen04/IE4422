@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "'Notice ... a more slender body' directs attention to one visual body feature, as requested for Tier 1.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The comparison specifically identifies the butterfly's and dragonfly's bodies in this image.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": ["The butterfly in the image has a more slender body compared to the dragonfly."], "count": 1},
+  "scientific_correctness": {"reason": "The error concerns the pictured body shapes; no separate scientific concept contradicts the reference or school science.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Slenderness does not establish any of the alternative claims about body length or color.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint neither identifies the longer body nor favors or eliminates an option.", "score": 0},
+  "actionability": {"reason": "It clearly directs attention to body shape, but leaves the student to determine how that relates to the choices.", "score": 3}
+}

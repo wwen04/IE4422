@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint states an initial-condition inference but gives no concrete reasoning step for the student to perform.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "'The initial temperatures for both greenhouses are the same' identifies the two initial-temperature entries, both 8°C.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Given the context's identical greenhouses, equal initial temperatures support equal initial thermal energy at the school level.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The initial-energy comparison does not suggest either direction of thermal energy transfer or favour the incorrect option.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint neither identifies the transfer direction nor rules in or out either option.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It provides only a statement about the starting conditions, with no usable next move for determining transfer direction.",
+    "score": 1
+  }
+}

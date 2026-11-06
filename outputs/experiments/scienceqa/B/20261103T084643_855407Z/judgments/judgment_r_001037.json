@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "'Consider the possible genotypes ... and their frequencies' is general advice, without a concrete, small reasoning action tailored to this cross.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "The hint identifies no specific label, genotype, or box in the Punnett square.",
+    "verdict": "no"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Using offspring genotypes and their frequencies to determine phenotype probability is scientifically valid.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "Considering offspring genotypes and frequencies is consistent with the correct probability and does not misdirect the student.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "The hint gives no genotype outcomes, phenotype counts, probability, or option elimination.",
+    "score": 0
+  },
+  "actionability": {
+    "reason": "It clearly directs attention to offspring genotypes and frequencies, but leaves the student to determine how to examine or count them.",
+    "score": 3
+  }
+}

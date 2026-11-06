@@ -1,0 +1,30 @@
+{
+  "tier_compliance": {
+    "reason": "The hint supplies the decisive same-volume, more-particles comparison instead of linking an observation to the concentration concept without deciding the answer.",
+    "verdict": "no"
+  },
+  "visual_grounding": {
+    "reason": "It identifies Solution A and Solution B, their equal solvent volumes, and their different numbers of green particles.",
+    "verdict": "yes"
+  },
+  "unsupported_visual_claims": {
+    "unsupported_claims": [],
+    "count": 0
+  },
+  "scientific_correctness": {
+    "reason": "Both solvent volumes are 30 mL, and Solution B has more solute particles; this is consistent with concentration as particles per solvent volume.",
+    "verdict": "yes"
+  },
+  "steers_toward_wrong_answer": {
+    "reason": "The comparison supports Solution B, the gold answer.",
+    "verdict": "no"
+  },
+  "answer_disclosure": {
+    "reason": "Equal solvent volumes and more particles in Solution B give the specific facts that decide the choice, without explicitly stating which has higher concentration.",
+    "score": 1
+  },
+  "actionability": {
+    "reason": "It directs attention to the relevant volume and particle comparison, but the student must infer how to use it to compare concentrations.",
+    "score": 3
+  }
+}

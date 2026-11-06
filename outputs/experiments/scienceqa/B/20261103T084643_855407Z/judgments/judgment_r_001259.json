@@ -1,0 +1,9 @@
+{
+  "tier_compliance": {"reason": "The instruction to notice Uranus's listed volume points to one relevant table entry without explaining or solving.", "verdict": "yes"},
+  "visual_grounding": {"reason": "The Uranus row visibly lists 68,330 under Volume (billions of km³), the specific entry identified by the hint.", "verdict": "yes"},
+  "unsupported_visual_claims": {"unsupported_claims": [], "count": 0},
+  "scientific_correctness": {"reason": "The stated volume and units match the table and introduce no scientific error.", "verdict": "yes"},
+  "steers_toward_wrong_answer": {"reason": "Identifying Uranus's volume supports the required comparison with one-tenth of Saturn's volume.", "verdict": "no"},
+  "answer_disclosure": {"reason": "The hint identifies one relevant value without comparing volumes or favouring either true or false.", "score": 0},
+  "actionability": {"reason": "The student can immediately locate the specified Uranus volume entry, but must determine the comparison step independently.", "score": 4}
+}
