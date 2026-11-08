@@ -1,4 +1,5 @@
 import csv
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -10,6 +11,7 @@ import unittest
 from unittest.mock import Mock, patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
+from zipfile import ZipFile
 
 from http.server import ThreadingHTTPServer
 
@@ -182,17 +184,31 @@ class TutorWebAppTests(unittest.TestCase):
         with patch("ui_server.ensure_data_ready",
                    side_effect=lambda root: events.append("prepare")), \
                 patch("ui_server.ThreadingHTTPServer", FakeServer), \
+                patch("ui_server.TutorWebApp") as make_app, \
                 patch("ui_server.webbrowser.open"):
-            main(["--no-browser"])
+            main(["--no-browser", "--d-judge-package", "d-package.zip"])
         self.assertEqual(events, ["prepare", "server", "serve", "close"])
+        self.assertEqual(
+            make_app.call_args.kwargs["d_judge_package"],
+            Path("d-package.zip"),
+        )
 
     def test_ui_and_question_routes_only_expose_public_question_fields(self):
         status, _, page = self.request("/")
         self.assertEqual(status, 200)
         self.assertIn(b"science hint studio", page.lower())
-        self.assertIn(b"Show inspection report", page)
-        self.assertIn(b"Does visual evidence improve answer accuracy?", page)
-        self.assertIn(b"/review", page)
+        self.assertNotIn(b"Show inspection report", page)
+        self.assertNotIn(b"Does visual evidence improve answer accuracy?", page)
+        self.assertNotIn(b"href=\"/compare\"", page)
+        self.assertNotIn(b"href=\"/review\"", page)
+        status, _, page = self.request("/compare")
+        self.assertEqual(status, 200)
+        self.assertIn(b"Compare what changes", page)
+        self.assertIn(b"Browse the evidence-conditioned hints", page)
+        self.assertIn(b"Human ratings", page)
+        for asset in ("/assets/compare.css", "/assets/compare.js"):
+            status, _, _ = self.request(asset)
+            self.assertEqual(status, 200)
 
         _, _, response = self.request("/api/questions?split=validation")
         self.assertNotIn(b"SECRET", response)
@@ -262,6 +278,183 @@ class TutorWebAppTests(unittest.TestCase):
         self.assertIn("QA reviewer", saved)
         self.assertIn("Looks grounded.", saved)
         self.assertIn(",4,", saved)
+
+    def test_unblinded_comparison_pairs_hints_and_summarizes_ratings(self):
+        self.assertEqual(
+            self.app.hint_comparison(),
+            {"available": False},
+        )
+        output = self.root / "outputs/hint_quality_validation.csv"
+        output.parent.mkdir(parents=True)
+        rows = []
+        for code, first_hint, method in (
+                ("A", "Look at the image.", "direct_visual"),
+                ("B", "The image shows an arrow.", "evidence_guided")):
+            row = {
+                "item_id": "validation_000001",
+                "image_path": str(self.root / "data/final/scienceqa/images/example.png"),
+                "question": self.item["question"],
+                "context": self.item["context"],
+                "choices": "A. A sample choice",
+                "condition_code": code,
+                "hint_level_1": first_hint,
+                "hint_level_2": "Notice a label.",
+                "hint_level_3": "Compare the evidence.",
+                **{field: "" for field in RATING_FIELDS},
+            }
+            if method == "evidence_guided":
+                row["level_1_factual_accuracy_1_to_4"] = "4"
+                row["level_1_image_groundedness_1_to_4"] = "3"
+            rows.append(row)
+
+        with output.open("w", encoding="utf-8-sig", newline="") as stream:
+            writer = csv.DictWriter(stream, fieldnames=CSV_FIELDS)
+            writer.writeheader()
+            writer.writerows(rows)
+        key_path = output.with_name(output.stem + "_key.json")
+        key_path.write_text(json.dumps({
+            "contains_answer_key": False,
+            "created_at": "2026-11-06T12:00:00+00:00",
+            "model": "test-model",
+            "n_questions": 1,
+            "conditions": {
+                "validation_000001": {
+                    "A": "direct_visual",
+                    "B": "evidence_guided",
+                },
+            },
+            "items": {
+                "validation_000001": {"visual_evidence": "Arrow: points upward."},
+            },
+        }), encoding="utf-8")
+
+        status, _, page = self.request("/compare")
+        self.assertEqual(status, 200)
+        self.assertIn(b"/assets/compare.js", page)
+        status, _, body = self.request("/api/hint-comparison")
+        self.assertEqual(status, 200)
+        result = json.loads(body)
+        self.assertTrue(result["available"])
+        self.assertEqual(result["n_questions"], 1)
+        item = result["items"][0]
+        self.assertEqual(item["conditions"]["direct_visual"]["hints"][0],
+                         "Look at the image.")
+        self.assertEqual(item["conditions"]["evidence_guided"]["hints"][0],
+                         "The image shows an arrow.")
+        self.assertEqual(item["visual_evidence"], "Arrow: points upward.")
+        self.assertEqual(
+            result["summary"]["methods"]["evidence_guided"]["levels"]["1"][
+                "factual_accuracy_1_to_4"
+            ],
+            4,
+        )
+        self.assertEqual(
+            result["rating_counts"]["evidence_guided"]["1"][
+                "factual_accuracy_1_to_4"
+            ],
+            1,
+        )
+        self.assertNotIn(b'"condition_code"', body)
+        self.assertNotIn(b'"contains_answer_key"', body)
+        self.assertNotIn(b"SECRET ANSWER", body)
+
+    def test_ui_evaluation_generates_reports_and_preserves_existing_hint_reviews(self):
+        from evaluate_hint_quality import CSV_FIELDS
+
+        review_csv = self.app.hint_review_path()
+        review_csv.parent.mkdir(parents=True)
+        fake_report = {
+            "schema_version": 1,
+            "experiment": "test",
+            "created_at": "2026-11-06T12:00:00+00:00",
+            "model": "test-model",
+            "split": "validation",
+            "data_source": "final",
+            "available_n": 1,
+            "limit_per_split": 1,
+            "protocol": "paired",
+            "n": 1,
+            "baseline": {"label": "Direct", "correct": 1, "accuracy_percent": 100.0},
+            "evidence_guided": {
+                "label": "Guided", "correct": 1, "accuracy_percent": 100.0,
+            },
+            "delta_percentage_points": 0.0,
+            "paired": {
+                "both_correct": 1, "baseline_only_correct": 0,
+                "evidence_guided_only_correct": 0, "both_incorrect": 0,
+            },
+            "by_split": {},
+            "items": [{
+                "split": "validation", "item_id": "validation_000001",
+                "baseline_prediction": "A", "baseline_correct": True,
+                "baseline_response": "A", "evidence_guided_prediction": "A",
+                "evidence_guided_correct": True, "evidence_guided_response": "A",
+                "visual_evidence": "Label: sample",
+            }],
+        }
+
+        from evaluate_visual_evidence import atomic_write_json
+
+        hint_row = {
+            "item_id": "validation_000001",
+            "image_path": str(self.root / "data/final/scienceqa/images/example.png"),
+            "question": self.item["question"],
+            "context": self.item["context"],
+            "choices": "A. A sample choice",
+            "condition_code": "A",
+            "hint_level_1": "Saved review hint",
+            "hint_level_2": "Level two",
+            "hint_level_3": "Level three",
+            **{field: "" for field in RATING_FIELDS},
+        }
+        with review_csv.open("w", encoding="utf-8-sig", newline="") as stream:
+            writer = csv.DictWriter(stream, fieldnames=CSV_FIELDS)
+            writer.writeheader()
+            writer.writerow(hint_row)
+        original_review = review_csv.read_bytes()
+        review_csv.with_name(review_csv.stem + "_key.json").write_text(
+            json.dumps({
+                "contains_answer_key": False,
+                "conditions": {"validation_000001": {"A": "direct_visual"}},
+                "items": {"validation_000001": {"visual_evidence": "Saved evidence"}},
+                "n_questions": 1,
+            }),
+            encoding="utf-8",
+        )
+
+        from unittest.mock import patch
+        import types
+
+        fake_engine = types.ModuleType("qwen_engine")
+        fake_engine.MODEL_ID = "test-model"
+        with patch.dict("sys.modules", {"qwen_engine": fake_engine}), \
+                patch.object(self.app, "get_tutor", return_value=object()), \
+                patch("evaluate_visual_evidence.evaluate", return_value=fake_report) as evaluate_run, \
+                patch("evaluate_visual_evidence.write_csv_report") as write_csv, \
+                patch("evaluate_visual_evidence.write_html_report") as write_html, \
+                patch("evaluate_hint_quality.generate_review_set") as generate_hints:
+            self.app.evaluations["test-run"] = {"status": "running"}
+            self.app.run_evaluation("test-run", 1)
+
+        result = self.app.get_evaluation("test-run")
+        self.assertEqual(result["status"], "complete")
+        self.assertEqual(result["result"]["accuracy_questions"], 1)
+        self.assertFalse(result["result"]["hints_generated"])
+        self.assertEqual(review_csv.read_bytes(), original_review)
+        self.assertEqual(
+            evaluate_run.call_args.kwargs["resume_path"],
+            self.root / "outputs/accuracy_comparison.validation-1.checkpoint.jsonl",
+        )
+        generate_hints.assert_not_called()
+        write_csv.assert_called_once()
+        write_html.assert_called_once()
+        self.assertTrue((self.root / "outputs/accuracy_comparison.json").is_file())
+
+    def test_ui_evaluation_rejects_invalid_sample_size(self):
+        for limit in (0, 26, True, "not-a-number"):
+            with self.subTest(limit=limit), self.assertRaisesRegex(
+                    ValueError, "whole number|from 1 to 25"):
+                self.app.start_evaluation({"limit": limit})
 
     def test_hint_review_save_rejects_invalid_ratings(self):
         output = self.root / "outputs/hint_quality_validation.csv"
@@ -335,6 +528,83 @@ class TutorWebAppTests(unittest.TestCase):
         self.assertIn("style-src 'unsafe-inline'", headers.get("Content-Security-Policy"))
         self.assertIn(b"Report", body)
 
+    def test_experiment_d_package_route_serves_only_case_data_and_images(self):
+        _, _, body = self.request("/api/experiment-d-judge-package")
+        self.assertEqual(json.loads(body), {"available": False})
+
+        image = b"\x89PNG\r\n\x1a\nexperiment-image"
+        image_hash = hashlib.sha256(image).hexdigest()
+        package = self.root / "experiment-d.zip"
+        case_dir = (
+            "20261107/judge_package/attachments/cases/r_000001"
+        )
+        row = {
+            "record_id": "r_000001",
+            "image_file": "image_r_000001.png",
+            "image_sha256": image_hash,
+            "question": "What is shown?",
+            "context": "Read the diagram.",
+            "choices": [{"id": "A", "text": "First"}, {"id": "B", "text": "Second"}],
+            "requested_tier": 2,
+            "hint_text": "Notice the labeled arrow.",
+            "gold_reference": {"option_id": "A", "solution": "PRIVATE REFERENCE"},
+        }
+        with ZipFile(package, "w") as archive:
+            archive.writestr(
+                f"{case_dir}/hints.jsonl",
+                json.dumps(row) + "\n",
+            )
+            archive.writestr(f"{case_dir}/image_r_000001.png", image)
+            archive.writestr(
+                "20261107/judge_package/record_map_PRIVATE.jsonl",
+                '{"private":"PRIVATE MAPPING"}\n',
+            )
+        self.app.d_judge_package = package
+
+        _, _, body = self.request("/api/experiment-d-judge-package")
+        report = json.loads(body)
+        self.assertTrue(report["available"])
+        self.assertEqual(report["n_cases"], 1)
+        case = report["items"][0]
+        self.assertEqual(case["record_id"], "r_000001")
+        self.assertEqual(case["tier"], 2)
+        self.assertNotIn("gold_reference", body.decode("utf-8"))
+        self.assertNotIn("PRIVATE REFERENCE", body.decode("utf-8"))
+        self.assertNotIn("PRIVATE MAPPING", body.decode("utf-8"))
+        self.assertNotIn("image_entry", case)
+
+        status, headers, image_body = self.request(case["image_url"])
+        self.assertEqual(status, 200)
+        self.assertEqual(headers.get_content_type(), "image/png")
+        self.assertEqual(image_body, image)
+
+    def test_experiment_d_package_rejects_bad_image_and_case_ids(self):
+        package = self.root / "bad-experiment-d.zip"
+        case_dir = "20261107/judge_package/attachments/cases/r_000001"
+        row = {
+            "record_id": "r_000001",
+            "image_file": "image_r_000001.png",
+            "image_sha256": hashlib.sha256(b"not an image").hexdigest(),
+            "question": "Question",
+            "context": "",
+            "choices": [],
+            "requested_tier": 1,
+            "hint_text": "Hint",
+        }
+        with ZipFile(package, "w") as archive:
+            archive.writestr(f"{case_dir}/hints.jsonl", json.dumps(row) + "\n")
+            archive.writestr(f"{case_dir}/image_r_000001.png", b"not an image")
+        self.app.d_judge_package = package
+
+        with self.assertRaises(HTTPError) as raised:
+            self.request("/api/experiment-d-judge-package")
+        self.assertEqual(raised.exception.code, 400)
+        self.assertIn(b"Image fingerprint mismatch", raised.exception.read())
+
+        with self.assertRaises(HTTPError) as raised:
+            self.request("/api/experiment-d-image?record_id=../../private")
+        self.assertEqual(raised.exception.code, 400)
+
     def test_inspection_runs_when_question_is_selected_and_display_is_optional(self):
         with patch("ui_server.subprocess.run", wraps=subprocess.run) as run:
             status, _, response = self.request(
@@ -361,14 +631,14 @@ class TutorWebAppTests(unittest.TestCase):
         self.assertIn(b"Reference answer: A", page)
         self.assertEqual(run.call_count, 1)
 
-    def test_run_validation_rejects_missing_student_response(self):
+    def test_run_validation_rejects_invalid_student_choice(self):
         request = Request(
             self.base_url + "/api/jobs",
             data=json.dumps({
                 "split": "validation",
                 "item_id": self.item["item_id"],
                 "mode": "check",
-                "student_answer": "",
+                "student_answer": "INVALID",
                 "explanation": "Reasoning",
             }).encode("utf-8"),
             headers={"Content-Type": "application/json"},
@@ -377,7 +647,35 @@ class TutorWebAppTests(unittest.TestCase):
         with self.assertRaises(HTTPError) as raised:
             urlopen(request, timeout=5)
         self.assertEqual(raised.exception.code, 400)
-        self.assertIn(b"Select the student's answer", raised.exception.read())
+        self.assertIn(b"not one of this question's choices", raised.exception.read())
+
+    def test_check_accepts_answer_with_optional_reasoning(self):
+        for answer, explanation in (("A", ""), ("A", "My reasoning")):
+            with self.subTest(answer=answer, explanation=explanation):
+                with patch("ui_server.threading.Thread") as worker:
+                    status, _, body = self.request("/api/jobs", "POST", {
+                        "mode": "check", "split": "validation",
+                        "item_id": self.item["item_id"],
+                        "student_answer": answer, "explanation": explanation,
+                    })
+                    self.assertEqual(status, 202)
+                    self.assertIn("job_id", json.loads(body))
+                    worker.return_value.start.assert_called_once()
+
+    def test_check_requires_answer_even_when_reasoning_is_provided(self):
+        for answer in (None, "", "   "):
+            for explanation in ("", "My reasoning"):
+                with self.subTest(answer=answer, explanation=explanation):
+                    with patch("ui_server.threading.Thread") as worker:
+                        with self.assertRaises(HTTPError) as raised:
+                            self.request("/api/jobs", "POST", {
+                                "mode": "check", "split": "validation",
+                                "item_id": self.item["item_id"],
+                                "student_answer": answer, "explanation": explanation,
+                            })
+                        self.assertEqual(raised.exception.code, 400)
+                        self.assertIn(b"Select an answer", raised.exception.read())
+                        worker.assert_not_called()
 
     def test_run_rejects_cross_origin_and_non_json_requests(self):
         body = json.dumps({

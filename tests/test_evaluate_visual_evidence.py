@@ -93,6 +93,10 @@ class VisualEvidenceEvaluationTests(unittest.TestCase):
         self.assertEqual(report["items"][0]["baseline_prediction"], "A")
         self.assertEqual(report["items"][0]["evidence_guided_prediction"], "B")
         self.assertNotIn("Secret", str(tutor.ask.call_args_list))
+        evidence_instruction = tutor.ask.call_args_list[1].args[1]
+        self.assertIn("minimum sufficient visual observations", evidence_instruction)
+        self.assertIn("Which arrow points up?", evidence_instruction)
+        self.assertIn("B. up", evidence_instruction)
         self.assertEqual(tutor.ask.call_count, 3)
 
     def test_evaluate_rejects_missing_tutor_and_invalid_limit(self):

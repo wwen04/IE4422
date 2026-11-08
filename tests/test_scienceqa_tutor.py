@@ -69,11 +69,13 @@ class TutorIntegrationTests(unittest.TestCase):
                 return "uncertain"
 
         tutor = FakeTutor()
-        evidence = extract_evidence(tutor, item["image_path"], prompt)
+        evidence = extract_evidence(tutor, item["image_path"], item)
         evidence_prompt = calls[0]
-        self.assertIn("List the visible observations", evidence_prompt)
-        self.assertIn("One observation per line", evidence_prompt)
-        self.assertIn("Do not infer, explain, interpret, predict", evidence_prompt)
+        self.assertIn("minimum sufficient visual observations", evidence_prompt)
+        self.assertIn("Context: Use the arrow labels.", evidence_prompt)
+        self.assertIn("Options: A. left\nB. up", evidence_prompt)
+        self.assertIn("Do not infer scientific meaning", evidence_prompt)
+        self.assertIn("maximum 10", evidence_prompt)
         diagnosis = diagnose(tutor, item["image_path"], prompt, "A", "My reasoning", evidence)
         generate_hint(tutor, item["image_path"], prompt, evidence, diagnosis)
         self.assertEqual(len(calls), 3)
@@ -229,6 +231,23 @@ class TutorIntegrationTests(unittest.TestCase):
         self.assertIsNone(result["hint"])
         self.assertNotIn("Reference explanation", result["feedback"])
         self.assertEqual(tutor.ask.call_count, 2)
+
+    def test_submission_allows_missing_answer_or_reasoning(self):
+        item = runner.load_question(self.root, "validation", self.item["item_id"])
+        reference = runner.load_reference(self.root, "validation", self.item["item_id"])
+        for answer, reasoning, responses, outcome in (
+            (None, "", ["Evidence", "Hint"], "hint"),
+            (reference["gold_option_id"], "", ["Evidence"], "correct"),
+            (None, "My reasoning", ["Evidence", "UNCERTAIN", "Diagnosis", "Hint"], "try_again"),
+        ):
+            with self.subTest(answer=answer, reasoning=reasoning):
+                tutor = Mock()
+                tutor.ask.side_effect = responses
+                result = runner.run_checked_question(tutor, item, reference, answer, reasoning)
+                self.assertEqual(result["outcome"], outcome)
+                self.assertEqual(tutor.ask.call_count, len(responses))
+                if answer is None and reasoning:
+                    self.assertIsNone(result["answer_correct"])
 
     def test_incorrect_answer_gets_a_follow_up_hint(self):
         tutor = Mock()

@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f3">
+  <title>Fieldnotes | Research comparison</title>
+  <link rel="stylesheet" href="/assets/app.css">
+  <link rel="stylesheet" href="/assets/compare.css">
+  <script src="/assets/compare.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Fieldnotes home">
+      <span class="brand-mark" aria-hidden="true">F</span>
+      <span>fieldnotes<span class="brand-period">.</span></span>
+    </a>
+    <div class="topbar-meta">
+      <span class="local-dot"></span>
+      <span>Research view · unblinded</span>
+      <a class="reviewer-nav-link" href="/">Tutor workspace ↗</a>
+      <a class="reviewer-nav-link" href="/review">Blind review ↗</a>
+    </div>
+  </header>
+
+  <main class="compare-shell">
+    <section class="compare-hero">
+      <div class="eyebrow"><span class="eyebrow-line"></span> RESEARCH / SIDE-BY-SIDE RESULTS</div>
+      <h1>Look closer.<br><em>Compare what changes.</em></h1>
+      <p>Explore model answer accuracy and human-rated hint quality as two separate outcomes. Choose a question to compare all three hint levels and the evidence used to guide them.</p>
+      <nav class="section-jump" aria-label="Comparison sections">
+        <a href="#accuracy-section"><span>01</span> Answer accuracy</a>
+        <a href="#hints-section"><span>02</span> Generated hints</a>
+        <a href="#experiment-d-section"><span>03</span> Experiment D</a>
+        <a href="#ratings-section"><span>04</span> Human ratings</a>
+      </nav>
+      <section class="evaluation-launch panel" aria-label="Generate comparison results">
+        <div class="evaluation-launch-copy">
+          <div class="eyebrow">RUN A VALIDATION SAMPLE</div>
+          <strong>Generate results for the dashboard</strong>
+          <p>Scores paired answers and creates paired hint examples with the local Qwen model. Uses validation only; hint quality ratings still need human review.</p>
+        </div>
+        <label class="field evaluation-limit-field">
+          <span>Questions <small>1–25</small></span>
+          <input id="evaluation-limit" type="number" min="1" max="25" value="10" inputmode="numeric">
+        </label>
+        <button id="run-evaluation-button" class="primary-button" type="button">Run comparison <span aria-hidden="true">↗</span></button>
+        <div id="evaluation-status" class="evaluation-status" role="status" aria-live="polite" hidden>
+          <div class="evaluation-status-row"><strong id="evaluation-stage">Preparing…</strong><span id="evaluation-progress-label">0%</span></div>
+          <div class="evaluation-progress-track" role="progressbar" aria-label="Comparison progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="evaluation-progress-bar"></span></div>
+          <p id="evaluation-detail"></p>
+        </div>
+        <div id="evaluation-error" class="evaluation-error" role="alert" hidden></div>
+      </section>
+    </section>
+
+    <section id="accuracy-section" class="compare-section">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">01 / MODEL ANSWERS</div>
+          <h2>Does visual evidence change accuracy?</h2>
+          <p>Same model and question; the guided condition first extracts visual evidence, then checks it against the image.</p>
+        </div>
+        <span class="section-index">01</span>
+      </div>
+      <div id="accuracy-message" class="compare-empty panel" role="status">
+        <strong>No accuracy report found yet.</strong>
+        <span>Run <code>python evaluate_visual_evidence.py</code> to generate the paired answer results.</span>
+      </div>
+      <div id="accuracy-content" hidden>
+        <div id="accuracy-meta" class="report-meta"></div>
+        <div class="accuracy-cards">
+          <article class="metric-card direct-metric">
+            <div class="metric-kicker">DIRECT ANSWER</div>
+            <div class="metric-row"><span>Default prompt</span><strong id="direct-accuracy">—</strong></div>
+            <div class="metric-track"><span id="direct-bar"></span></div>
+            <p id="direct-count" class="metric-caption"></p>
+          </article>
+          <article class="metric-card guided-metric">
+            <div class="metric-kicker">EVIDENCE-GUIDED</div>
+            <div class="metric-row"><span>Project prompt</span><strong id="guided-accuracy">—</strong></div>
+            <div class="metric-track"><span id="guided-bar"></span></div>
+            <p id="guided-count" class="metric-caption"></p>
+          </article>
+          <article id="delta-card" class="delta-card">
+            <span>Accuracy change</span>
+            <strong id="accuracy-delta">—</strong>
+            <p id="delta-caption"></p>
+          </article>
+        </div>
+
+        <div class="accuracy-detail-grid">
+          <article class="panel detail-panel">
+            <div class="mini-heading">
+              <div><span class="eyebrow">PAIRED OUTCOMES</span><h3>What happened to the same questions?</h3></div>
+              <span class="info-dot" title="Counts compare each question under both prompts.">i</span>
+            </div>
+            <div id="paired-bar" class="paired-bar" role="img" aria-label="Paired question outcomes"></div>
+            <div id="paired-legend" class="paired-legend"></div>
+            <p class="chart-note">Each segment is a question, grouped by whether neither, one, or both prompts answered correctly.</p>
+          </article>
+          <article class="panel detail-panel">
+            <div class="mini-heading">
+              <div><span class="eyebrow">BY DATA SPLIT</span><h3>Accuracy across the dataset</h3></div>
+            </div>
+            <div class="table-scroll">
+              <table class="split-table">
+                <thead><tr><th>Split</th><th>Direct</th><th>Evidence-guided</th><th>Change</th></tr></thead>
+                <tbody id="split-rows"></tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+
+        <details class="output-details">
+          <summary>Inspect each model answer and its visual evidence</summary>
+          <div class="output-toolbar">
+            <label class="field">
+              <span>Question result</span>
+              <select id="accuracy-item-select"></select>
+            </label>
+          </div>
+          <div id="accuracy-item-output" class="answer-pair"></div>
+        </details>
+      </div>
+      <p class="interpretation-note"><strong>How to read this:</strong> percentage-point change is the guided accuracy minus direct accuracy. It measures answer choice accuracy on this evaluated sample—not hint usefulness, student learning, or statistical significance.</p>
+    </section>
+
+    <section id="hints-section" class="compare-section">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">02 / GENERATED HINTS</div>
+          <h2>See the hint, the evidence, and the difference</h2>
+          <p>Compare the paired no-evidence and evidence-guided hints for a question. The evidence transcript is model-generated and may be imperfect.</p>
+        </div>
+        <span class="section-index">02</span>
+      </div>
+      <div id="hints-message" class="compare-empty panel" role="status">
+        <strong>No hint comparison set found yet.</strong>
+        <span>Run <code>python evaluate_hint_quality.py --limit 10 --seed 4422</code> to generate the paired hint set.</span>
+        <a href="/review">Open the blinded hint review studio ↗</a>
+      </div>
+      <div id="hints-content" hidden>
+        <div class="hint-toolbar">
+          <div id="hints-meta" class="report-meta"></div>
+          <label class="field question-picker">
+            <span>Compare question</span>
+            <select id="hint-item-select"></select>
+          </label>
+        </div>
+        <div class="question-context-grid">
+          <article class="panel question-context-card">
+            <div class="question-context-copy">
+              <div class="eyebrow">VALIDATION QUESTION <span id="hint-item-position"></span></div>
+              <h3 id="hint-question"></h3>
+              <p id="hint-context" class="context-text"></p>
+              <div id="hint-choices" class="hint-choices"></div>
+            </div>
+            <a id="hint-image-link" class="hint-image-link" target="_blank" rel="noopener noreferrer">
+              <img id="hint-image" alt="Diagram for the selected science question">
+              <span>Open full size ↗</span>
+            </a>
+          </article>
+          <details class="panel evidence-card">
+            <summary><span class="evidence-icon" aria-hidden="true">◎</span><span><strong>Visual evidence supplied to the guided hints</strong><small>Expand to inspect the model-generated observations</small></span></summary>
+            <pre id="hint-evidence"></pre>
+          </details>
+        </div>
+        <div class="hint-comparison-heading">
+          <div><div class="eyebrow">THREE-STEP SCAFFOLD</div><h3>Compare each level side by side</h3></div>
+          <div class="condition-legend"><span class="legend-swatch direct-swatch"></span>No evidence <span class="legend-swatch guided-swatch"></span>With evidence</div>
+        </div>
+        <div id="hint-pair-grid" class="hint-pair-grid"></div>
+      </div>
+    </section>
+
+    <section id="experiment-d-section" class="compare-section">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">03 / EXPERIMENT D</div>
+          <h2>Browse the evidence-conditioned hints</h2>
+          <p>Inspect the D judging sample by case. This view shows the question, original image and generated hint; the judging package does not contain D's evidence transcript.</p>
+        </div>
+        <span class="section-index">03</span>
+      </div>
+      <div id="d-hints-message" class="compare-empty panel" role="status">
+        <strong>No Experiment D judging package connected.</strong>
+        <span>Start the UI with <code>--d-judge-package &lt;path-to-zip&gt;</code> to browse the saved D sample here.</span>
+      </div>
+      <div id="d-hints-content" hidden>
+        <div class="hint-toolbar">
+          <div id="d-hints-meta" class="report-meta"></div>
+          <label class="field question-picker">
+            <span>Experiment D case</span>
+            <select id="d-hint-case-select"></select>
+          </label>
+        </div>
+        <div class="question-context-grid">
+          <article class="panel question-context-card">
+            <div class="question-context-copy">
+              <div class="eyebrow">D JUDGING CASE <span id="d-hint-case-position"></span></div>
+              <h3 id="d-hint-question"></h3>
+              <p id="d-hint-context" class="context-text"></p>
+              <div id="d-hint-choices" class="hint-choices"></div>
+            </div>
+            <a id="d-hint-image-link" class="hint-image-link" target="_blank" rel="noopener noreferrer">
+              <img id="d-hint-image" alt="Diagram for the selected Experiment D case">
+              <span>Open full size ↗</span>
+            </a>
+          </article>
+          <article class="hint-output-card guided-output">
+            <div class="hint-output-heading">
+              <strong>Experiment D · Tier <span id="d-hint-tier"></span></strong>
+              <span id="d-hint-record-id"></span>
+            </div>
+            <p id="d-hint-text" class="hint-copy"></p>
+          </article>
+        </div>
+        <p class="interpretation-note"><strong>Scope:</strong> this is the D judging sample from the ZIP, not the full generated run or a B-versus-D score. It contains hints and images, not evidence transcripts or judge ratings.</p>
+      </div>
+    </section>
+
+    <section id="ratings-section" class="compare-section ratings-section">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">04 / HUMAN REVIEW</div>
+          <h2>What did reviewers think of the hints?</h2>
+          <p>Ratings are summarized by scaffold level and generation method. Blank ratings are excluded; the count shows how many scores support each average.</p>
+        </div>
+        <span class="section-index">04</span>
+      </div>
+      <div id="ratings-message" class="compare-empty panel" role="status" hidden></div>
+      <div id="ratings-content" class="panel ratings-panel" hidden>
+        <div id="ratings-summary-meta" class="ratings-summary-meta"></div>
+        <div class="table-scroll">
+          <table class="ratings-table">
+            <thead>
+              <tr><th>Hint level</th><th>Method</th><th>Accuracy</th><th>Image grounding</th><th>Usefulness</th><th>Leakage</th><th>Unsupported claims</th></tr>
+            </thead>
+            <tbody id="ratings-rows"></tbody>
+          </table>
+        </div>
+        <p class="chart-note">Rating averages use the 1–4 reviewer scale. Leakage and unsupported-claim counts are shown as yes / rated responses; “unclear” leakage ratings are reported separately.</p>
+      </div>
+      <p class="interpretation-note"><strong>Keep outcomes separate:</strong> answer accuracy comes from automatic model answers; hint quality comes from human ratings of generated hints. Neither result alone shows whether students learn more.</p>
+    </section>
+
+    <footer class="page-footer"><span>FIELDNOTES · RESEARCH COMPARISON</span><span>Experimental outputs · not a student assessment</span></footer>
+  </main>
+</body>
+</html>

@@ -19,18 +19,20 @@ def build(destination=None):
     # IE4422: batch experiments A, B and D
 
     Use a fresh **GPU** runtime. This notebook runs experiments separately from the browser tutor.
-    AI2D defaults to its frozen 100-question test sample; ScienceQA uses audited training questions.
+    ScienceQA is selected by default and uses audited training questions; AI2D uses its frozen
+    100-question test sample.
     Select one dataset at a time. You can run A, B and D sequentially in this session on that dataset.
     Each condition is a separate saved run. Do not launch simultaneous runs on the same GPU.
     Generation controls default to off. B and D each produce three independent hint tiers per question.
     D extracts evidence separately for every hint, without caching or learner attempts.
-    D uses the same evidence extractor as the browser tutor: up to 10 brief numbered observations,
-    with types and locations, under a 320-token limit. Evidence is observation-only and unverified.
+    D uses the same minimum-sufficient-observations prompt as the browser tutor. The public question,
+    context and options guide relevance but are not visual evidence. Output is at most 10 concise
+    numbered observations with types and locations under a 320-token limit; evidence is unverified.
     AI2D's same frozen 30 questions supply both B and D judging packages (90 planned hints each).
     ScienceQA reuses the exact 100 judging questions from the completed B run (300 planned hints per condition).
     No judge is called automatically. Keep datasets and condition results separate.
     """)
-    cell("markdown", "## 1. Upload the experiment source ZIP\nUpload the updated **IE4422_Experiments_Source.zip** alongside this notebook to use the numbered-observation evidence pass. This bundle is built separately from the UI source ZIP. Use a fresh runtime when replacing an older bundle.")
+    cell("markdown", "## 1. Upload the experiment source ZIP\nUpload **IE4422_Experiments_Source.zip** to use the minimum-sufficient-observations evidence prompt. For this prompt update, keep the existing notebook and rerun this upload cell and the setup cells with the new source ZIP. This bundle is built separately from the UI source ZIP. Use a fresh runtime when replacing an older bundle.")
     cell("code", """
     from pathlib import Path, PurePosixPath
     from datetime import datetime, timezone
@@ -78,9 +80,9 @@ def build(destination=None):
     from notebooks.experiments_colab import prepare_dataset, run_folder, run_experiment, package_run, summarize_run, import_judgments
     print('Source:', WORK)
     """)
-    cell("markdown", "## 2. Choose the dataset and storage\nUse the same run label across A, B and D. Each saved run belongs to one dataset and one condition. To switch datasets later, change DATASET, rerun this settings cell and Cell 4, then run the required experiment cells. The environment and downloaded model can be reused. Enable resume only for an existing run with the same dataset, label, source and checkpoint.")
+    cell("markdown", "## 2. Choose the dataset and storage\nScienceQA is selected for this run. Its full D experiment uses the 613 audited training questions (1,839 planned hint outputs and up to 3,678 model calls). Use a new run label and keep RESUME=False for the updated prompt. Each saved run belongs to one dataset and one condition. To switch datasets later, change DATASET, rerun this settings cell and Cell 4, then run the required experiment cells. The environment and downloaded model can be reused. Enable resume only for an existing run with the same dataset, label, source and checkpoint.")
     cell("code", """
-    DATASET = 'ai2d'  # @param ['ai2d', 'scienceqa']
+    DATASET = 'scienceqa'  # @param ['scienceqa', 'ai2d']
     USE_DRIVE = True  # @param {type:'boolean'}
     SAVE_MODEL_TO_DRIVE = True  # @param {type:'boolean'}
     REBUILD_DATA = False  # @param {type:'boolean'}
@@ -123,7 +125,7 @@ def build(destination=None):
     for condition, description in (("A", "answer-only check"), ("B", "generic hints"), ("D", "evidence-conditioned hints")):
         instructions = f"## Run {condition}: {description}\nEnable this control when ready. Wait for the previous experiment to finish before running this cell. Each command loads one model, writes every outcome immediately, and exits to release GPU memory."
         if condition == "D":
-            instructions += "\n\nD calls the UI's shared numbered-observation evidence extractor, then the existing tier hint prompt. Evidence stays unverified. For a new D run, set RESUME=False; completed B results can be reused. A D run made with the older JSON evidence prompt requires a new run label."
+            instructions += "\n\nD calls the UI's shared minimum-sufficient-observations evidence prompt, then the existing tier hint prompt. Evidence stays unverified. Set RUN_D=True to start the full selected dataset. For this updated prompt, use a new run label and RESUME=False; completed A/B results can be retained. Do not resume a D run generated with an earlier evidence prompt."
         cell("markdown", instructions)
         cell("code", f"""
         RUN_{condition} = False  # @param {{type:'boolean'}}

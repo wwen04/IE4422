@@ -42,7 +42,8 @@ class ExperimentColabTests(unittest.TestCase):
         for flag in ("RUN_A", "RUN_B", "RUN_D", "PREPARE_B_PACKAGE", "PREPARE_D_PACKAGE", "UPLOAD_JUDGMENTS", "COMPUTE_SUMMARY"):
             self.assertIn(flag + " = False", code)
         self.assertNotIn("ui_server", code)
-        self.assertIn("DATASET = 'ai2d'", code)
+        self.assertIn("DATASET = 'scienceqa'", code)
+        self.assertIn("RUN_D = False", code)
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             path = build(Path(directory) / "rebuilt.ipynb")
             self.assertEqual(json.loads(path.read_text(encoding="utf-8")), notebook)

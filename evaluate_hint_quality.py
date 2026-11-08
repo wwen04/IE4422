@@ -49,7 +49,8 @@ def hint_question(item):
 
 
 def generate_review_set(root=ROOT, limit=10, seed=4422, tutor=None,
-                        output_path=DEFAULT_OUTPUT, model=None):
+                        output_path=DEFAULT_OUTPUT, model=None,
+                        on_progress=None):
     if limit < 1:
         raise ValueError("Question limit must be at least 1.")
     if tutor is None:
@@ -70,10 +71,10 @@ def generate_review_set(root=ROOT, limit=10, seed=4422, tutor=None,
         "items": {},
     }
 
-    for item_id in selected_ids:
+    for index, item_id in enumerate(selected_ids, start=1):
         item = runner.load_question(root, "validation", item_id, "final")
         question = hint_question(item)
-        evidence = extract_evidence(tutor, item["image_path"], question)
+        evidence = extract_evidence(tutor, item["image_path"], item)
         direct_hints = [
             generate_hint_candidate(tutor, item["image_path"], question, level)
             for level in (1, 2, 3)
@@ -109,6 +110,12 @@ def generate_review_set(root=ROOT, limit=10, seed=4422, tutor=None,
             guided_code: "evidence_guided",
         }
         key["items"][item_id] = {"visual_evidence": evidence}
+        if on_progress is not None:
+            on_progress({
+                "completed": index,
+                "total": len(selected_ids),
+                "item_id": item_id,
+            })
 
     random.Random(seed ^ 0xBEEF).shuffle(rows)
     with output_path.open("w", encoding="utf-8-sig", newline="") as stream:

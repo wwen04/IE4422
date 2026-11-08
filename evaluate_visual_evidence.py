@@ -239,7 +239,7 @@ def evaluate(root=ROOT, split="validation", data_source="final", limit=None,
             baseline_response = tutor.ask(
                 item["image_path"], answer_prompt(item), max_new_tokens=32
             )
-            evidence = extract_evidence(tutor, item["image_path"], question)
+            evidence = extract_evidence(tutor, item["image_path"], item)
             guided_response = tutor.ask(
                 item["image_path"],
                 answer_prompt(item, evidence),

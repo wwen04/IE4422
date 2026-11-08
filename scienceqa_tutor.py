@@ -116,7 +116,8 @@ def question_prompt(item):
 
 def run_hint(tutor, item, hint_level=1, on_stage=None):
     result = run_initial_hint(
-        tutor, item["image_path"], question_prompt(item), hint_level, on_stage
+        tutor, item["image_path"], question_prompt(item), hint_level, on_stage,
+        evidence_inputs=item,
     )
     return {"item_id": item["item_id"], "split": item["split"], **result}
 
@@ -127,7 +128,7 @@ def run_checked_question(tutor, item, reference, student_answer_id,
         (choice for choice in item["choices"] if choice["id"] == student_answer_id),
         None,
     )
-    if choice is None:
+    if choice is None and student_answer_id is not None:
         raise ValueError(f"Unknown answer choice: {student_answer_id}")
     reference_text = "\n\n".join(filter(None, (
         reference["lecture"], reference["solution"]
@@ -138,10 +139,11 @@ def run_checked_question(tutor, item, reference, student_answer_id,
         question=question_prompt(item),
         student_answer=student_answer_id,
         student_explanation=explanation,
-        answer_text=f'{choice["id"]}. {choice["text"]}',
+        answer_text=f'{choice["id"]}. {choice["text"]}' if choice else "No answer selected",
         correct_answer_id=reference["gold_option_id"],
         reference=reference_text,
         hint_level=hint_level,
         on_stage=on_stage,
+        evidence_inputs=item,
     )
     return {"item_id": item["item_id"], "split": item["split"], **result}

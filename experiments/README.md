@@ -4,7 +4,7 @@ The batch workflows run independently of the browser tutor. AI2D and ScienceQA s
 
 ## Colab
 
-Open the updated `notebooks/IE4422_Experiments.ipynb` in a fresh GPU runtime and upload the matching `notebooks/IE4422_Experiments_Source.zip` to use the numbered-observation evidence pass. This is a separate notebook/bundle from the browser tutor. Select AI2D (default) or ScienceQA; then enable A, B and D individually. The notebook supports the pinned checkpoint, Drive persistence, interrupted-run resume, package downloads, returned judgment imports and summaries. Generation and judging-package controls default to off. No LLM judge is called by any script here.
+Upload the new `notebooks/IE4422_Experiments_Source.zip` to use the minimum-sufficient-observations evidence prompt; the existing `notebooks/IE4422_Experiments.ipynb` can be kept. Rerun its upload and setup cells, preferably in a fresh GPU runtime. This is a separate notebook/bundle from the browser tutor. Select AI2D (default) or ScienceQA; then enable A, B and D individually. The notebook supports the pinned checkpoint, Drive persistence, interrupted-run resume, package downloads, returned judgment imports and summaries. Generation and judging-package controls default to off. No LLM judge is called by any script here.
 
 One saved run belongs to one dataset and one condition. A single notebook session can run A, then B, then D sequentially on the same prepared selection. Do not start concurrent experiments on the same GPU: each runner loads its own model. To switch datasets later, change `DATASET`, rerun the settings cell and dataset-preparation cell, and then run the desired conditions. The environment and downloaded checkpoint can be reused, while dataset-specific outputs stay separate. Cell 4's software tests deliberately exercise rejected commands; a message ending in `ok` is an expected rejection test. Notebook consistency checks compare parsed JSON so Windows/Linux file line endings do not cause false failures.
 
@@ -49,9 +49,9 @@ A follows one normal path: generate predictions, validate/load reference answers
 | B: generic hints | 300 hints | 300 | None |
 | D: evidence-conditioned hints | 300 planned hint outcomes | 600 if both stages complete | None |
 
-D calls the UI's shared `extract_evidence()` function in `tutor_pipeline.py`, with the same evidence prompt and shared 320-token limit, followed by the shared tier hint prompt (160-token limit). Prompt version `d-ui-prompt-with-evidence-v2` requests at most 10 brief numbered observations with types and locations, covering text, counts, objects, arrows, tables, colour legends and graphs. It explicitly excludes inference and answer-choice evaluation, while preserving letters that are visible image labels. Evidence remains raw text without format or correctness validation or repair. Evidence is regenerated independently for each question-tier pair; there is no cross-tier caching, diagnosis or student attempt. Both prompts, unedited evidence, unedited hint, failure status and timing are saved. Total generation timing includes both stages. Empty/failed evidence leaves a planned failed outcome; it does not trigger quality retries or a generic replacement hint. Model-produced evidence remains unverified, and no structured-evidence correctness claim is made merely because generation completed. This is the batch version of the current no-attempt two-stage method, not an independent evidence verifier.
+D calls the UI's shared `extract_evidence()` function in `tutor_pipeline.py`, with the same evidence prompt and shared 320-token limit, followed by the shared tier hint prompt (160-token limit). The minimum-sufficient-observations prompt uses the public question, context and options to identify relevance; options are not visual evidence. It returns at most 10 concise numbered observations with types and locations, covering relevant objects, labels, counts, measurements, colours, positions, connections, graphs and tables. It excludes inference, calculations, answering and hint generation. Evidence remains raw text without format or correctness validation or repair. Evidence is regenerated independently for each question-tier pair; there is no cross-tier caching, diagnosis or student attempt. Both prompts, unedited evidence, unedited hint, failure status and timing are saved. Total generation timing includes both stages. Empty/failed evidence leaves a planned failed outcome; it does not trigger quality retries or a generic replacement hint. Model-produced evidence remains unverified, and no structured-evidence correctness claim is made merely because generation completed. This is the batch version of the current no-attempt two-stage method, not an independent evidence verifier.
 
-For the first D run with this prompt, use `RESUME=False`; the completed B results can be reused. If a D run already exists with the older JSON evidence prompt, use a new D run label. Resume deliberately rejects changed prompts rather than mixing evidence formats in one run.
+For the first D run with this updated prompt, use a new D run label and `RESUME=False`; completed A/B results can be retained. Do not resume a D run generated with an earlier evidence prompt. Resume deliberately rejects changed prompts rather than mixing evidence formats in one run.
 
 ## Prepare and judge hints
 
@@ -89,6 +89,16 @@ Store returned `judgment_r_000123.json` files under that run's `judgments/`. The
 ```
 
 Add `--answers-run-dir <matching-A-run-folder>` to break down hint scores by A correctness without filtering the judging sample. This join requires the same dataset, public-input fingerprints, checkpoint and image settings. Summaries include the good-hint composite, every component, disclosure distribution and mean actionability overall/per tier. Coverage and missing/invalid judgments are explicit. Conditional metrics use valid judgments only; the good-hint rate over all planned outcomes is available only once all nonempty hints have valid judgments, with failed/empty generations retained in its denominator. No confidence intervals or pooled cross-dataset score are invented. Compare B and D within each dataset; keep their same paired question/tier selections.
+
+## Browse the saved D judging sample in the research UI
+
+The local research comparison page can display the D cases from a judge-package ZIP without extracting or modifying it. Start the UI with the package path:
+
+```powershell
+.\.venv\Scripts\python.exe ui_server.py --d-judge-package "C:\path\to\scienceqa_D_judge_package.zip"
+```
+
+Then open `http://127.0.0.1:8765/compare` and choose a case under **Experiment D**. The page shows its question, image, tier and generated hint. It intentionally does not expose the package's private record map or gold references. The judge package contains only the selected 100-question/300-hint sample; it does not include D's evidence transcripts, returned ratings or the full 1,839-hint run.
 
 ## Files and saved runs
 

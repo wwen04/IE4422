@@ -81,7 +81,13 @@ class HintQualityEvaluationTests(unittest.TestCase):
         self.assertFalse(key["contains_answer_key"])
         self.assertNotIn("SECRET", output.read_text(encoding="utf-8-sig"))
         self.assertNotIn("SECRET", str(tutor.ask.call_args_list))
-        self.assertNotIn("A. first", str(tutor.ask.call_args_list))
+        evidence_calls = tutor.ask.call_args_list[::7]
+        hint_calls = [
+            call for index, call in enumerate(tutor.ask.call_args_list)
+            if index % 7 != 0
+        ]
+        self.assertTrue(all("A. first" in call.args[1] for call in evidence_calls))
+        self.assertTrue(all("A. first" not in call.args[1] for call in hint_calls))
         self.assertEqual(tutor.ask.call_count, 14)
 
     def test_review_summary_validates_ratings_and_reports_method_metrics(self):

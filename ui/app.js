@@ -10,26 +10,18 @@ const reasoningInput = document.querySelector("#reasoning-input");
 const hintLevel = document.querySelector("#hint-level");
 const hintButton = document.querySelector("#hint-button");
 const checkButton = document.querySelector("#check-button");
-const sampleButton = document.querySelector("#sample-button");
-const inspectionButton = document.querySelector("#inspection-button");
-const inspectionFrame = document.querySelector("#inspection-frame");
-const inspectionMessage = document.querySelector("#inspection-message");
 const setupMessage = document.querySelector("#setup-message");
-const demoNotice = document.querySelector("#demo-notice");
 const errorMessage = document.querySelector("#error-message");
-const comparisonMessage = document.querySelector("#comparison-message");
-const comparisonReport = document.querySelector("#comparison-report");
 const hintCard = document.querySelector("#hint-card");
 const hintText = document.querySelector("#hint-text");
 const feedbackCard = document.querySelector("#feedback-card");
 const feedbackText = document.querySelector("#feedback-text");
 const outcomeBadge = document.querySelector("#outcome-badge");
-const resultFile = document.querySelector("#result-file");
 const stageNames = ["evidence", "assessment", "response"];
 
 let selectedQuestion = null;
 let busy = false;
-let inspectionUrl = null;
+
 
 function showMessage(element, message) {
   element.textContent = message;
@@ -44,14 +36,13 @@ async function getJson(url, options) {
 }
 
 function updateRunButton() {
-  const hasAnswer = document.querySelector('input[name="student-answer"]:checked');
   hintButton.disabled = busy || !selectedQuestion;
-  checkButton.disabled = busy || !selectedQuestion || !hasAnswer || !reasoningInput.value.trim();
-  inspectionButton.disabled = !selectedQuestion;
+  checkButton.disabled = busy || !selectedQuestion ||
+    !document.querySelector('input[name="student-answer"]:checked');
   hintButton.querySelector("span:first-child").textContent =
     busy ? "Tutor is thinking…" : "I'm stuck — give me a hint";
   checkButton.querySelector("span:first-child").textContent =
-    busy ? "Tutor is thinking…" : "Check my answer";
+    busy ? "Tutor is thinking…" : "Submit";
 }
 
 function clearResult() {
@@ -64,17 +55,8 @@ function clearResult() {
   hintCard.hidden = true;
   feedbackCard.hidden = true;
   errorMessage.hidden = true;
-  resultFile.hidden = true;
 }
 
-function resetInspection() {
-  inspectionUrl = null;
-  inspectionFrame.hidden = true;
-  inspectionFrame.removeAttribute("src");
-  inspectionButton.textContent = "Show inspection report";
-  inspectionButton.setAttribute("aria-expanded", "false");
-  showMessage(inspectionMessage, "");
-}
 
 function renderQuestion(item) {
   selectedQuestion = item;
@@ -103,7 +85,6 @@ function renderQuestion(item) {
     input.name = "student-answer";
     input.value = choice.id;
     input.addEventListener("change", () => {
-      demoNotice.hidden = true;
       updateRunButton();
     });
     const answerText = document.createElement("span");
@@ -115,15 +96,12 @@ function renderQuestion(item) {
   questionImage.src = item.image_url;
   questionImage.alt = `Diagram for ${item.item_id}`;
   diagramFrame.hidden = false;
-  resetInspection();
-  inspectionUrl = item.inspection_url || null;
   clearResult();
   updateRunButton();
 }
 
 async function loadQuestionList() {
   selectedQuestion = null;
-  resetInspection();
   hintButton.disabled = true;
   checkButton.disabled = true;
   questionSelect.disabled = true;
@@ -195,7 +173,7 @@ function renderResult(result, jobId, outputFile) {
       not_assessed: "Not separately assessed",
     };
     const assessment = [
-      `Selected answer: ${result.answer_correct ? "Correct" : "Not correct yet"}`,
+      `Selected answer: ${result.answer_correct === null ? "Not selected" : result.answer_correct ? "Correct" : "Not correct yet"}`,
       `Explanation: ${explanationLabels[result.explanation_status] || "Unclear"}`,
       result.diagnosis ? `Tutor's reasoning: ${result.diagnosis}` : "",
     ].filter(Boolean);
@@ -213,148 +191,6 @@ function renderResult(result, jobId, outputFile) {
   feedbackCard.hidden = false;
   hintText.textContent = result.hint || "";
   hintCard.hidden = !result.hint;
-  resultFile.href = `/api/results/${encodeURIComponent(jobId)}`;
-  resultFile.textContent = `Download saved result: ${outputFile}`;
-  resultFile.hidden = false;
-}
-
-function comparisonResultCell(prediction, correct, response) {
-  const cell = document.createElement("td");
-  const status = document.createElement("span");
-  status.className = correct ? "comparison-status correct" : "comparison-status incorrect";
-  status.textContent = correct ? "Correct" : "Incorrect";
-  if (prediction) status.textContent += ` · ${prediction}`;
-  const output = document.createElement("pre");
-  output.className = "comparison-output";
-  output.textContent = response || "(No model response)";
-  cell.append(status, output);
-  return cell;
-}
-
-function renderComparison(report) {
-  if (!report.available) return;
-  const total = Number(report.n);
-  const baseline = report.baseline;
-  const guided = report.evidence_guided;
-  const paired = report.paired;
-  const items = report.items;
-  const bySplit = report.by_split;
-  if (!Number.isInteger(total) || total < 1 || !baseline || !guided || !paired
-      || !Array.isArray(items) || items.length !== total
-      || !bySplit || typeof bySplit !== "object") {
-    throw new Error("The comparison report is missing required accuracy results.");
-  }
-  const expectedBaselineCorrect = items.filter(item => item.baseline_correct === true).length;
-  const expectedGuidedCorrect =
-    items.filter(item => item.evidence_guided_correct === true).length;
-  const expectedPaired = {
-    both_correct: items.filter(item =>
-      item.baseline_correct === true && item.evidence_guided_correct === true).length,
-    baseline_only_correct: items.filter(item =>
-      item.baseline_correct === true && item.evidence_guided_correct === false).length,
-    evidence_guided_only_correct: items.filter(item =>
-      item.baseline_correct === false && item.evidence_guided_correct === true).length,
-    both_incorrect: items.filter(item =>
-      item.baseline_correct === false && item.evidence_guided_correct === false).length,
-  };
-  if (baseline.correct !== expectedBaselineCorrect
-      || guided.correct !== expectedGuidedCorrect
-      || Object.entries(expectedPaired).some(([key, count]) => paired[key] !== count)) {
-    throw new Error("The comparison summary does not match its per-question results.");
-  }
-  const baselineAccuracy = expectedBaselineCorrect / total * 100;
-  const guidedAccuracy = expectedGuidedCorrect / total * 100;
-  if (Math.abs(Number(baseline.accuracy_percent) - baselineAccuracy) > 0.01
-      || Math.abs(Number(guided.accuracy_percent) - guidedAccuracy) > 0.01) {
-    throw new Error("The comparison accuracy does not match the per-question results.");
-  }
-  const delta = Number(report.delta_percentage_points);
-  if (!Number.isFinite(delta)
-      || Math.abs(delta - (guidedAccuracy - baselineAccuracy)) > 0.01) {
-    throw new Error("The comparison report contains an invalid accuracy difference.");
-  }
-  comparisonMessage.hidden = true;
-  comparisonReport.hidden = false;
-  const available = Number(report.available_n);
-  document.querySelector("#comparison-meta-text").textContent =
-    `${report.split} split · ${total}` +
-    `${Number.isInteger(available) && available > total ? ` of ${available}` : ""}` +
-    ` questions · ${report.model} · ${report.created_at}`;
-
-  const splitRows = document.querySelector("#comparison-split-rows");
-  splitRows.replaceChildren();
-  for (const [split, metrics] of Object.entries(bySplit)) {
-    const row = document.createElement("tr");
-    const splitCell = document.createElement("th");
-    splitCell.scope = "row";
-    splitCell.textContent = `${split} · ${metrics.n} items`;
-    const defaultCell = document.createElement("td");
-    defaultCell.textContent =
-      `${metrics.baseline.accuracy_percent.toFixed(2)}%`;
-    const guidedCell = document.createElement("td");
-    guidedCell.textContent =
-      `${metrics.evidence_guided.accuracy_percent.toFixed(2)}%`;
-    const deltaCell = document.createElement("td");
-    const splitDelta = Number(metrics.delta_percentage_points);
-    deltaCell.textContent =
-      `${splitDelta > 0 ? "+" : ""}${splitDelta.toFixed(2)} pp`;
-    row.append(splitCell, defaultCell, guidedCell, deltaCell);
-    splitRows.append(row);
-  }
-
-  for (const [prefix, metric] of [["baseline", baseline], ["guided", guided]]) {
-    const accuracy = Number(metric.accuracy_percent);
-    if (!Number.isFinite(accuracy) || accuracy < 0 || accuracy > 100) {
-      throw new Error("The comparison report contains an invalid accuracy value.");
-    }
-    document.querySelector(`#${prefix === "baseline" ? "baseline" : "guided"}-accuracy`)
-      .textContent = `${accuracy.toFixed(2)}%`;
-    document.querySelector(`#${prefix}-bar`).style.width = `${accuracy}%`;
-    document.querySelector(`#${prefix}-count`).textContent =
-      `${metric.correct} of ${total} answers correct`;
-  }
-
-  const deltaCard = document.querySelector("#comparison-delta");
-  deltaCard.classList.toggle("positive", delta > 0);
-  deltaCard.classList.toggle("negative", delta < 0);
-  document.querySelector("#delta-value").textContent =
-    `${delta > 0 ? "+" : ""}${delta.toFixed(2)} percentage points`;
-  document.querySelector("#paired-counts").textContent =
-    `${paired.evidence_guided_only_correct} improved · ` +
-    `${paired.baseline_only_correct} regressed · ${paired.both_correct} both correct`;
-
-  const rows = document.querySelector("#comparison-rows");
-  rows.replaceChildren();
-  for (const item of items) {
-    const row = document.createElement("tr");
-    const questionCell = document.createElement("th");
-    questionCell.scope = "row";
-    questionCell.textContent = item.item_id;
-    row.append(questionCell);
-    row.append(
-      comparisonResultCell(
-        item.baseline_prediction, item.baseline_correct, item.baseline_response,
-      ),
-      comparisonResultCell(
-        item.evidence_guided_prediction,
-        item.evidence_guided_correct,
-        item.evidence_guided_response,
-      ),
-    );
-    const evidenceCell = document.createElement("td");
-    evidenceCell.className = "comparison-evidence";
-    evidenceCell.textContent = item.visual_evidence || "(No evidence output)";
-    row.append(evidenceCell);
-    rows.append(row);
-  }
-}
-
-async function loadComparison() {
-  try {
-    renderComparison(await getJson("/api/comparison"));
-  } catch (error) {
-    showMessage(comparisonMessage, `Comparison report unavailable: ${error.message}`);
-  }
 }
 
 async function pollJob(jobId) {
@@ -388,7 +224,7 @@ async function pollJob(jobId) {
 async function runTutor(mode) {
   if (busy || !selectedQuestion) return;
   const selected = document.querySelector('input[name="student-answer"]:checked');
-  if (mode === "check" && (!selected || !reasoningInput.value.trim())) return;
+  if (mode === "check" && !selected) return;
 
   busy = true;
   errorMessage.hidden = true;
@@ -403,7 +239,7 @@ async function runTutor(mode) {
         mode,
         split: splitSelect.value,
         item_id: selectedQuestion.item_id,
-        student_answer: mode === "check" ? selected.value : null,
+        student_answer: mode === "check" ? (selected?.value || null) : null,
         explanation: mode === "check" ? reasoningInput.value.trim() : null,
         hint_level: Number(hintLevel.value),
       }),
@@ -421,37 +257,6 @@ async function runTutor(mode) {
     busy = false;
     updateRunButton();
   }
-}
-
-function toggleInspection() {
-  if (!selectedQuestion) return;
-  if (!inspectionFrame.hidden) {
-    inspectionFrame.hidden = true;
-    inspectionButton.textContent = "Show inspection report";
-    inspectionButton.setAttribute("aria-expanded", "false");
-    return;
-  }
-
-  if (!inspectionUrl) {
-    showMessage(inspectionMessage, "The inspection report is not available for this question.");
-    return;
-  }
-
-  inspectionFrame.src = inspectionUrl;
-  inspectionFrame.hidden = false;
-  inspectionButton.textContent = "Hide inspection report";
-  inspectionButton.setAttribute("aria-expanded", "true");
-  updateRunButton();
-}
-
-function loadDemoResponse() {
-  const firstOption = document.querySelector('input[name="student-answer"]');
-  if (!firstOption) return;
-  firstOption.checked = true;
-  reasoningInput.value = "The extra nutrients may help the bacteria produce more insulin.";
-  hintLevel.value = "1";
-  demoNotice.hidden = false;
-  updateRunButton();
 }
 
 async function initialize() {
@@ -473,17 +278,13 @@ async function initialize() {
     showMessage(setupMessage, error.message);
   }
   await loadQuestionList();
-  await loadComparison();
 }
 
 splitSelect.addEventListener("change", loadQuestionList);
 questionSelect.addEventListener("change", loadSelectedQuestion);
 reasoningInput.addEventListener("input", () => {
-  demoNotice.hidden = true;
   updateRunButton();
 });
-sampleButton.addEventListener("click", loadDemoResponse);
-inspectionButton.addEventListener("click", toggleInspection);
 hintButton.addEventListener("click", () => runTutor("hint"));
 checkButton.addEventListener("click", () => runTutor("check"));
 initialize();

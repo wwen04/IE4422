@@ -2,6 +2,7 @@
 
 import argparse
 import csv
+import hashlib
 import html
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
@@ -14,6 +15,7 @@ import subprocess
 import sys
 import threading
 import traceback
+import zipfile
 from urllib.parse import parse_qs, urlencode, urlparse
 import uuid
 import webbrowser
@@ -100,11 +102,15 @@ def ensure_data_ready(root=ROOT):
 
 class TutorWebApp:
     def __init__(self, root=ROOT, model_path=None, persistent_output=None,
-                 allowed_origins=(), frame_ancestors=(), splits=runner.SPLITS, instance_id=None):
+                 allowed_origins=(), frame_ancestors=(), splits=runner.SPLITS, instance_id=None,
+                 d_judge_package=None):
         self.root = Path(root).resolve()
         self.model_path = model_path
         self.instance_id = instance_id or uuid.uuid4().hex
         self.persistent_output = Path(persistent_output) if persistent_output else None
+        self.d_judge_package = (
+            Path(d_judge_package).resolve() if d_judge_package else None
+        )
         self.allowed_origins = {validate_origin(value) for value in allowed_origins}
         self.frame_ancestors = tuple(validate_origin(value) for value in frame_ancestors)
         self.splits = tuple(splits)
@@ -117,6 +123,12 @@ class TutorWebApp:
         self.tutor = None
         self.inspection_lock = threading.Lock()
         self.review_lock = threading.Lock()
+        self.evaluation_lock = threading.Lock()
+        self.evaluations = {}
+        self.evaluations_lock = threading.Lock()
+        self.evaluation_running = False
+        self.d_judge_package_lock = threading.Lock()
+        self._d_judge_package_cache = None
 
     def generate_inspection(self, split, item_id):
         self.check_split(split)
@@ -202,11 +214,15 @@ class TutorWebApp:
         item = runner.load_question(self.root, split, item_id, data_source="final")
         reference = None
         if mode == "check":
-            if not isinstance(answer, str) or not answer.strip():
-                raise ValueError("Select the student's answer before checking it.")
-            if not isinstance(explanation, str) or not explanation.strip():
-                raise ValueError("Enter the student's reasoning before checking it.")
-            if answer not in {choice["id"] for choice in item["choices"]}:
+            if answer is not None and not isinstance(answer, str):
+                raise ValueError("The selected answer must be text.")
+            if explanation is not None and not isinstance(explanation, str):
+                raise ValueError("The reasoning must be text.")
+            answer = answer.strip() or None if answer is not None else None
+            if answer is None:
+                raise ValueError("Select an answer before submitting.")
+            explanation = (explanation or "").strip()
+            if answer is not None and answer not in {choice["id"] for choice in item["choices"]}:
                 raise ValueError("The selected answer is not one of this question's choices.")
             reference = runner.load_reference(
                 self.root, split, item_id, data_source="final"
@@ -299,6 +315,173 @@ class TutorWebApp:
                 error=f"{type(error).__name__}: {error}",
             )
 
+    def start_evaluation(self, payload):
+        raw_limit = payload.get("limit", 10)
+        if isinstance(raw_limit, bool):
+            raise ValueError("Question count must be a whole number from 1 to 25.")
+        try:
+            limit = int(raw_limit)
+        except (TypeError, ValueError) as error:
+            raise ValueError("Question count must be a whole number from 1 to 25.") from error
+        if not 1 <= limit <= 25:
+            raise ValueError("Question count must be from 1 to 25.")
+        self.check_split("validation")
+
+        with self.evaluations_lock:
+            if self.evaluation_running:
+                raise ValueError("A comparison evaluation is already running.")
+            self.evaluation_running = True
+            job_id = uuid.uuid4().hex
+            self.evaluations[job_id] = {
+                "job_id": job_id,
+                "status": "running",
+                "stage": "queued",
+                "stage_label": "Waiting to start",
+                "progress": 0,
+                "completed": 0,
+                "total": limit,
+                "current_item": None,
+                "error": None,
+            }
+
+        worker = threading.Thread(
+            target=self.run_evaluation,
+            args=(job_id, limit),
+            daemon=True,
+        )
+        worker.start()
+        return job_id
+
+    def get_evaluation(self, job_id):
+        with self.evaluations_lock:
+            job = self.evaluations.get(job_id)
+            return dict(job) if job else None
+
+    def update_evaluation(self, job_id, **updates):
+        with self.evaluations_lock:
+            self.evaluations[job_id].update(updates)
+
+    def run_evaluation(self, job_id, limit):
+        try:
+            with self.inference_lock:
+                self.update_evaluation(
+                    job_id,
+                    stage="loading_model",
+                    stage_label="Loading the vision model",
+                    progress=2,
+                )
+                tutor = self.get_tutor()
+                from evaluate_hint_quality import generate_review_set
+                from evaluate_visual_evidence import (
+                    atomic_write_json,
+                    evaluate,
+                    write_csv_report,
+                    write_html_report,
+                )
+                from qwen_engine import MODEL_ID
+
+                output_dir = self.root / "outputs"
+                output_dir.mkdir(parents=True, exist_ok=True)
+                report_path = output_dir / "accuracy_comparison.json"
+                checkpoint = (
+                    output_dir / f"accuracy_comparison.validation-{limit}.checkpoint.jsonl"
+                )
+
+                def report_progress(progress):
+                    completed = progress["completed"]
+                    total = progress["total"]
+                    self.update_evaluation(
+                        job_id,
+                        stage="answer_accuracy",
+                        stage_label="Comparing direct and evidence-guided answers",
+                        progress=5 + round(completed / total * 70),
+                        completed=completed,
+                        total=total,
+                        current_item=progress["item_id"],
+                    )
+
+                report = evaluate(
+                    root=self.root,
+                    split="validation",
+                    data_source="final",
+                    limit=limit,
+                    tutor=tutor,
+                    model=MODEL_ID,
+                    resume_path=checkpoint,
+                    on_progress=report_progress,
+                )
+                atomic_write_json(report_path, report)
+                write_csv_report(report_path.with_suffix(".csv"), report)
+                write_html_report(report_path.with_suffix(".html"), report)
+                self.update_evaluation(
+                    job_id,
+                    stage="hints",
+                    stage_label="Preparing paired hint examples",
+                    progress=78,
+                    current_item=None,
+                )
+
+                hint_csv = self.hint_review_path()
+                hint_key = hint_csv.with_name(hint_csv.stem + "_key.json")
+                if hint_csv.exists() != hint_key.exists():
+                    raise RuntimeError(
+                        "The hint review files are incomplete. Keep both "
+                        "hint_quality_validation.csv and its _key.json together."
+                    )
+                hints_generated = not hint_csv.exists()
+                if hints_generated:
+                    def report_hint_progress(progress):
+                        completed = progress["completed"]
+                        total = progress["total"]
+                        self.update_evaluation(
+                            job_id,
+                            stage="hints",
+                            stage_label="Generating paired hint examples",
+                            progress=78 + round(completed / total * 18),
+                            completed=completed,
+                            total=total,
+                            current_item=progress["item_id"],
+                        )
+
+                    generate_review_set(
+                        root=self.root,
+                        limit=limit,
+                        tutor=tutor,
+                        output_path=hint_csv,
+                        model=MODEL_ID,
+                        on_progress=report_hint_progress,
+                    )
+                result = {
+                    "accuracy_questions": report["n"],
+                    "hint_questions": (
+                        json.loads(hint_key.read_text(encoding="utf-8"))["n_questions"]
+                        if hint_key.exists() else 0
+                    ),
+                    "hints_generated": hints_generated,
+                    "accuracy_report": str(report_path),
+                    "hint_review": str(hint_csv),
+                }
+            self.update_evaluation(
+                job_id,
+                status="complete",
+                stage="complete",
+                stage_label="Results are ready",
+                progress=100,
+                result=result,
+            )
+        except Exception as error:
+            traceback.print_exc()
+            self.update_evaluation(
+                job_id,
+                status="failed",
+                stage="failed",
+                stage_label="Evaluation stopped",
+                error=f"{type(error).__name__}: {error}",
+            )
+        finally:
+            with self.evaluations_lock:
+                self.evaluation_running = False
+
     def status(self):
         counts = {}
         for split in self.splits:
@@ -321,8 +504,230 @@ class TutorWebApp:
             raise ValueError(f"Invalid comparison report: {report_path}")
         return {**report, "available": True}
 
+    def hint_comparison(self):
+        import evaluate_hint_quality as review_tools
+
+        review_path = self.hint_review_path()
+        key_path = review_path.with_name(review_path.stem + "_key.json")
+        if not review_path.is_file() or not key_path.is_file():
+            return {"available": False}
+
+        key = json.loads(key_path.read_text(encoding="utf-8"))
+        if (not isinstance(key, dict) or key.get("contains_answer_key") is not False
+                or not isinstance(key.get("conditions"), dict)
+                or not isinstance(key.get("items"), dict)):
+            raise ValueError(f"Invalid hint comparison key: {key_path}")
+
+        with review_path.open(encoding="utf-8-sig", newline="") as stream:
+            reader = csv.DictReader(stream)
+            if reader.fieldnames is None or not set(review_tools.CSV_FIELDS).issubset(
+                    reader.fieldnames):
+                raise ValueError(f"Hint review sheet has an invalid header: {review_path}")
+            rows = list(reader)
+
+        grouped = {}
+        for line_number, row in enumerate(rows, start=2):
+            item_id = row["item_id"]
+            code = row["condition_code"]
+            code_map = key["conditions"].get(item_id, {})
+            method = code_map.get(code) if isinstance(code_map, dict) else None
+            if (not isinstance(item_id, str)
+                    or not re.fullmatch(r"validation_\d{6}", item_id)
+                    or method not in ("direct_visual", "evidence_guided")):
+                raise ValueError(
+                    f"Hint review row {line_number} is not present in the comparison key."
+                )
+            item = grouped.setdefault(item_id, {
+                "item_id": item_id,
+                "question": row["question"],
+                "context": row["context"],
+                "choices": row["choices"],
+                "image_url": (
+                    "/api/image?" + urlencode({
+                        "split": "validation",
+                        "item_id": item_id,
+                    })
+                ),
+                "conditions": {},
+            })
+            if method in item["conditions"]:
+                raise ValueError(
+                    f"Duplicate {method} hint row for validation question {item_id}."
+                )
+            item["conditions"][method] = {
+                "hints": [row[f"hint_level_{level}"] for level in (1, 2, 3)],
+                "ratings": {
+                    field: row.get(field, "")
+                    for field in self.hint_review_rating_fields()
+                },
+            }
+
+        items = []
+        for item_id, item in grouped.items():
+            if set(item["conditions"]) != {"direct_visual", "evidence_guided"}:
+                raise ValueError(
+                    f"Expected both hint conditions for validation question {item_id}."
+                )
+            runner.load_question(self.root, "validation", item_id, data_source="final")
+            item_key = key["items"].get(item_id, {})
+            evidence = (
+                item_key.get("visual_evidence")
+                if isinstance(item_key, dict) else None
+            )
+            items.append({
+                **item,
+                "visual_evidence": evidence if isinstance(evidence, str) else "",
+            })
+
+        summary = review_tools.summarize_reviews(review_path, key_path)
+        rating_counts = {
+            method: {
+                str(level): {
+                    dimension: sum(
+                        item["conditions"][method]["ratings"][
+                            f"level_{level}_{dimension}"
+                        ] in ("1", "2", "3", "4")
+                        for item in items
+                    )
+                    for dimension in (
+                        "factual_accuracy_1_to_4",
+                        "image_groundedness_1_to_4",
+                        "pedagogical_usefulness_1_to_4",
+                    )
+                }
+                for level in (1, 2, 3)
+            }
+            for method in ("direct_visual", "evidence_guided")
+        }
+        return {
+            "available": True,
+            "created_at": key.get("created_at"),
+            "model": key.get("model"),
+            "n_questions": len(items),
+            "summary": summary,
+            "rating_counts": rating_counts,
+            "items": items,
+        }
+
     def hint_review_path(self):
         return self.root / "outputs/hint_quality_validation.csv"
+
+    def experiment_d_judge_package(self):
+        if self.d_judge_package is None:
+            return {"available": False}
+        cases = self._load_experiment_d_judge_package()
+        return {
+            "available": True,
+            "name": self.d_judge_package.stem,
+            "n_cases": len(cases),
+            "items": [
+                {key: value for key, value in case.items() if key != "image_entry"}
+                for case in cases
+            ],
+        }
+
+    def experiment_d_judge_image(self, record_id):
+        if not isinstance(record_id, str) or not re.fullmatch(r"r_\d{6}", record_id):
+            raise ValueError("Invalid Experiment D case ID.")
+        cases = self._load_experiment_d_judge_package()
+        case = next((item for item in cases if item["record_id"] == record_id), None)
+        if case is None:
+            raise FileNotFoundError(f"Experiment D image not found for {record_id}.")
+        with zipfile.ZipFile(self.d_judge_package) as archive:
+            return archive.read(case["image_entry"])
+
+    def _load_experiment_d_judge_package(self):
+        with self.d_judge_package_lock:
+            if self._d_judge_package_cache is not None:
+                return self._d_judge_package_cache
+            if self.d_judge_package is None:
+                raise FileNotFoundError("No Experiment D judging package is connected.")
+            if not self.d_judge_package.is_file():
+                raise FileNotFoundError(
+                    f"Experiment D judging package not found: {self.d_judge_package}"
+                )
+            try:
+                with zipfile.ZipFile(self.d_judge_package) as archive:
+                    entries = archive.infolist()
+                    if len(entries) > 2000 or sum(item.file_size for item in entries) > 128 * 1024 * 1024:
+                        raise ValueError("Experiment D judging package is larger than supported.")
+                    files = {item.filename: item for item in entries if not item.is_dir()}
+                    case_entries = {}
+                    for filename, info in files.items():
+                        match = re.fullmatch(
+                            r"(?:[^/]+/)?(?:judge_package/)?attachments/cases/"
+                            r"(r_\d{6})/hints\.jsonl",
+                            filename,
+                        )
+                        if match:
+                            if match.group(1) in case_entries:
+                                raise ValueError("Duplicate case in Experiment D judging package.")
+                            case_entries[match.group(1)] = (filename, info)
+                    if not case_entries:
+                        raise ValueError(
+                            "No judging cases found in the Experiment D package."
+                        )
+
+                    cases = []
+                    for record_id, (hints_entry, info) in sorted(case_entries.items()):
+                        if info.file_size > 128 * 1024:
+                            raise ValueError(f"Experiment D case is too large: {record_id}.")
+                        raw = archive.read(hints_entry).decode("utf-8")
+                        lines = [line for line in raw.splitlines() if line.strip()]
+                        if len(lines) != 1:
+                            raise ValueError(
+                                f"Expected exactly one hint in Experiment D case {record_id}."
+                            )
+                        row = json.loads(lines[0])
+                        image_name = f"image_{record_id}.png"
+                        image_entry = hints_entry.rsplit("/", 1)[0] + "/" + image_name
+                        image_info = files.get(image_entry)
+                        if (not isinstance(row, dict)
+                                or row.get("record_id") != record_id
+                                or row.get("image_file") != image_name
+                                or type(row.get("requested_tier")) is not int
+                                or row["requested_tier"] not in (1, 2, 3)
+                                or not isinstance(row.get("question"), str)
+                                or not isinstance(row.get("context"), str)
+                                or not isinstance(row.get("hint_text"), str)
+                                or not isinstance(row.get("choices"), list)
+                                or image_info is None
+                                or image_info.file_size > 8 * 1024 * 1024):
+                            raise ValueError(
+                                f"Invalid or incomplete Experiment D case {record_id}."
+                            )
+                        choices = []
+                        for choice in row["choices"]:
+                            if (not isinstance(choice, dict)
+                                    or not isinstance(choice.get("id"), str)
+                                    or not isinstance(choice.get("text"), str)):
+                                raise ValueError(
+                                    f"Invalid choices in Experiment D case {record_id}."
+                                )
+                            choices.append({"id": choice["id"], "text": choice["text"]})
+                        image = archive.read(image_entry)
+                        if (not image.startswith(b"\x89PNG\r\n\x1a\n")
+                                or hashlib.sha256(image).hexdigest() != row.get("image_sha256")):
+                            raise ValueError(
+                                f"Image fingerprint mismatch in Experiment D case {record_id}."
+                            )
+                        cases.append({
+                            "record_id": record_id,
+                            "question": row["question"],
+                            "context": row["context"],
+                            "choices": choices,
+                            "tier": row["requested_tier"],
+                            "hint_text": row["hint_text"],
+                            "image_url": (
+                                "/api/experiment-d-image?"
+                                + urlencode({"record_id": record_id})
+                            ),
+                            "image_entry": image_entry,
+                        })
+            except zipfile.BadZipFile as error:
+                raise ValueError("Experiment D judging package is not a valid ZIP file.") from error
+            self._d_judge_package_cache = cases
+            return cases
 
     @staticmethod
     def hint_review_rating_fields():
@@ -502,10 +907,16 @@ class TutorWebApp:
                         self.send_static("index.html")
                     elif parsed.path == "/review":
                         self.send_static("review.html")
+                    elif parsed.path == "/compare":
+                        self.send_static("compare.html")
                     elif parsed.path == "/assets/app.css":
                         self.send_static("app.css")
                     elif parsed.path == "/assets/app.js":
                         self.send_static("app.js")
+                    elif parsed.path == "/assets/compare.css":
+                        self.send_static("compare.css")
+                    elif parsed.path == "/assets/compare.js":
+                        self.send_static("compare.js")
                     elif parsed.path == "/assets/review.css":
                         self.send_static("review.css")
                     elif parsed.path == "/assets/review.js":
@@ -514,6 +925,24 @@ class TutorWebApp:
                         self.send_json(200, app.status())
                     elif parsed.path == "/api/comparison":
                         self.send_json(200, app.comparison())
+                    elif parsed.path == "/api/hint-comparison":
+                        self.send_json(200, app.hint_comparison())
+                    elif parsed.path == "/api/experiment-d-judge-package":
+                        self.send_json(200, app.experiment_d_judge_package())
+                    elif parsed.path == "/api/experiment-d-image":
+                        record_id = params.get("record_id", [""])[0]
+                        self.send_bytes(
+                            200,
+                            app.experiment_d_judge_image(record_id),
+                            "image/png",
+                        )
+                    elif parsed.path.startswith("/api/evaluations/"):
+                        job_id = parsed.path.rsplit("/", 1)[-1]
+                        evaluation = app.get_evaluation(job_id)
+                        if evaluation is None:
+                            self.send_json(404, {"error": "Evaluation job not found."})
+                        else:
+                            self.send_json(200, evaluation)
                     elif parsed.path == "/api/hint-reviews":
                         self.send_json(200, app.read_hint_reviews())
                     elif parsed.path == "/api/comparison/html":
@@ -653,7 +1082,8 @@ class TutorWebApp:
 
             def do_POST(self):
                 request_path = urlparse(self.path).path
-                if request_path not in ("/api/jobs", "/api/hint-reviews"):
+                if request_path not in (
+                        "/api/jobs", "/api/hint-reviews", "/api/evaluations"):
                     self.send_json(404, {"error": "Not found."})
                     return
                 try:
@@ -674,6 +1104,9 @@ class TutorWebApp:
                         raise ValueError("Request body must be a JSON object.")
                     if request_path == "/api/jobs":
                         job_id = app.start_job(payload)
+                        self.send_json(202, {"job_id": job_id})
+                    elif request_path == "/api/evaluations":
+                        job_id = app.start_evaluation(payload)
                         self.send_json(202, {"job_id": job_id})
                     else:
                         self.send_json(200, app.save_hint_review(payload))
@@ -696,6 +1129,8 @@ def main(argv=None):
     parser.add_argument("--no-browser", action="store_true")
     parser.add_argument("--persistent-output", type=Path,
                         help="Also save each completed UI result to this folder (e.g. mounted Drive).")
+    parser.add_argument("--d-judge-package", type=Path,
+                        help="Read-only Experiment D judge-package ZIP to show on /compare.")
     parser.add_argument("--allowed-origin", action="append", default=[], type=validate_origin,
                         help="Exact trusted proxy origin for POST requests; repeat if needed.")
     parser.add_argument("--frame-ancestor", action="append", default=[], type=validate_origin,
@@ -709,7 +1144,8 @@ def main(argv=None):
     ensure_data_ready(ROOT)
     app = TutorWebApp(model_path=args.model_path, persistent_output=args.persistent_output,
                       allowed_origins=args.allowed_origin, frame_ancestors=args.frame_ancestor,
-                      splits=args.splits, instance_id=args.instance_id)
+                      splits=args.splits, instance_id=args.instance_id,
+                      d_judge_package=args.d_judge_package)
     server = ThreadingHTTPServer((args.host, args.port), app.handler())
     url = f"http://{args.host}:{server.server_port}"
     print(f"Science tutor UI is running at {url}")
