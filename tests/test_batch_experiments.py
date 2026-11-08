@@ -124,6 +124,87 @@ class BatchExperimentTests(unittest.TestCase):
         (self.root / "experiments/judge_rubric.md").unlink()
         self.assertEqual(runner.make_plans(self.root, "ai2d", "B", items, runner.load_prompt_spec(self.root), "fixed"), plans)
 
+    def test_a_with_evidence_uses_two_passes_and_scores_only_after_generation(self):
+        evidence = '1. Text: "w", upper left.'
+        self.tutor.ask.side_effect = [evidence, "b", evidence, "Not an option"]
+
+        def references(*args):
+            self.assertEqual(self.tutor.ask.call_count, 4)
+            return load_references(*args)
+
+        with patch.object(runner, "load_references", side_effect=references):
+            output = self.run_cli("A", extra=("--with-evidence", "--limit", "2"))
+        manifest = json.loads((output / "run.json").read_text())
+        self.assertEqual(manifest["prompt_version"], runner.EVIDENCE_ANSWER_VERSION)
+        self.assertEqual(manifest["generation"]["evidence_max_new_tokens"], 320)
+        records = [json.loads(line) for line in (output / "predictions.jsonl").read_text().splitlines()]
+        spec = runner.load_prompt_spec(self.root)
+        plans = runner.make_plans(self.root, "ai2d", "A", load_questions(self.root, "ai2d", limit=2),
+                                  spec, manifest["run_id"], with_evidence=True)
+        for index, row in enumerate(records):
+            runner.validate_record(row, plans[row["hint_id"]], spec)
+            self.assertEqual(row["evidence"]["text"], evidence)
+            self.assertIn(evidence, self.tutor.ask.call_args_list[index * 2 + 1].args[1])
+            self.assertEqual(self.tutor.ask.call_args_list[index * 2].args[1], row["evidence_prompt"])
+            self.assertNotIn("gold_option_id", str(row))
+            self.assertNotIn("lecture", row["effective_prompt"])
+        self.assertEqual([call.kwargs["max_new_tokens"] for call in self.tutor.ask.call_args_list], [320, 8] * 2)
+        summary = json.loads((output / "result.json").read_text())["summary"]
+        self.assertEqual((summary["total"], summary["correct"], summary["invalid_outputs"]), (2, 1, 1))
+        self.assertEqual(summary["accuracy"], 0.5)
+
+    def test_a_with_evidence_failures_skip_answering_and_remain_in_denominator(self):
+        self.tutor.ask.side_effect = ["  ", RuntimeError("evidence failure"), "observation", RuntimeError("answer failure")]
+        output = self.run_cli("A", extra=("--with-evidence", "--limit", "3"))
+        self.assertEqual(self.tutor.ask.call_count, 4)
+        manifest = json.loads((output / "run.json").read_text())
+        spec = runner.load_prompt_spec(self.root)
+        plans = runner.make_plans(self.root, "ai2d", "A", load_questions(self.root, "ai2d", limit=3),
+                                  spec, manifest["run_id"], with_evidence=True)
+        rows = list(runner.read_records(output / "predictions.jsonl", plans, spec).values())
+        self.assertEqual([row["evidence"]["status"] for row in rows], ["empty_output", "generation_error", "ok"])
+        summary = json.loads((output / "result.json").read_text())["summary"]
+        self.assertEqual((summary["total"], summary["generation_errors"], summary["accuracy"]), (3, 3, 0))
+
+    def test_a_with_evidence_resume_retains_mode_and_rejects_tampered_prompt(self):
+        self.tutor.ask.side_effect = ["observation", "B", KeyboardInterrupt()]
+        with self.assertRaises(KeyboardInterrupt):
+            self.run_cli("A", "resume-evidence", extra=("--with-evidence", "--limit", "2"))
+        output = self.root / "resume-evidence"
+        before = (output / "predictions.jsonl").read_bytes()
+        self.tutor.ask.reset_mock(side_effect=True)
+        self.tutor.ask.side_effect = ["another observation", "B"]
+        self.run_cli("A", "resume-evidence", extra=("--resume",))
+        self.assertEqual(self.tutor.ask.call_count, 2)
+        self.assertTrue((output / "predictions.jsonl").read_bytes().startswith(before))
+        rows = [json.loads(line) for line in (output / "predictions.jsonl").read_text().splitlines()]
+        rows[0]["effective_prompt"] += "changed"
+        (output / "predictions.jsonl").write_text("".join(json.dumps(row) + "\n" for row in rows))
+        self.engine.QwenTutor.reset_mock()
+        with self.assertRaises(SystemExit):
+            self.run_cli("A", "resume-evidence", extra=("--resume",))
+        self.engine.QwenTutor.assert_not_called()
+
+    def test_evidence_mode_cannot_be_added_to_baseline_resume_or_hint_conditions(self):
+        self.tutor.ask.return_value = "B"
+        output = self.run_cli("A", extra=("--limit", "1"))
+        before = (output / "predictions.jsonl").read_bytes()
+        with self.assertRaises(SystemExit):
+            self.run_cli("A", extra=("--resume", "--with-evidence"))
+        self.assertEqual((output / "predictions.jsonl").read_bytes(), before)
+        for experiment in ("B", "D"):
+            with self.assertRaises(SystemExit):
+                self.run_cli(experiment, extra=("--with-evidence", "--preflight"))
+
+    def test_a_with_evidence_preflight_is_reference_free_and_reports_two_calls(self):
+        shutil.rmtree(self.root / "data/final/ai2d/references")
+        with patch.object(runner, "ROOT", self.root), redirect_stdout(StringIO()) as stdout:
+            runner.main(["--dataset", "ai2d", "--experiment", "A", "--with-evidence", "--preflight"])
+        report = json.loads(stdout.getvalue())
+        self.assertEqual((report["planned_outputs"], report["model_calls"]), (31, 62))
+        self.assertFalse(report["reference_inputs_loaded"])
+        self.engine.QwenTutor.assert_not_called()
+
     def test_answer_prompt_does_not_include_extra_reference_fields(self):
         item = load_questions(self.root, "ai2d", limit=1)[0]
         prompt = runner.answer_prompt({**item, "gold_option_id": "SECRET GOLD", "lecture": "SECRET LECTURE", "solution": "SECRET SOLUTION"})

@@ -1,6 +1,6 @@
 # Run the browser tutor on Google Colab
 
-For separate AI2D/ScienceQA batch experiments A, B and D, use **IE4422_Experiments.ipynb** with **IE4422_Experiments_Source.zip**. Its controls cover Drive persistence, resume, judge-package downloads and returned-score summaries. See [the experiment guide](../experiments/README.md). Rebuild that bundle with `python notebooks/build_experiment_bundle.py`. The instructions below refer only to the browser tutor.
+For separate AI2D/ScienceQA batch experiments A, B and D, use **IE4422_Experiments.ipynb** with **IE4422_Experiments_Source.zip**. Use the updated notebook and source ZIP together. ScienceQA A, A with evidence, B and D run on all 173 audited test questions; B/D judging packages reuse the same fixed 30 test questions (90 hints per condition). ScienceQA test runs save under `experiments/scienceqa_test/<condition>/<run-label>/` in local outputs or Drive runs. Use a new RUN_LABEL with RESUME=False when switching from earlier training runs. Enable `RUN_A_WITH_EVIDENCE=True` in its separate A with evidence cell for evidence extraction followed by second-pass question answering; baseline A stays available. Results save separately under `A_with_evidence/`. Its controls cover Drive persistence, resume, both answer-run downloads, judge-package downloads and returned-score summaries. See [the experiment guide](../experiments/README.md). Rebuild that bundle with `python notebooks/build_experiment_bundle.py`. The instructions below refer only to the browser tutor.
 
 Share these two files together:
 

@@ -10,7 +10,7 @@ from pathlib import Path
 
 from PIL import Image
 
-from experiments.data import ROOT, freeze_ai2d_judging, load_questions, load_references, public_snapshot, read_json, source_config
+from experiments.data import ROOT, freeze_ai2d_judging, freeze_scienceqa_judging, load_questions, load_references, read_json, source_config
 from experiments.run import SCHEMA_VERSION, VERSIONS, make_plans, read_records, settings
 from experiments.common import digest, json_digest, load_prompt_spec, require, write_json, write_jsonl
 from experiments.legacy import verify_run as verify_legacy_run
@@ -207,9 +207,9 @@ def package_readme(report, case_count):
     if report.get("dataset_name") == "ai2d":
         selection_note = "Question IDs come from the committed AI2D 30-question judging selection, shared across B and D."
         reuse_note = "AI2D automatically reuses `manifests/ai2d/test_judge_selection.json` for later B/D packages; do not draw a new sample."
-    elif selection["sample_from"] and Path(selection["sample_from"]).name == "train_judge_selection.json":
-        selection_note = "Question IDs come from the committed ScienceQA selection: the exact questions already judged in B."
-        reuse_note = "The default ScienceQA B/D package automatically reuses `manifests/scienceqa/train_judge_selection.json`; do not draw a new sample."
+    elif selection["sample_from"] and Path(selection["sample_from"]).name == "test_judge_selection.json":
+        selection_note = "Question IDs come from the committed ScienceQA 30-question test selection, shared across B and D."
+        reuse_note = "The default ScienceQA B/D package automatically reuses `manifests/scienceqa/test_judge_selection.json`; do not draw a new sample."
     elif selection["sample_from"]:
         selection_note = f"Question IDs were reused from `{selection['sample_from']}`; no new random draw was made."
         reuse_note = "For a later compatible ScienceQA run, use `--sample-from <this-private-map>` to reuse the same questions."
@@ -290,30 +290,21 @@ If file creation is unavailable, save the JSON-only response under its expected 
 """
 
 
-def prepare(root, run_folder, destination, *, sample_questions=100, seed=42, sample_from=None, all_questions=False):
+def prepare(root, run_folder, destination, *, sample_questions=30, seed=42, sample_from=None, all_questions=False):
     root = Path(root).resolve()
     run = read_json(Path(run_folder) / "run.json")
     dataset = run.get("dataset_name", "scienceqa")
+    require(dataset in ("ai2d", "scienceqa"), "Unknown experiment dataset")
+    require(run.get("split") == "test", "Current judging packages require test runs; start a new test-set run")
     override = None
     if dataset == "ai2d":
         require(not sample_from and not all_questions and sample_questions in (None, 30, 100),
                 "AI2D uses its frozen 30-question selection across B and D")
         frozen = freeze_ai2d_judging(root)
         frozen_path = root / "manifests/ai2d/test_judge_selection.json"
-    elif not sample_from and not all_questions and sample_questions == 100:
-        frozen_path = root / "manifests/scienceqa/train_judge_selection.json"
-        frozen = read_json(frozen_path)
-        require(frozen["dataset_name"] == "scienceqa" and frozen["tiers"] == [1, 2, 3]
-                and frozen["source_configuration"] == source_config(root, "scienceqa"),
-                "ScienceQA judging selection/source configuration mismatch")
-        chosen = [row["item_id"] for row in frozen["items"]]
-        require(len(chosen) == frozen["size"] == len(set(chosen)), "Invalid fixed ScienceQA judging selection")
-        items = load_questions(root, "scienceqa", item_ids=chosen)
-        expected = {row["item_id"]: row for row in frozen["items"]}
-        for item in items:
-            public = public_snapshot(root, item)
-            require(all(public[key] == expected[item["item_id"]][key] for key in ("input_sha256", "image_sha256")),
-                    "ScienceQA judging question/image changed since the B sample was saved")
+    elif not sample_from and not all_questions and sample_questions in (None, 30):
+        frozen = freeze_scienceqa_judging(root)
+        frozen_path = root / "manifests/scienceqa/test_judge_selection.json"
     else:
         frozen = None
     if frozen is not None:
@@ -332,18 +323,23 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", type=Path)
     parser.add_argument("--output-dir", type=Path)
-    parser.add_argument("--freeze-ai2d-selection", action="store_true", help="Freeze/verify the same 30 judging questions before generation; no run required")
-    parser.add_argument("--sample-questions", type=int, default=100, help="ScienceQA: default 100 reuses the saved B selection; other sizes draw a pilot sample. AI2D always uses its frozen 30")
+    freeze = parser.add_mutually_exclusive_group()
+    freeze.add_argument("--freeze-ai2d-selection", action="store_true", help="Freeze/verify the same 30 AI2D judging questions before generation; no run required")
+    freeze.add_argument("--freeze-scienceqa-selection", action="store_true", help="Freeze/verify the same 30 ScienceQA test judging questions before generation; no run required")
+    parser.add_argument("--sample-questions", type=int, default=30, help="ScienceQA: default 30 reuses the frozen test selection; other sizes draw a pilot sample. AI2D always uses its frozen 30")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--sample-from", type=Path, help="ScienceQA: reuse a previous private question-tier map")
     parser.add_argument("--all", action="store_true", help="ScienceQA: package every question")
     args = parser.parse_args(argv)
-    if args.freeze_ai2d_selection:
-        frozen = freeze_ai2d_judging(ROOT)
-        print(f"Frozen {len(frozen['items'])} AI2D judging questions, 3 tiers each; independent of outcomes.")
+    if args.freeze_ai2d_selection or args.freeze_scienceqa_selection:
+        try:
+            frozen = freeze_ai2d_judging(ROOT) if args.freeze_ai2d_selection else freeze_scienceqa_judging(ROOT)
+        except (ValueError, OSError, KeyError) as error:
+            parser.error(str(error))
+        print(f"Frozen {len(frozen['items'])} {frozen['dataset_name']} test judging questions, 3 tiers each; independent of outcomes.")
         return
     if not args.run_dir:
-        parser.error("Supply --run-dir, or use --freeze-ai2d-selection")
+        parser.error("Supply --run-dir, or use --freeze-ai2d-selection / --freeze-scienceqa-selection")
     destination = args.output_dir or args.run_dir / "judge_package"
     try:
         report = prepare(ROOT, args.run_dir, destination, sample_questions=args.sample_questions,

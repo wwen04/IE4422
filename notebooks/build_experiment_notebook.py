@@ -19,18 +19,22 @@ def build(destination=None):
     # IE4422: batch experiments A, B and D
 
     Use a fresh **GPU** runtime. This notebook runs experiments separately from the browser tutor.
-    AI2D defaults to its frozen 100-question test sample; ScienceQA uses audited training questions.
+    AI2D defaults to its frozen 100-question test sample; ScienceQA uses all 173 audited test questions.
     Select one dataset at a time. You can run A, B and D sequentially in this session on that dataset.
     Each condition is a separate saved run. Do not launch simultaneous runs on the same GPU.
+    A also offers an optional evidence-first answering run: extract observations, then answer in a second pass.
+    Answer-only A and A with evidence use separate folders and can both be run for comparison.
     Generation controls default to off. B and D each produce three independent hint tiers per question.
     D extracts evidence separately for every hint, without caching or learner attempts.
     D uses the same evidence extractor as the browser tutor: up to 10 brief numbered observations,
     with types and locations, under a 320-token limit. Evidence is observation-only and unverified.
     AI2D's same frozen 30 questions supply both B and D judging packages (90 planned hints each).
-    ScienceQA reuses the exact 100 judging questions from the completed B run (300 planned hints per condition).
+    ScienceQA freezes 30 test questions for both B and D judging packages (90 planned hints each).
+    ScienceQA A and A with evidence each produce 173 answers; B and D each produce 519 hints before packaging.
+    ScienceQA test outputs use experiments/scienceqa_test/<condition>/<run-label>/, separate from earlier training runs.
     No judge is called automatically. Keep datasets and condition results separate.
     """)
-    cell("markdown", "## 1. Upload the experiment source ZIP\nUpload **IE4422_Experiments_Source.zip** to use the minimum-sufficient-observations evidence prompt. For this prompt update, the existing notebook can be kept: rerun this upload cell and the setup cells with the new source ZIP. This bundle is built separately from the UI source ZIP. Use a fresh runtime when replacing an older bundle.")
+    cell("markdown", "## 1. Upload the experiment source ZIP\nUse this updated notebook together with the rebuilt **IE4422_Experiments_Source.zip** for test-only ScienceQA A, A with evidence, B and D, with 30-question judging packages. This bundle is built separately from the UI source ZIP. Use a fresh runtime when replacing an older bundle.")
     cell("code", """
     from pathlib import Path, PurePosixPath
     from datetime import datetime, timezone
@@ -78,7 +82,7 @@ def build(destination=None):
     from notebooks.experiments_colab import prepare_dataset, run_folder, run_experiment, package_run, summarize_run, import_judgments
     print('Source:', WORK)
     """)
-    cell("markdown", "## 2. Choose the dataset and storage\nUse the same run label across A, B and D. Each saved run belongs to one dataset and one condition. To switch datasets later, change DATASET, rerun this settings cell and Cell 4, then run the required experiment cells. The environment and downloaded model can be reused. Enable resume only for an existing run with the same dataset, label, source and checkpoint.")
+    cell("markdown", "## 2. Choose the dataset and storage\nUse the same run label across A, B and D. Each saved run belongs to one dataset and one condition. To switch datasets later, change DATASET, rerun this settings cell and Cell 4, then run the required experiment cells. The environment and downloaded model can be reused. For ScienceQA, start a new test-set run with a new RUN_LABEL and RESUME=False. Earlier training runs cannot be resumed as test runs. Enable resume only for an existing test run with the same dataset, label, source and checkpoint.")
     cell("code", """
     DATASET = 'ai2d'  # @param ['ai2d', 'scienceqa']
     USE_DRIVE = True  # @param {type:'boolean'}
@@ -94,6 +98,7 @@ def build(destination=None):
     if not RUN_LABEL:
         RUN_LABEL = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S_%fZ')
     RUNS = {condition: run_folder(WORK, DATASET, condition, RUN_LABEL, PERSISTENT) for condition in ('A', 'B', 'D')}
+    RUNS['A_WITH_EVIDENCE'] = run_folder(WORK, DATASET, 'A', RUN_LABEL, PERSISTENT, with_evidence=True)
     print('Run label:', RUN_LABEL)
     for condition, folder in RUNS.items():
         print(condition, folder)
@@ -104,10 +109,10 @@ def build(destination=None):
     run_visible([sys.executable, WORK / 'notebooks/colab_support.py', 'setup', WORK, ENVIRONMENT], cwd=WORK)
     PYTHON = ENVIRONMENT / 'bin/python'
     """)
-    cell("markdown", "## 4. Prepare the dataset and validate the experiment code\nFor AI2D, preparation validates all 3,088 source rows and exports the frozen 100-question evaluation sample. Prepared final data can be restored from Drive. This step does not load a model or run a judge. Some tests deliberately print rejected-command messages followed by `ok`; the final `OK` confirms that test suite passed.")
+    cell("markdown", "## 4. Prepare the dataset and validate the experiment code\nFor AI2D, preparation validates all 3,088 source rows and exports the frozen 100-question evaluation sample. ScienceQA exports all audited splits for the shared data cache, but experiments load only the 173 test questions. This cell freezes/verifies each dataset’s 30-question judging selection before generation. Prepared final data can be restored from Drive. This step does not load a model or run a judge. Some tests deliberately print rejected-command messages followed by `ok`; the final `OK` confirms that test suite passed.")
     cell("code", """
     prepare_dataset(WORK, PYTHON, DATASET, PERSISTENT, REBUILD_DATA)
-    for test in ('test_judge_preparation.py', 'test_batch_experiments.py', 'test_experiment_colab.py'):
+    for test in ('test_judge_preparation.py', 'test_batch_experiments.py', 'test_scienceqa_experiments.py', 'test_experiment_colab.py'):
         run_visible([PYTHON, '-m', 'unittest', 'discover', '-s', 'tests', '-p', test, '-v'], cwd=WORK)
     """)
     cell("markdown", "## 5. Download or restore the fixed Qwen checkpoint\nThe pinned checkpoint needs approximately 7.5 GB before quantization. The existing Drive model cache can be reused.")
@@ -120,19 +125,21 @@ def build(destination=None):
     MODEL = WORK / 'models' / model_config['model_revision']
     print('Checkpoint:', MODEL)
     """)
-    for condition, description in (("A", "answer-only check"), ("B", "generic hints"), ("D", "evidence-conditioned hints")):
+    for condition, description in (("A", "answer-only check"), ("A_WITH_EVIDENCE", "question answering with evidence"), ("B", "generic hints"), ("D", "evidence-conditioned hints")):
         instructions = f"## Run {condition}: {description}\nEnable this control when ready. Wait for the previous experiment to finish before running this cell. Each command loads one model, writes every outcome immediately, and exits to release GPU memory."
+        if condition == "A_WITH_EVIDENCE":
+            instructions += "\n\nPass 1 uses the same 320-token evidence extractor as D. Pass 2 receives the image, public question/options and unverified observations, and returns one option letter (8-token limit). The answer key is loaded only after generation for accuracy. Failed/empty evidence skips answering and counts as a failure. Results go to A_with_evidence, separately from answer-only A. On AI2D this plans 200 model calls for the same frozen 100 questions; on ScienceQA it plans 346 calls for 173 test questions. Use RESUME=False for a new run."
         if condition == "D":
             instructions += "\n\nD calls the UI's shared minimum-sufficient-observations evidence prompt, then the existing tier hint prompt. Evidence stays unverified. For this updated prompt, use a new run label and RESUME=False; completed A/B results can be retained. Do not resume a D run generated with an earlier evidence prompt."
         cell("markdown", instructions)
         cell("code", f"""
         RUN_{condition} = False  # @param {{type:'boolean'}}
         if RUN_{condition}:
-            run_experiment(WORK, PYTHON, MODEL, DATASET, '{condition}', RUN_LABEL, PERSISTENT, RESUME)
+            run_experiment(WORK, PYTHON, MODEL, DATASET, '{'A' if condition == 'A_WITH_EVIDENCE' else condition}', RUN_LABEL, PERSISTENT, RESUME{', with_evidence=True' if condition == 'A_WITH_EVIDENCE' else ''})
         else:
             print('{condition} skipped; no inference performed.')
         """)
-    cell("markdown", "## Prepare the B and D judge packages\nAI2D uses the same saved 30-question selection for both conditions: 90 planned hints each. ScienceQA uses the exact saved 100 questions already judged in B: 300 planned hints each, including the original calibration exclusions. No new question draw is made for the default packages. Generation selections are unchanged. Empty/failed generations remain in the private map. This step creates attachments only; it does not call a judge.")
+    cell("markdown", "## Prepare the B and D judge packages\nAI2D uses the same saved 30-question selection for both conditions: 90 planned hints each. ScienceQA uses its saved 30-question test selection for both B and D: 90 planned hints each. It selects these from all 173 audited test questions, independently of model outcomes. No new question draw is made for later packages. Empty/failed generations remain in the private map. This step creates attachments only; it does not call a judge.")
     cell("code", """
     PREPARE_B_PACKAGE = False  # @param {type:'boolean'}
     PREPARE_D_PACKAGE = False  # @param {type:'boolean'}
@@ -146,10 +153,10 @@ def build(destination=None):
     cell("markdown", "## Download saved results or a judging package\nA package ZIP includes the coordinator's private map. Give each judge only its individual image and hints file plus the judge prompt.")
     cell("code", """
     DOWNLOAD = False  # @param {type:'boolean'}
-    ARTIFACT = 'B judge package'  # @param ['A run', 'B run', 'D run', 'B judge package', 'D judge package']
+    ARTIFACT = 'B judge package'  # @param ['A run', 'A with evidence run', 'B run', 'D run', 'B judge package', 'D judge package']
     if DOWNLOAD:
         import shutil
-        condition = ARTIFACT[0]
+        condition = 'A_WITH_EVIDENCE' if ARTIFACT == 'A with evidence run' else ARTIFACT[0]
         target = PACKAGES[condition] if 'judge package' in ARTIFACT else RUNS[condition]
         if not target.is_dir():
             raise FileNotFoundError('Run/package does not exist yet: ' + str(target))
@@ -162,6 +169,7 @@ def build(destination=None):
     UPLOAD_JUDGMENTS = False  # @param {type:'boolean'}
     COMPUTE_SUMMARY = False  # @param {type:'boolean'}
     INCLUDE_A_BREAKDOWN = True  # @param {type:'boolean'}
+    ANSWER_RUN = 'A'  # @param ['A', 'A_WITH_EVIDENCE']
     if UPLOAD_JUDGMENTS:
         returned = files.upload()
         if len(returned) != 1:
@@ -171,12 +179,12 @@ def build(destination=None):
         upload_path.write_bytes(content)
         print('Imported:', import_judgments(upload_path, RUNS[CONDITION] / 'judgments'))
     if COMPUTE_SUMMARY:
-        answers = RUNS['A'] if INCLUDE_A_BREAKDOWN and (RUNS['A'] / 'result.json').is_file() else None
+        answers = RUNS[ANSWER_RUN] if INCLUDE_A_BREAKDOWN and (RUNS[ANSWER_RUN] / 'result.json').is_file() else None
         summary = summarize_run(WORK, PYTHON, RUNS[CONDITION], PACKAGES[CONDITION], answers)
         print((summary / 'README.md').read_text())
         files.download(str(summary / 'metrics.json'))
     """)
-    cell("markdown", "AI2D is held out: keep prompts/settings fixed after development on ScienceQA. A accuracy measures answering; Part A rubric judgments measure hint quality. Do not filter the judging selection by A correctness or generation success. Missing AI2D reference explanations are not invented. Results stay separated by dataset, condition and run.")
+    cell("markdown", "Both datasets use held-out test questions: keep prompts/settings fixed after training/validation development. A accuracy measures answering; Part A rubric judgments measure hint quality. Do not filter the judging selection by A correctness or generation success. Missing AI2D reference explanations are not invented. Results stay separated by dataset, condition and run.")
     notebook = {"cells": cells, "metadata": {"colab": {"name": "IE4422_Experiments.ipynb"},
                 "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
                 "language_info": {"name": "python"}, "accelerator": "GPU"}, "nbformat": 4, "nbformat_minor": 5}

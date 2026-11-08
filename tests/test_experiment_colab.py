@@ -39,7 +39,7 @@ class ExperimentColabTests(unittest.TestCase):
                 self.assertEqual(cell["outputs"], [])
                 self.assertIsNone(cell["execution_count"])
         code = "\n".join(cell["source"] for cell in notebook["cells"] if cell["cell_type"] == "code")
-        for flag in ("RUN_A", "RUN_B", "RUN_D", "PREPARE_B_PACKAGE", "PREPARE_D_PACKAGE", "UPLOAD_JUDGMENTS", "COMPUTE_SUMMARY"):
+        for flag in ("RUN_A", "RUN_A_WITH_EVIDENCE", "RUN_B", "RUN_D", "PREPARE_B_PACKAGE", "PREPARE_D_PACKAGE", "UPLOAD_JUDGMENTS", "COMPUTE_SUMMARY"):
             self.assertIn(flag + " = False", code)
         self.assertNotIn("ui_server", code)
         self.assertIn("DATASET = 'ai2d'", code)
@@ -68,6 +68,26 @@ class ExperimentColabTests(unittest.TestCase):
             self.assertIn("--resume", call.call_args.args[0])
             self.assertEqual(result, ROOT / "outputs/experiments/ai2d/D/fixed")
 
+    def test_evidence_answer_run_has_separate_folder_and_cli_flag(self):
+        with patch.object(support, "run_visible") as call:
+            result = support.run_experiment(ROOT, "python", "checkpoint", "ai2d", "A", "fixed",
+                                            Path("drive"), resume=True, with_evidence=True)
+        self.assertEqual(result, Path("drive/runs/experiments/ai2d/A_with_evidence/fixed"))
+        command = call.call_args.args[0]
+        self.assertIn("--with-evidence", command)
+        self.assertIn("--resume", command)
+        self.assertEqual(command[command.index("--experiment") + 1], "A")
+        self.assertNotEqual(result, support.run_folder(ROOT, "ai2d", "A", "fixed", Path("drive")))
+        with self.assertRaises(ValueError):
+            support.run_folder(ROOT, "ai2d", "B", "fixed", with_evidence=True)
+
+    def test_scienceqa_preparation_freezes_test_judging_selection(self):
+        with patch.object(support, "run_visible") as call:
+            support.prepare_dataset(ROOT, "python", "scienceqa")
+        commands = [entry.args[0] for entry in call.call_args_list]
+        self.assertTrue(any("--preflight" in command and "scienceqa" in command for command in commands))
+        self.assertTrue(any("--freeze-scienceqa-selection" in command for command in commands))
+
     def test_judgment_upload_rejects_traversal_and_does_not_replace_valid_conflicts(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             root = Path(directory)
@@ -89,7 +109,8 @@ class ExperimentColabTests(unittest.TestCase):
             with zipfile.ZipFile(archive) as source:
                 names = source.namelist()
                 for name in ("experiments/run.py", "experiments/common.py", "experiments/prepare_judging.py",
-                             "manifests/ai2d/test_judge_selection.json", "notebooks/IE4422_Experiments.ipynb"):
+                             "manifests/ai2d/test_judge_selection.json", "manifests/scienceqa/test_judge_selection.json",
+                             "tests/test_scienceqa_experiments.py", "notebooks/IE4422_Experiments.ipynb"):
                     self.assertIn("IE4422/" + name, names)
                 self.assertFalse(any(name.startswith(("IE4422/data/", "IE4422/outputs/", "IE4422/models/")) for name in names))
                 self.assertEqual(json.loads(source.read("IE4422/bundle_info.json"))["kind"], "batch_experiments")

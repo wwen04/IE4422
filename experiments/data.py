@@ -42,10 +42,16 @@ def public_snapshot(root, item):
 
 
 def load_questions(root, dataset, *, item_ids=None, limit=None):
-    """Read public exports only; AI2D remains test, ScienceQA remains train."""
+    """Read public test exports only for all current experiment modes."""
+    return _load_questions(root, dataset, split="test", item_ids=item_ids, limit=limit)
+
+
+def _load_questions(root, dataset, *, split, item_ids=None, limit=None):
+    """Shared validation; the legacy read-only verifier can still inspect train runs."""
     root = Path(root).resolve()
     config = source_config(root, dataset)
-    split = "test" if dataset == "ai2d" else "train"
+    if split not in ("train", "test") or dataset == "ai2d" and split != "test":
+        raise ValueError("Invalid experiment dataset/split")
     if dataset == "scienceqa":
         rows = load_public_questions(root, split)
     else:
@@ -76,7 +82,7 @@ def load_questions(root, dataset, *, item_ids=None, limit=None):
     result = []
     image_root = (root / f"data/final/{dataset}/images").resolve()
     for row in rows:
-        prefix = "ai2d_test_" if dataset == "ai2d" else "train_"
+        prefix = "ai2d_test_" if dataset == "ai2d" else f"{split}_"
         if row["split"] != split or not row["item_id"].startswith(prefix):
             raise ValueError("Dataset ID/split mismatch")
         image = (root / row["image_path"]).resolve()
@@ -99,7 +105,7 @@ def load_questions(root, dataset, *, item_ids=None, limit=None):
 def load_references(root, dataset, items):
     """Evaluator-only join; never called by hint generation."""
     root = Path(root).resolve()
-    split = "test" if dataset == "ai2d" else "train"
+    split = "test"
     path = root / f"data/final/{dataset}/references/{split}.jsonl"
     if dataset == "ai2d":
         report = read_json(root / "reports/ai2d/integrity_audit.json")
@@ -137,6 +143,31 @@ def freeze_ai2d_judging(root):
     if path.exists():
         if read_json(path) != frozen:
             raise ValueError("Frozen AI2D judging selection changed")
+    else:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        write_json(path, frozen)
+    return frozen
+
+
+def freeze_scienceqa_judging(root):
+    """Freeze 30 audited test questions for paired B/D judging, independent of outcomes."""
+    root = Path(root).resolve()
+    items = load_questions(root, "scienceqa")
+    if len(items) < 30:
+        raise ValueError("ScienceQA judging requires at least 30 audited test questions")
+    by_id = {item["item_id"]: item for item in items}
+    ids = sorted(random.Random(42).sample(sorted(by_id), 30))
+    snapshots = {key: public_snapshot(root, by_id[key]) for key in ids}
+    frozen = {"dataset_name": "scienceqa", "split": "test", "size": 30, "seed": 42, "tiers": [1, 2, 3],
+              "method": "Random questions from the audited test set; independent of generation/accuracy/quality",
+              "source_configuration": source_config(root, "scienceqa"),
+              "parent_selection_sha256": json_digest(read_json(root / "manifests/scienceqa/test_final_ids.json")),
+              "items": [{"item_id": key, **{field: snapshots[key][field]
+                                           for field in ("input_sha256", "image_sha256")}} for key in ids]}
+    path = root / "manifests/scienceqa/test_judge_selection.json"
+    if path.exists():
+        if read_json(path) != frozen:
+            raise ValueError("Frozen ScienceQA test judging selection changed")
     else:
         path.parent.mkdir(parents=True, exist_ok=True)
         write_json(path, frozen)

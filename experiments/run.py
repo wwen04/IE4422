@@ -19,31 +19,35 @@ from tutor_pipeline import EVIDENCE_MAX_NEW_TOKENS, evidence_prompt, extract_evi
 
 SCHEMA_VERSION = "no-attempt-batch-v1"
 VERSIONS = {"A": "answer-only-v1", "B": "b-ui-prompt-without-evidence-v2", "D": "d-ui-prompt-with-evidence-v2"}
+EVIDENCE_ANSWER_VERSION = "answer-with-evidence-v1"
 OUTPUT_FIELDS = {"hint_text", "word_count", "raw_response", "predicted_option_id", "generation", "evidence", "effective_prompt"}
 
 
-def settings(experiment):
+def settings(experiment, with_evidence=False):
     return {"do_sample": False, "max_new_tokens": 8 if experiment == "A" else 160,
-            "evidence_max_new_tokens": EVIDENCE_MAX_NEW_TOKENS if experiment == "D" else None,
+            "evidence_max_new_tokens": EVIDENCE_MAX_NEW_TOKENS if experiment == "D" or with_evidence else None,
             "evidence_reuse": False}
 
 
-def make_plans(root, dataset, experiment, items, spec, run_id):
+def make_plans(root, dataset, experiment, items, spec, run_id, *, with_evidence=False):
+    if with_evidence and experiment != "A":
+        raise ValueError("--with-evidence is only available for Experiment A")
+    uses_evidence = experiment == "D" or with_evidence
     plans = {}
     for item in items:
         public = public_snapshot(root, item)
         question = question_prompt(public)
         for tier in ((None,) if experiment == "A" else (1, 2, 3)):
-            prompt = (answer_prompt(item) if experiment == "A" else
+            prompt = (answer_prompt(public, "<evidence generated in the first pass>" if with_evidence else None) if experiment == "A" else
                       render_initial_hint(question, tier, None if experiment == "B" else
                                           "<evidence generated in the first pass>", template=spec["template"]))
             key = f"{run_id}:{item['item_id']}:{'A' if tier is None else 'T' + str(tier)}"
             plans[key] = {"schema_version": SCHEMA_VERSION, "hint_id": key, "run_id": run_id,
                           "dataset_name": dataset, "experiment": experiment, "item_id": item["item_id"],
                           "split": item["split"], "tier": tier, "public_inputs": public,
-                          "prompt": {"version": VERSIONS[experiment], "rendered_text": prompt,
+                          "prompt": {"version": EVIDENCE_ANSWER_VERSION if with_evidence else VERSIONS[experiment], "rendered_text": prompt,
                                      "sha256": digest(prompt.encode("utf-8"))},
-                          "evidence_prompt": evidence_prompt(public) if experiment == "D" else None}
+                          "evidence_prompt": evidence_prompt(public) if uses_evidence else None}
     return plans
 
 
@@ -56,7 +60,7 @@ def generate_record(tutor, root, plan, spec):
     started = time.perf_counter()
     try:
         image = str(Path(root) / plan["public_inputs"]["image_path"])
-        if plan["experiment"] == "D":
+        if plan["evidence_prompt"] is not None:
             evidence = {"text": None, "seconds": 0, "status": "generation_error", "error": None}
             row["evidence"] = evidence
             evidence_started = time.perf_counter()
@@ -71,9 +75,10 @@ def generate_record(tutor, root, plan, spec):
             finally:
                 evidence["seconds"] = time.perf_counter() - evidence_started
             if evidence["status"] != "ok":
-                raise ValueError("Empty evidence output; the dependent hint was not generated")
-            prompt = render_initial_hint(question_prompt(plan["public_inputs"]), plan["tier"],
-                                         evidence["text"], template=spec["template"])
+                raise ValueError("Empty evidence output; the dependent response was not generated")
+            prompt = (answer_prompt(plan["public_inputs"], evidence["text"]) if plan["experiment"] == "A" else
+                      render_initial_hint(question_prompt(plan["public_inputs"]), plan["tier"],
+                                          evidence["text"], template=spec["template"]))
         else:
             prompt = plan["prompt"]["rendered_text"]
         row["effective_prompt"] = prompt
@@ -129,7 +134,7 @@ def validate_record(row, plan, spec):
                 or status != ("ok" if text.strip() else "empty_output")
                 or row["raw_response"] is not None or row["predicted_option_id"] is not None):
             raise ValueError("Hint text/status mismatch")
-    if plan["experiment"] == "D":
+    if plan["evidence_prompt"] is not None:
         evidence = row["evidence"]
         if (not isinstance(evidence, dict) or set(evidence) != {"text", "seconds", "status", "error"}
                 or type(evidence["seconds"]) not in (int, float) or not math.isfinite(evidence["seconds"])
@@ -138,13 +143,14 @@ def validate_record(row, plan, spec):
         if evidence["status"] == "ok":
             if not isinstance(evidence["text"], str) or not evidence["text"].strip() or evidence["error"] is not None:
                 raise ValueError("Invalid evidence output")
-            expected_prompt = render_initial_hint(question_prompt(plan["public_inputs"]), plan["tier"],
-                                                  evidence["text"], template=spec["template"])
+            expected_prompt = (answer_prompt(plan["public_inputs"], evidence["text"]) if plan["experiment"] == "A" else
+                               render_initial_hint(question_prompt(plan["public_inputs"]), plan["tier"],
+                                                   evidence["text"], template=spec["template"]))
             if row["effective_prompt"] != expected_prompt:
                 raise ValueError("Evidence-conditioned prompt changed")
         else:
             if status != "generation_error" or row["effective_prompt"] is not None:
-                raise ValueError("Hint generated from failed evidence")
+                raise ValueError("Response generated from failed evidence")
             if evidence["status"] == "empty_output":
                 if not isinstance(evidence["text"], str) or evidence["text"].strip() or evidence["error"] is not None:
                     raise ValueError("Invalid empty evidence outcome")
@@ -190,6 +196,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", choices=("ai2d", "scienceqa"), required=True)
     parser.add_argument("--experiment", choices=("A", "B", "D"), required=True)
+    parser.add_argument("--with-evidence", action="store_true",
+                        help="For A: extract visual evidence first, then answer in a second model pass")
     choice = parser.add_mutually_exclusive_group()
     choice.add_argument("--limit", type=int, help="First N frozen questions for a pilot; default uses the full selection")
     choice.add_argument("--item-id", action="append")
@@ -198,6 +206,8 @@ def main(argv=None):
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--preflight", action="store_true", help="Validate public inputs and plan without importing/loading the GPU model")
     args = parser.parse_args(argv)
+    if args.with_evidence and args.experiment != "A":
+        parser.error("--with-evidence is only available for Experiment A (D already uses evidence)")
     if args.resume and (not args.output_dir or args.limit is not None or args.item_id or args.preflight):
         parser.error("Resume requires an existing output folder and its saved selection")
     try:
@@ -205,22 +215,32 @@ def main(argv=None):
         if old and (old.get("dataset_name") != args.dataset or old.get("experiment") != args.experiment
                     or old.get("schema_version") != SCHEMA_VERSION):
             raise ValueError("The saved run uses a different dataset, experiment or schema")
+        if old and old.get("split") != "test":
+            raise ValueError("Experiments now use the test set only; start a new run instead of resuming a training run")
+        with_evidence = args.with_evidence
+        if old and args.experiment == "A":
+            saved_evidence = old["generation"]["evidence_max_new_tokens"] is not None
+            if args.with_evidence and not saved_evidence:
+                raise ValueError("Cannot resume an answer-only run with evidence enabled")
+            with_evidence = saved_evidence
         items = load_questions(ROOT, args.dataset, item_ids=old["item_ids"] if old else args.item_id,
                                limit=None if old else args.limit)
         spec = load_prompt_spec(ROOT)
         run_id = old["run_id"] if old else datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")
-        plans = make_plans(ROOT, args.dataset, args.experiment, items, spec, run_id)
+        plans = make_plans(ROOT, args.dataset, args.experiment, items, spec, run_id, with_evidence=with_evidence)
         dataset = source_config(ROOT, args.dataset)
         signature = json_digest({"plans": list(plans.values()), "dataset": dataset,
-                                 "prompt_spec": spec, "generation": settings(args.experiment)})
+                                 "prompt_spec": spec, "generation": settings(args.experiment, with_evidence)})
         if old and old["plan_sha256"] != signature:
             raise ValueError("Public inputs, selection, source or prompts changed")
         if args.preflight:
             print(json.dumps({"dataset": args.dataset, "experiment": args.experiment, "questions": len(items),
-                              "planned_outputs": len(plans), "model_calls": len(plans) * (2 if args.experiment == "D" else 1),
+                              "planned_outputs": len(plans), "model_calls": len(plans) * (2 if args.experiment == "D" or with_evidence else 1),
                               "reference_inputs_loaded": False, "model_loaded": False}, indent=2))
             return
-        output = args.output_dir or ROOT / "outputs/experiments" / args.dataset / args.experiment / run_id
+        condition = "A_with_evidence" if with_evidence else args.experiment
+        dataset_folder = "scienceqa_test" if args.dataset == "scienceqa" else args.dataset
+        output = args.output_dir or ROOT / "outputs/experiments" / dataset_folder / condition / run_id
         if not args.resume:
             output.mkdir(parents=True, exist_ok=False)
         path = output / ("predictions.jsonl" if args.experiment == "A" else "hints.jsonl")
@@ -231,9 +251,9 @@ def main(argv=None):
                   "experiment": args.experiment, "run_id": run_id, "split": items[0]["split"],
                   "data_source": "final", "item_ids": [item["item_id"] for item in items],
                   "tiers": [] if args.experiment == "A" else [1, 2, 3], "expected_records": len(plans),
-                  "prompt_version": VERSIONS[args.experiment], "prompt_spec": spec, "plan_sha256": signature,
-                  "generation": settings(args.experiment), "runtime": runtime_versions(), "resume_count": 0,
-                  "purpose": "AI2D held-out no-attempt evaluation" if args.dataset == "ai2d" else "ScienceQA training development"}
+                  "prompt_version": EVIDENCE_ANSWER_VERSION if with_evidence else VERSIONS[args.experiment], "prompt_spec": spec, "plan_sha256": signature,
+                  "generation": settings(args.experiment, with_evidence), "runtime": runtime_versions(), "resume_count": 0,
+                  "purpose": f"{args.dataset} held-out test no-attempt evaluation"}
     if args.resume:
         run["resume_count"] += 1
 

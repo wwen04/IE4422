@@ -10,7 +10,7 @@ import re
 from PIL import Image
 
 from experiments.common import ROOT, digest, json_digest, load_prompt_spec, read_json, require
-from experiments.data import load_questions
+from experiments.data import _load_questions
 from hint_prompts import render_initial_hint
 from scienceqa_tutor import question_prompt
 
@@ -18,6 +18,13 @@ TIERS = (1, 2, 3)
 MAX_NEW_TOKENS = 160
 PROMPT_VERSION = "b-ui-prompt-without-evidence-v2"
 SCHEMA_VERSION = "b-hint-record-v1"
+
+
+def load_questions(root, dataset, *, item_ids=None, limit=None):
+    """Read historical training inputs only for verification; current runs use test."""
+    require(dataset == "scienceqa", "Legacy runs must use ScienceQA")
+    return _load_questions(root, dataset, split="train", item_ids=item_ids, limit=limit)
+
 
 def planned_records(root, items, spec, run_id):
     """Snapshot public fields explicitly and construct the full planned ID set."""

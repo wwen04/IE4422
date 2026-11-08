@@ -4,14 +4,11 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
-from types import SimpleNamespace
 
 from PIL import Image
 
 from experiments import legacy as generator
-from experiments.data import load_questions
 from experiments.prepare_judging import judge_prompt, prepare, prepare_package, verify_run, write_json, write_jsonl
-from experiments import run as batch
 
 
 class JudgePreparationTests(unittest.TestCase):
@@ -43,7 +40,7 @@ class JudgePreparationTests(unittest.TestCase):
         manifest = self.root / "manifests/scienceqa/train_final_ids.json"
         manifest.parent.mkdir(parents=True)
         write_json(manifest, [row["item_id"] for row in questions])
-        items = load_questions(self.root, "scienceqa")
+        items = generator.load_questions(self.root, "scienceqa")
         plans = generator.planned_records(self.root, items, generator.load_prompt_spec(self.root), "private-run")
         # Existing B files are read-only legacy input; no legacy generator is needed.
         self.rows = [{**plan, "hint_text": f"Unedited hint {i}\n", "word_count": 3,
@@ -98,44 +95,10 @@ class JudgePreparationTests(unittest.TestCase):
         for name, content in before.items():
             self.assertEqual((self.run_folder / name).read_bytes(), content)
 
-    def test_default_scienceqa_packages_reuse_saved_b_question_ids_for_d(self):
-        # A small fixture exercises the same manifest mechanism as the real 100.
-        public = next(row["public_inputs"] for row in self.rows if row["item_id"] == "train_000001")
-        frozen = {"dataset_name": "scienceqa", "size": 1, "seed": 42, "tiers": [1, 2, 3],
-                  "source_configuration": self.run["dataset"], "method": "Reuse exact existing B question IDs",
-                  "items": [{"item_id": "train_000001", "input_sha256": public["input_sha256"],
-                             "image_sha256": public["image_sha256"]}]}
-        manifest = self.root / "manifests/scienceqa/train_judge_selection.json"
-        write_json(manifest, frozen)
-        items = load_questions(self.root, "scienceqa")
-        spec = batch.load_prompt_spec(self.root)
-        plans = batch.make_plans(self.root, "scienceqa", "D", items, spec, "new-d-run")
-        tutor = SimpleNamespace(ask=lambda image, prompt, **kwargs: '1. Text: "left", left block.' if kwargs["max_new_tokens"] == 320 else "Notice the left block.")
-        records = [batch.generate_record(tutor, self.root, plan, spec) for plan in plans.values()]
-        d_run = {"schema_version": batch.SCHEMA_VERSION, "dataset_name": "scienceqa", "experiment": "D",
-                 "run_id": "new-d-run", "split": "train", "data_source": "final", "status": "complete",
-                 "tiers": [1, 2, 3], "dataset": self.run["dataset"], "item_ids": [item["item_id"] for item in items],
-                 "prompt_spec": spec, "prompt_version": batch.VERSIONS["D"], "generation": batch.settings("D"),
-                 "expected_records": 6, "completed_records": 6, "remaining_records": 0,
-                 "counts": {"ok": 6, "empty_output": 0, "invalid_output": 0, "generation_error": 0},
-                 "plan_sha256": batch.json_digest({"plans": list(plans.values()), "dataset": self.run["dataset"],
-                                                  "prompt_spec": spec, "generation": batch.settings("D")})}
-        d_folder = self.root / "d-run"
-        d_folder.mkdir()
-        write_json(d_folder / "run.json", d_run)
-        write_jsonl(d_folder / "hints.jsonl", records)
-        for folder in (self.run_folder, d_folder):
-            destination = folder / "fixed-package"
-            report = prepare(self.root, folder, destination, seed=999)
-            mapping = [json.loads(line) for line in (destination / "record_map_PRIVATE.jsonl").read_text().splitlines()]
-            self.assertEqual({row["item_id"] for row in mapping}, {"train_000001"})
-            self.assertEqual({row["tier"] for row in mapping}, {1, 2, 3})
-            self.assertEqual(report["selected_records"], 3)
-        frozen["items"][0]["input_sha256"] = "changed"
-        write_json(manifest, frozen)
-        with self.assertRaisesRegex(ValueError, "changed"):
-            prepare(self.root, d_folder, self.root / "bad-fixed-package")
-        self.assertFalse((self.root / "bad-fixed-package").exists())
+    def test_default_packager_rejects_historical_training_run(self):
+        with self.assertRaisesRegex(ValueError, "require test runs"):
+            prepare(self.root, self.run_folder, self.root / "new-package")
+        self.assertFalse((self.root / "new-package").exists())
 
     def test_modified_hint_prompt_fingerprint_is_rejected_without_creating_package(self):
         changed = deepcopy(self.rows)

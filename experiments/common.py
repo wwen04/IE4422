@@ -60,7 +60,7 @@ def model_identity(model_path):
             "files": {p.name: {"bytes": p.stat().st_size, "mtime_ns": p.stat().st_mtime_ns}
                       for p in sorted(folder.glob("*.safetensors"))} if not marker.is_file() else None}
 
-def answer_prompt(item):
+def answer_prompt(item, evidence=None):
     """Select public fields explicitly; references never enter this prompt."""
     ids = [choice["id"] for choice in item["choices"]]
     if (len(ids) < 2 or len(set(ids)) != len(ids)
@@ -71,6 +71,9 @@ def answer_prompt(item):
         "Answer the multiple-choice science question using the image and supplied text.\n"
         f"Return exactly one option letter ({', '.join(ids)}). "
         "Do not include an explanation, punctuation, or any other text.\n\n"
+        + (f"Visual evidence (unverified): {evidence}\n"
+           "Check these model-produced observations against the image; they may contain errors.\n\n"
+           if evidence is not None else "")
         + question_prompt(item)
     )
 

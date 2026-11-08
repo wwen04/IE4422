@@ -14,7 +14,8 @@ BASE = (
     "notebooks/colab_config.json", "notebooks/experiments_colab.py", "notebooks/build_experiment_bundle.py",
     "notebooks/IE4422_Experiments.ipynb", "notebooks/build_experiment_notebook.py", "notebooks/README.md",
     "tests/test_judge_preparation.py",
-    "tests/test_batch_experiments.py", "tests/test_experiment_colab.py", "tests/test_prepare_ai2d.py",
+    "tests/test_batch_experiments.py", "tests/test_scienceqa_experiments.py",
+    "tests/test_experiment_colab.py", "tests/test_prepare_ai2d.py",
 )
 
 

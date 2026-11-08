@@ -46,8 +46,7 @@ def prepare_dataset(root, python, dataset, persistent=None, rebuild=False):
         for script in scripts:
             run_visible([python, root / script], cwd=root)
     run_visible([python, "-m", "experiments.run", "--dataset", dataset, "--experiment", "B", "--preflight"], cwd=root)
-    if dataset == "ai2d":
-        run_visible([python, "-m", "experiments.prepare_judging", "--freeze-ai2d-selection"], cwd=root)
+    run_visible([python, "-m", "experiments.prepare_judging", f"--freeze-{dataset}-selection"], cwd=root)
     if archive and (rebuild or not archive.exists()):
         archive.parent.mkdir(parents=True, exist_ok=True)
         paths = sorted(path for path in final.rglob("*") if path.is_file())
@@ -61,19 +60,24 @@ def prepare_dataset(root, python, dataset, persistent=None, rebuild=False):
     print(f"{dataset}: prepared final data validated; no model was loaded.")
 
 
-def run_folder(root, dataset, experiment, label, persistent=None):
+def run_folder(root, dataset, experiment, label, persistent=None, *, with_evidence=False):
     if dataset not in ("ai2d", "scienceqa") or experiment not in ("A", "B", "D"):
         raise ValueError("Invalid dataset or experiment")
+    if with_evidence and experiment != "A":
+        raise ValueError("with_evidence is only available for Experiment A")
     if not label or label in (".", "..") or any(char in label for char in '/\\:'):
         raise ValueError("Use a simple run label without path separators")
     base = Path(persistent) / "runs/experiments" if persistent else Path(root) / "outputs/experiments"
-    return base / dataset / experiment / label
+    dataset_folder = "scienceqa_test" if dataset == "scienceqa" else dataset
+    return base / dataset_folder / ("A_with_evidence" if with_evidence else experiment) / label
 
 
-def run_experiment(root, python, model, dataset, experiment, label, persistent=None, resume=False):
-    folder = run_folder(root, dataset, experiment, label, persistent)
+def run_experiment(root, python, model, dataset, experiment, label, persistent=None, resume=False, *, with_evidence=False):
+    folder = run_folder(root, dataset, experiment, label, persistent, with_evidence=with_evidence)
     command = [python, "-m", "experiments.run", "--dataset", dataset, "--experiment", experiment,
                "--model-path", model, "--output-dir", folder]
+    if with_evidence:
+        command.append("--with-evidence")
     if resume:
         command.append("--resume")
     run_visible(command, cwd=root)
